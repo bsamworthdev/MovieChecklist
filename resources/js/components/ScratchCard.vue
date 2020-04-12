@@ -15,14 +15,14 @@
         props: {
             movie: Object,
         },
-        data() {
-            return {
-                hasWatched: true,
-            }
-        },
         methods: {
             toggleWatched(){
                 this.hasWatched = !this.hasWatched;
+            }
+        },
+        data() {
+            return {
+                hasWatched: (this.movie.watched == 1)
             }
         },
         mounted() {
@@ -32,10 +32,16 @@
 </script>
 
 <style scoped>
+    .movieCard{
+        margin-bottom:10px;
+    }
     .movieCard.watched .card-body{
         background-color:transparent;
     }
     .movieCard:not(.watched) .card-body{
         background-color:#C0C0C0;
+    }
+    .movieCard .card-header{
+        min-height:100px;
     }
 </style>

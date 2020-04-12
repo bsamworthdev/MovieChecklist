@@ -19,6 +19,7 @@ class MovieController extends Controller
         // $response = json_decode($api_response);
 
         //$movies =  Movie::all();
+
         return $response;
     }
 }

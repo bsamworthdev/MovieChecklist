@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Movie;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -24,20 +26,17 @@ class HomeController extends Controller
      */
     public function index()
     {
+        //  Movie::all();
+        $user_id = Auth::user()->id;
 
-        // movies = [
-        //     {
-        //         name:'bambi',
-        //         year:1944,
-        //     },
-        //     {
-        //         name:'dumbo',
-        //         year: 1948,
-        //     }
-        // ];
-
-        $movies =  Movie::all();
+        $movies = DB::table('movies')
+            ->leftjoin('movie_user', 'movies.id', '=', 'movie_user.movie_id')
+            ->where('movie_user.user_id', '=', $user_id)
+            ->orWhere('movie_user.user_id', '=', NULL)
+            ->get([
+                'movies.*', 
+                DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')
+            ]);
         return view('home', ["movies" => $movies]);
-
     }
 }
