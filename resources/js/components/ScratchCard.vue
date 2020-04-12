@@ -19,6 +19,16 @@
         methods: {
             toggleWatched(){
                 this.hasWatched = !this.hasWatched;
+                axios.post('/saveMovieUser',{
+                    movie_id:this.movie.id,
+                    watched:this.hasWatched                    
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
             }
         },
         data() {

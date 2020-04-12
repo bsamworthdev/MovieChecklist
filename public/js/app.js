@@ -1961,6 +1961,14 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     toggleWatched: function toggleWatched() {
       this.hasWatched = !this.hasWatched;
+      axios.post('/saveMovieUser', {
+        movie_id: this.movie.id,
+        watched: this.hasWatched
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   data: function data() {
