@@ -1953,6 +1953,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     movie: Object
@@ -2010,7 +2011,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     updateMovies: function updateMovies() {
       axios.post('/updatemovies').then(function (response) {
-        alert(response);
+        console.log('movies updated successfully');
       })["catch"](function (error) {
         console.log(error);
       });
@@ -6573,7 +6574,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:10px;\n}\n.movieCard.watched .card-body[data-v-1e6a29e2]{\n    background-color:transparent;\n}\n.movieCard:not(.watched) .card-body[data-v-1e6a29e2]{\n    background-color:#C0C0C0;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:100px;\n}\n", ""]);
+exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:20px;\n    margin: 1px solid #C0C0C0;\n}\n.movieImage h4[data-v-1e6a29e2]{\n    color:transparent;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-1e6a29e2] {\n    color:black!important;\n    background-color:white;\n    opacity:0.5;\n}\n.tick[data-v-1e6a29e2]{\n    color:green;\n    font-size:100px;\n}\n.tickContainer[data-v-1e6a29e2]{\n    position:relative;\n    text-align:center;\n    margin-top:70px;\n    width:100%;\n}\n.movieCard .movieImage[data-v-1e6a29e2] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: 300px auto;\n    position: relative;\n    height: 300px;\n}\n.movieCard .movieImage[data-v-1e6a29e2]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-1e6a29e2]:before{\n    background: rgba(0,0,0,0.7);\n}\n\n", ""]);
 
 // exports
 
@@ -38424,13 +38425,22 @@ var render = function() {
         on: { click: _vm.toggleWatched }
       },
       [
-        _c("div", { staticClass: "card-header" }, [
-          _vm._v(_vm._s(_vm.movie.name))
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _vm._v("\n            " + _vm._s(_vm.movie.year) + "\n        ")
-        ])
+        _c(
+          "div",
+          {
+            staticClass: "card-body movieImage",
+            style: { backgroundImage: "url(" + _vm.movie.image_url + ")" }
+          },
+          [
+            _c("h4", [_vm._v(_vm._s(_vm.movie.name))]),
+            _vm._v(" "),
+            _c("div", { staticClass: "tickContainer" }, [
+              _vm.hasWatched
+                ? _c("i", { staticClass: "fa fa-check tick" })
+                : _vm._e()
+            ])
+          ]
+        )
       ]
     )
   ])
@@ -50983,7 +50993,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/vagrant/code/MovieChecklist/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/bensamworth/development/php/MovieChecklist/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })

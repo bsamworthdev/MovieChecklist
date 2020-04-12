@@ -4,22 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Movie;
-use App\Http\Requests;
-use GuzzleHttp\Client;
-//use GuzzleHttp\Message\Request;
-use GuzzleHttp\Message\Response;
+use Illuminate\Support\Str;
 
 class MovieController extends Controller
 {
     //
     function updateMovies(){
 
-        // $client = new Client();
-        // $api_response = $client->get('https://api.envato.com/v1/discovery/search/search/item?site=themeforest.net&category=wordpress&sort_by=relevance&access_token=TOKEN');
-        // $response = json_decode($api_response);
+        $movies =  Movie::all();
+        foreach($movies as $movie) {
+            $url = 'https://v2.sg.media-imdb.com/suggests/'.Str::lower($movie->name[0]).'/'.urlencode($movie->name).'.json';
 
-        //$movies =  Movie::all();
+            $api_response = file_get_contents($url);
 
-        return $response;
+            if ($api_response){
+                $image_url = explode('"i":["', $api_response)[1];
+                $image_url = explode('"', $image_url)[0];
+                $movie->image_url = $image_url;
+                $movie->save();
+            }
+        }
+
+        //
+
+       // return $response;
     }
 }

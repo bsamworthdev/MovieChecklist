@@ -26,7 +26,7 @@
             updateMovies(){
                 axios.post('/updatemovies')
                 .then((response) => {
-                    alert(response);
+                    console.log('movies updated successfully');
                 })
                 .catch((error) => {
                     console.log(error);
