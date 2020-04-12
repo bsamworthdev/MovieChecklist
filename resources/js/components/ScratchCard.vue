@@ -1,14 +1,10 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Example Component3</div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
+            <div class="card-header">{{ movie.name }}</div>
 
-                    <div class="card-body">
-                        I'm an example component
-                    </div>
-                </div>
+            <div class="card-body">
+                {{ movie.year }}
             </div>
         </div>
     </div>
@@ -16,8 +12,30 @@
 
 <script>
     export default {
+        props: {
+            movie: Object,
+        },
+        data() {
+            return {
+                hasWatched: true,
+            }
+        },
+        methods: {
+            toggleWatched(){
+                this.hasWatched = !this.hasWatched;
+            }
+        },
         mounted() {
             console.log('Component mounted.')
         }
     }
 </script>
+
+<style scoped>
+    .movieCard.watched .card-body{
+        background-color:transparent;
+    }
+    .movieCard:not(.watched) .card-body{
+        background-color:#C0C0C0;
+    }
+</style>

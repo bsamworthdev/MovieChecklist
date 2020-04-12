@@ -13,9 +13,8 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    <div class="card"> 
-                        <scratch-card-grid></scratch-card-grid>
+                    <div class="card" id="app"> 
+                        <scratch-card-grid :movies="{{ $movies }}"></scratch-card-grid>
                     </div>
                     
                 </div>
