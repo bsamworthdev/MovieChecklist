@@ -3,6 +3,9 @@
         <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
             <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url})` }">
                 <h4>{{ movie.name }}</h4>
+                <div class="rank">
+                    <span>{{ movie.rank}}</span>
+                </div>
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
                 </div>
@@ -46,7 +49,7 @@
 <style scoped>
     .movieCard{
         margin-bottom:20px;
-        margin: 1px solid #C0C0C0;
+        margin: 4px solid #C0C0C0;
         cursor:pointer;
     }
     .movieImage h4{
@@ -87,6 +90,22 @@
     }
     .movieCard.watched .movieImage:before{
         background: rgba(0,0,0,0.7);
+    }
+
+    .movieCard .rank{
+        background-color:white;
+        border-radius:22px;
+        position:absolute;
+        text-align:center;
+        left:10px;
+        top:9px;
+        min-width:40px;
+        border:1px solid black;
+    }
+
+    .movieCard .rank span{
+        color:black;
+        font-size:25px;
     }
 
 </style>
