@@ -6,6 +6,10 @@
                 <div class="rank">
                     <span>{{ movie.rank}}</span>
                 </div>
+                <div class="rating">
+                    <i class="fa fa-star star"></i>
+                    <span>{{ ratingShort }}</span>
+                </div>
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
                 </div>
@@ -35,6 +39,15 @@
                 });
             }
         },
+        computed: {
+            ratingShort: function (){
+                if (this.movie.rating) {
+                    return parseFloat(this.movie.rating).toFixed(1);
+                } else {
+                    return 'n/a';
+                }
+            }
+        },
         data() {
             return {
                 hasWatched: (this.movie.watched == 1)
@@ -53,15 +66,22 @@
         cursor:pointer;
     }
     .movieImage h4{
+        color:black!important;
+        margin-top:40px;
+        position:absolute;
         color:transparent;
+        background-color:white;
+        opacity:0;
+        width:100%;
+        left:0;
+        bottom:-8px;
+        padding:4px 8px 4px 8px;
     }
     .movieCard .card-header{
         min-height:50px;
     }
+
     .movieImage:hover h4 {
-        margin-top:40px;
-        color:black!important;
-        background-color:white;
         opacity:0.5;
     }
     .tick{
@@ -71,7 +91,7 @@
     .tickContainer{
         position:relative;
         text-align:center;
-        margin-top:30px;
+        margin-top:100px;
         width:100%;
     }
     .movieCard .movieImage {
@@ -107,6 +127,29 @@
     .movieCard .rank span{
         color:black;
         font-size:25px;
+    }
+
+    .movieCard .rating{
+        position:absolute;
+        text-align:center;
+        right:22px;
+        top:9px;
+        min-width:40px;
+    }
+
+    .movieCard .rating span{
+        position:relative;
+        top:11px;
+        left:12px;
+        color:black;
+        font-size:15px;
+        width:40px;
+        text-align:center;
+    }
+    .star{
+        position:absolute;
+        color:yellow;
+        font-size:41px;
     }
 
 </style>

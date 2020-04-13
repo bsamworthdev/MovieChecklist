@@ -1957,6 +1957,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     movie: Object
@@ -1974,6 +1978,15 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    }
+  },
+  computed: {
+    ratingShort: function ratingShort() {
+      if (this.movie.rating) {
+        return parseFloat(this.movie.rating).toFixed(1);
+      } else {
+        return 'n/a';
+      }
     }
   },
   data: function data() {
@@ -6578,7 +6591,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:20px;\n    margin: 4px solid #C0C0C0;\n    cursor:pointer;\n}\n.movieImage h4[data-v-1e6a29e2]{\n    color:transparent;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-1e6a29e2] {\n    color:black!important;\n    background-color:white;\n    opacity:0.5;\n}\n.tick[data-v-1e6a29e2]{\n    color:green;\n    font-size:100px;\n}\n.tickContainer[data-v-1e6a29e2]{\n    position:relative;\n    text-align:center;\n    margin-top:70px;\n    width:100%;\n}\n.movieCard .movieImage[data-v-1e6a29e2] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: cover;\n    position: relative;\n    height: 300px;\n}\n.movieCard .movieImage[data-v-1e6a29e2]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-1e6a29e2]:before{\n    background: rgba(0,0,0,0.7);\n}\n.movieCard .rank[data-v-1e6a29e2]{\n    background-color:white;\n    border-radius:22px;\n    position:absolute;\n    text-align:center;\n    left:10px;\n    top:9px;\n    min-width:40px;\n}\n.movieCard .rank span[data-v-1e6a29e2]{\n    color:black;\n    font-size:25px;\n}\n\n", ""]);
+exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:20px;\n    border: 4px solid #C0C0C0;\n    cursor:pointer;\n}\n.movieImage h4[data-v-1e6a29e2]{\n    color:black!important;\n    margin-top:40px;\n    position:absolute;\n    color:transparent;\n    background-color:white;\n    opacity:0;\n    width:100%;\n    left:0;\n    bottom:-8px;\n    padding:4px 8px 4px 8px;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-1e6a29e2] {\n    opacity:0.5;\n}\n.tick[data-v-1e6a29e2]{\n    color:green;\n    font-size:100px;\n}\n.tickContainer[data-v-1e6a29e2]{\n    position:relative;\n    text-align:center;\n    margin-top:100px;\n    width:100%;\n}\n.movieCard .movieImage[data-v-1e6a29e2] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: cover;\n    position: relative;\n    height: 300px;\n}\n.movieCard .movieImage[data-v-1e6a29e2]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-1e6a29e2]:before{\n    background: rgba(0,0,0,0.7);\n}\n.movieCard .rank[data-v-1e6a29e2]{\n    background-color:white;\n    border-radius:22px;\n    position:absolute;\n    text-align:center;\n    left:10px;\n    top:9px;\n    min-width:40px;\n    border:1px solid black;\n}\n.movieCard .rank span[data-v-1e6a29e2]{\n    color:black;\n    font-size:25px;\n}\n.movieCard .rating[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:22px;\n    top:9px;\n    min-width:40px;\n}\n.movieCard .rating span[data-v-1e6a29e2]{\n    position:relative;\n    top:11px;\n    left:12px;\n    color:black;\n    font-size:15px;\n    width:40px;\n    text-align:center;\n}\n.star[data-v-1e6a29e2]{\n    position:absolute;\n    color:yellow;\n    font-size:41px;\n}\n\n", ""]);
 
 // exports
 
@@ -38440,6 +38453,12 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "rank" }, [
               _c("span", [_vm._v(_vm._s(_vm.movie.rank))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "rating" }, [
+              _c("i", { staticClass: "fa fa-star star" }),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.ratingShort))])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "tickContainer" }, [
