@@ -1974,10 +1974,16 @@ __webpack_require__.r(__webpack_exports__);
         watched: !this.hasWatched
       }).then(function (response) {
         _this.hasWatched = !_this.hasWatched;
+
+        _this.movieStatusChanged();
+
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    movieStatusChanged: function movieStatusChanged() {
+      this.$emit('movieStatusChanged', this.hasWatched);
     }
   },
   computed: {
@@ -2024,24 +2030,56 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    movies: Array
+    movies: Array,
+    user: Object
   },
   components: {
     scratchCard: _ScratchCard__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   methods: {
+    setWatchedMoviesCount: function setWatchedMoviesCount() {
+      alert('!');
+      var arr = [];
+
+      for (var i = 0; i < this.movies.length; i++) {
+        if (this.movies[i].watched == 1) {
+          arr.push(this.movies[i]);
+        }
+      }
+
+      this.watchedMoviesCount = arr.length;
+    },
     updateMovies: function updateMovies() {
       axios.post('/updatemovies').then(function (response) {
         console.log('movies updated successfully');
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    movieStatusChanged: function movieStatusChanged(hasWatched) {
+      console.log('movie status changed');
+
+      if (hasWatched) {
+        this.watchedMoviesCount++;
+      } else {
+        this.watchedMoviesCount--;
+      } //this.$forceUpdate();
+
     }
   },
+  data: function data() {
+    return {
+      watchedMoviesCount: 0
+    };
+  },
   mounted: function mounted() {
+    this.setWatchedMoviesCount();
     console.log('Component mounted.');
   }
 });
@@ -6610,7 +6648,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n", ""]);
+exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n", ""]);
 
 // exports
 
@@ -38499,9 +38537,24 @@ var render = function() {
       _c("div", { staticClass: "btn-group col-lg-4 col-md-6 col-sm-12" }, [
         _c(
           "button",
-          { staticClass: "btn btn-success", on: { click: _vm.updateMovies } },
+          {
+            staticClass: "btn btn-success d-none",
+            on: { click: _vm.updateMovies }
+          },
           [_vm._v("Update Movies")]
         )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-12" }, [
+        _c("h4", [
+          _vm._v("Hi " + _vm._s(_vm.user.name) + ", you have watched "),
+          _c("span", { staticClass: "watchedMovies" }, [
+            _vm._v(_vm._s(_vm.watchedMoviesCount))
+          ]),
+          _vm._v(" of "),
+          _c("b", [_vm._v(_vm._s(_vm.movies.length))]),
+          _vm._v(" movies.")
+        ])
       ])
     ]),
     _vm._v(" "),
@@ -38509,7 +38562,18 @@ var render = function() {
       "div",
       { staticClass: "row justify-content-center" },
       _vm._l(_vm.movies, function(movie) {
-        return _c("scratch-card", { key: movie.id, attrs: { movie: movie } })
+        return _c("scratch-card", {
+          key: movie.id,
+          attrs: { movie: movie },
+          on: { movieStatusChanged: _vm.movieStatusChanged },
+          model: {
+            value: _vm.watchedMoviesCount,
+            callback: function($$v) {
+              _vm.watchedMoviesCount = $$v
+            },
+            expression: "watchedMoviesCount"
+          }
+        })
       }),
       1
     )

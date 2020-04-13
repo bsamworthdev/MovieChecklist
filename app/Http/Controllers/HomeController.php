@@ -27,7 +27,8 @@ class HomeController extends Controller
     public function index()
     {
         //  Movie::all();
-        $user_id = Auth::user()->id;
+        $user = Auth::user();
+        $user_id = $user->id;
 
         $movies = DB::table('movies')
             ->leftJoin('movie_user', function($join) use ($user_id)
@@ -42,6 +43,6 @@ class HomeController extends Controller
                 'movies.*', 
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')
             ]);
-        return view('home', ["movies" => $movies]);
+        return view('home', ["user" => $user, "movies" => $movies]);
     }
 }

@@ -13,7 +13,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <scratch-card-grid :movies="{{ $movies }}"></scratch-card-grid>
+                    <scratch-card-grid :user="{{ $user }}" :movies="{{ $movies }}"></scratch-card-grid>
                 </div>
             </div>
         </div>

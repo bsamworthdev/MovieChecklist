@@ -32,11 +32,15 @@
                 })
                 .then((response) => {
                     this.hasWatched = !this.hasWatched;
+                    this.movieStatusChanged();
                     console.log(response);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+            },
+            movieStatusChanged() {
+                this.$emit('movieStatusChanged', this.hasWatched);
             }
         },
         computed: {
