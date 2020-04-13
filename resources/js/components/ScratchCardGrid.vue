@@ -3,8 +3,6 @@
         <div class="row justify-content-left">
             <div class="btn-group col-lg-4 col-md-6 col-sm-12">
                 <button class="btn btn-success" @click="updateMovies">Update Movies</button>
-                &nbsp;
-                <button class="btn btn-success" @click="saveUserMovies">Save</button>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -27,18 +25,6 @@
                 axios.post('/updatemovies')
                 .then((response) => {
                     console.log('movies updated successfully');
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            },
-            saveUserMovies(){
-                axios.post('/saveusermovies',{
-                    
-                    
-                })
-                .then((response) => {
-                    alert(response);
                 })
                 .catch((error) => {
                     console.log(error);

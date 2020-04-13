@@ -30,7 +30,11 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
 
         $movies = DB::table('movies')
-            ->leftjoin('movie_user', 'movies.id', '=', 'movie_user.movie_id')
+            ->leftJoin('movie_user', function($join) use ($user_id)
+                {
+                    $join->on('movie_user.movie_id', '=', 'movies.id');
+                    $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
+                })
             ->where('movie_user.user_id', '=', $user_id)
             ->orWhere('movie_user.user_id', '=', NULL)
             ->orderBy('rank','ASC')
