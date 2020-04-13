@@ -33,6 +33,7 @@ class HomeController extends Controller
             ->leftjoin('movie_user', 'movies.id', '=', 'movie_user.movie_id')
             ->where('movie_user.user_id', '=', $user_id)
             ->orWhere('movie_user.user_id', '=', NULL)
+            ->orderBy('rank','ASC')
             ->get([
                 'movies.*', 
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')
