@@ -49,7 +49,7 @@
 <style scoped>
     .movieCard{
         margin-bottom:20px;
-        margin: 4px solid #C0C0C0;
+        border: 4px solid #C0C0C0;
         cursor:pointer;
     }
     .movieImage h4{
@@ -59,6 +59,7 @@
         min-height:50px;
     }
     .movieImage:hover h4 {
+        margin-top:40px;
         color:black!important;
         background-color:white;
         opacity:0.5;
@@ -70,7 +71,7 @@
     .tickContainer{
         position:relative;
         text-align:center;
-        margin-top:70px;
+        margin-top:30px;
         width:100%;
     }
     .movieCard .movieImage {
