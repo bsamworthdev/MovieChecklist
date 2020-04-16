@@ -1,5 +1,5 @@
 <template>
-    <div class="col-lg-3 col-md-4 col-sm-6">
+    <div class="col-lg-3 col-md-4 col-6">
         <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
             <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url})` }">
                 <h4>{{ movie.name }}</h4>
@@ -68,6 +68,7 @@
         margin-bottom:20px;
         border: 4px solid #C0C0C0;
         cursor:pointer;
+        height:90%;
     }
     .movieImage h4{
         color:black!important;

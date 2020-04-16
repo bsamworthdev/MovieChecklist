@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row justify-content-left">
-            <div class="btn-group col-lg-3 col-md-4 col-sm-6">
+            <div class="btn-group col-lg-4 col-md-6 col-sm-12">
                 <button class="btn btn-success d-none" @click="updateMovies">Update Movies</button>
             </div>
              <div class="col-sm-12">
