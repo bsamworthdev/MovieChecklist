@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Movie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -26,6 +27,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        MovieController::updateSavedImages();
+
         //  Movie::all();
         $user = Auth::user();
         $user_id = $user->id;
@@ -43,6 +46,7 @@ class HomeController extends Controller
                 'movies.*', 
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')
             ]);
+
         return view('home', ["user" => $user, "movies" => $movies]);
     }
 }

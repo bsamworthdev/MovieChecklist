@@ -38209,7 +38209,7 @@ var render = function() {
           "div",
           {
             staticClass: "card-body movieImage",
-            style: { backgroundImage: "url(" + _vm.movie.image_url + ")" }
+            style: { backgroundImage: "url(" + _vm.movie.image_url_small + ")" }
           },
           [
             _c("h4", [_vm._v(_vm._s(_vm.movie.name))]),

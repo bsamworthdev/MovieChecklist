@@ -1,7 +1,7 @@
 <template>
     <div class="col-lg-3 col-md-4 col-6">
         <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
-            <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url})` }">
+            <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small})` }">
                 <h4>{{ movie.name }}</h4>
                 <div class="rank">
                     <span>{{ movie.rank}}</span>

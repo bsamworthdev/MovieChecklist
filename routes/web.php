@@ -23,3 +23,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/updatemovies', 'MovieController@updateMovies');
 Route::post('/saveMovieUser', 'UserController@saveMovieUser');
 
+
