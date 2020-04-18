@@ -1,5 +1,5 @@
 <template>
-    <div class="col-lg-3 col-md-4 col-6">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
         <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
             <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small})` }">
                 <h4>{{ movie.name }}</h4>
@@ -68,7 +68,7 @@
         margin-bottom:20px;
         border: 4px solid #C0C0C0;
         cursor:pointer;
-        height:90%;
+        box-shadow:7px 7px #343a40;
     }
     .movieImage h4{
         color:black!important;
@@ -91,20 +91,16 @@
     }
     .tick{
         color:green;
-        font-size:100px;
     }
     .tickContainer{
         position:relative;
         text-align:center;
-        margin-top:100px;
         width:100%;
     }
     .movieCard .movieImage {
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
-        position: relative;
-        height: 300px;
     }
     .movieCard .movieImage:before{
         content: '';
@@ -155,6 +151,95 @@
         position:absolute;
         color:yellow;
         font-size:41px;
+    }
+
+    /*x-x-small*/
+    @media (max-width: 320px) {
+        .movieCard .movieImage{
+            height: 320px;
+        }
+        .tick{
+            font-size:80px;
+        }
+        .tickContainer{
+            margin-top:80px;
+        }
+    }
+
+    /*x-x-small*/
+    @media (min-width: 321px) {
+        .movieCard .movieImage{
+            height: 390px;
+        }
+        .tick{
+            font-size:80px;
+        }
+        .tickContainer{
+            margin-top:100px;
+        }
+    }
+
+    /*x-x-small*/
+    @media (min-width: 400px) {
+        .movieCard .movieImage{
+            height: 549px;
+        }
+        .tick{
+            font-size:120px;
+        }
+        .tickContainer{
+            margin-top:300px;
+        }
+    }
+    /*Extra-Small devices (portrait phones, 576px and up)*/
+    @media (min-width: 576px) {
+        .movieCard .movieImage{
+            height: 242px;
+        }
+        .tick{
+            font-size:60px;
+        }
+        .tickContainer{
+            margin-top:100px;
+        }
+    }
+
+    /*Small devices (landscape phones, 576px and up)*/
+    @media (min-width: 768px){
+        .movieCard .movieImage{
+            height: 225px;
+        }
+        .tick{
+            font-size:60px;
+        }
+        .tickContainer{
+            margin-top:100px;
+        }
+    }
+    
+    /* Medium devices (desktops, 992px and up)*/
+    @media (min-width: 992px) {
+        .movieCard .movieImage{
+            height: 233px;
+        }
+        .tick{
+            font-size:80px;
+        }
+        .tickContainer{
+            margin-top:100px;
+        }
+    }
+    /*Extra large devices (large desktops, 1200px and up)*/
+    @media (min-width: 1200px) {
+        .movieCard .movieImage{
+            height: 287px;
+        }
+        .tick{
+            font-size:100px;
+        }
+        .tickContainer{
+            margin-top:120px;
+        }
     }
 
 </style>
