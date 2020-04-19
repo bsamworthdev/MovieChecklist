@@ -58,7 +58,7 @@ class MovieController extends Controller
                 $small_image = Image::make( Storage::disk('public')->get($name) )->resize(229,287)->stream();
                 Storage::disk('public')->put($name, $small_image);
 
-                $movie->image_url_small = '../storage/'.$name;
+                $movie->image_url_small = '/storage/'.$name;
                 $movie->save();
             }
         }

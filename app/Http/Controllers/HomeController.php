@@ -25,8 +25,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index($genre = NULL)
     {
+
         MovieController::updateSavedImages();
 
         //  Movie::all();
@@ -39,8 +40,13 @@ class HomeController extends Controller
                     $join->on('movie_user.movie_id', '=', 'movies.id');
                     $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
                 })
-            ->where('movie_user.user_id', '=', $user_id)
-            ->orWhere('movie_user.user_id', '=', NULL)
+            ->where(function ($q) use ($user_id) {
+                return $q->where('movie_user.user_id', '=', $user_id)
+                        ->orWhere('movie_user.user_id', '=', NULL);
+            })
+            ->when(!empty($genre), function ($q) use ($genre) {
+                return $q->where('movies.genre', '=', $genre);
+            })
             ->orderBy('rank','ASC')
             ->get([
                 'movies.*', 
