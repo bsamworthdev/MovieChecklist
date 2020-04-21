@@ -43,7 +43,7 @@ class HomeController extends Controller
                         ->orWhere('movie_user.user_id', '=', NULL);
             })
             ->when($genre <> 'all', function ($q) use ($genre) {
-                return $q->where('movies.genre', '=', $genre);
+                return $q->where('movies.genre', 'LIKE', '%'.$genre.'%');
             })
             ->orderBy('rank','ASC')
             ->take(100)
@@ -54,7 +54,13 @@ class HomeController extends Controller
 
             $movie_genres = [
                 'all' => 'All Movies',
-                'animated'=>'Animated Movies'
+                'action'=>'Action',
+                'animation'=>'Animated',
+                'comedy'=>'Comedy',
+                'crime'=>'Crime',
+                'drama'=>'Drama',
+                'fantasy'=>'Fantasy',
+                'thriller'=>'Thriller',
             ];
             $selectedGenre = $genre;
 

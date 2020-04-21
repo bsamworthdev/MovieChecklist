@@ -27,10 +27,12 @@ class MovieController extends Controller
             $nl_name = $xpath->query('//div[contains(@class, "lister-item-content")]//span[contains(@class, "lister-item-header")]//a');
             $nl_rank = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "text-primary")]');
             $nl_rating = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "col-imdb-rating")]//strong');
-            $nl_image_url = $xpath->query('//div[contains(@class, "lister-item-image")]//img/@src');
+            // $nl_image_url = $xpath->query('//div[contains(@class, "lister-item-image")]//img/@src');
             $nl_imdb_id = $xpath->query('//div[contains(@class, "lister-item-image")]//img/@data-tconst');
             $nl_year = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "lister-item-year")]');
+            $nl_genre = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "genre")]');
 
+            $nl_rating = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "col-imdb-rating")]//strong');
             for($i=0;$i<count($nl_name);$i++){ 
                 
                 $imdb_id = $nl_imdb_id->item($i)->nodeValue;
@@ -43,7 +45,7 @@ class MovieController extends Controller
                     // $movie->image_url = $nl_image_url->item($i)->nodeValue;
                     $movie->imdb_id = $imdb_id;
                     $movie->year = str_replace(')','',str_replace('(','',str_replace('I','',$nl_year->item($i)->nodeValue)));
-                    
+                    $movie->genre = $nl_genre->item($i)->nodeValue;
                     $movie->save();
                 }
             }
@@ -71,7 +73,7 @@ class MovieController extends Controller
     }
 
     function updateSavedMovieImages() {
-        $movies = Movie::whereNull('image_url_small')->get();
+        $movies = Movie::whereNull('image_url_small')->get();;
         foreach($movies as $movie){
             if ($movie->image_url && !$movie->image_url_small){
 

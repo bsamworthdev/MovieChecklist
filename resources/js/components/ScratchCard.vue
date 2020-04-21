@@ -153,6 +153,12 @@
         font-size:41px;
     }
 
+    @media only screen and (max-device-width: 800px){
+        .movieImage h4{
+            opacity:0.5!important;
+        }
+    }
+
     /*x-x-small*/
     @media (max-width: 320px) {
         .movieCard .movieImage{
