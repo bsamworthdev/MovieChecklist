@@ -10,8 +10,11 @@
                         My List 
                         <form id="movie_form">
                             <select id="movie_select" class="form-select" onchange="return changeGenre();">
-                                <option value="all">All Movies</option>
-                                <option value="animated">Animated Movies</option>
+                                @foreach ($genres as $key => $value)
+                                    <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
+                                        {{ $value }} 
+                                    </option>
+                                @endforeach    
                             </select>
                         </form>
                     </h4>

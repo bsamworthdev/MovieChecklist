@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($genre = NULL)
+    public function index($genre = 'all')
     {
 
         //  Movie::all();
@@ -42,7 +42,7 @@ class HomeController extends Controller
                 return $q->where('movie_user.user_id', '=', $user_id)
                         ->orWhere('movie_user.user_id', '=', NULL);
             })
-            ->when(!empty($genre), function ($q) use ($genre) {
+            ->when($genre <> 'all', function ($q) use ($genre) {
                 return $q->where('movies.genre', '=', $genre);
             })
             ->orderBy('rank','ASC')
@@ -52,6 +52,18 @@ class HomeController extends Controller
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')
             ]);
 
-        return view('home', ["user" => $user, "movies" => $movies]);
+            $movie_genres = [
+                'all' => 'All Movies',
+                'animated'=>'Animated Movies'
+            ];
+            $selectedGenre = $genre;
+
+        return view('home', [
+            "user" => $user, 
+            "movies" => $movies, 
+            "genres" => $movie_genres, 
+            'selectedGenre' => $selectedGenre
+            ]
+        );
     }
 }
