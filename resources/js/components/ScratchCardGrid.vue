@@ -1,8 +1,12 @@
 <template>
     <div class="container">
         <div class="row justify-content-left">
-            <div class="btn-group col-lg-4 col-md-6 col-sm-12">
-                <button class="btn btn-success d-none" @click="updateMovies">Update Movies</button>
+            <div v-if="user.id==1" class="btn-group col-12">
+                <button class="btn btn-success" @click="updateMovies">Update Movies</button>
+                <span class="btn-separator"></span>
+                <button class="btn btn-success" @click="updateMovieImages">Update Movie Images</button>
+                <span class="btn-separator"></span>
+                <button class="btn btn-success" @click="updateSavedMovieImages">Update Saved Movie Images</button>
             </div>
              <div class="col-sm-12">
                 <h4>Hi {{ user.name }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ movies.length }}</b> movies.</h4>
@@ -43,6 +47,24 @@
                     console.log(error);
                 });
             },
+            updateMovieImages(){
+                axios.post('/updatemovieimages')
+                .then((response) => {
+                    console.log('movie images updated successfully');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
+            updateSavedMovieImages(){
+                axios.post('/updatesavedmovieimages')
+                .then((response) => {
+                    console.log('movie saved images updated successfully');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
             movieStatusChanged(hasWatched) {
                 console.log('movie status changed');
                 if (hasWatched){
@@ -71,5 +93,14 @@
     .watchedMovies{
         color:red;
         font-weight:bold;
+    }
+    .btn-separator:after {
+        content: ' ';
+        display: block;
+        float: left;
+        background: #ADADAD;
+        margin: 0 2px;
+        height: 34px;
+        width: 1px;
     }
 </style>

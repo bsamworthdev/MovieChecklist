@@ -21,6 +21,8 @@ Auth::routes();
 
 Route::get('/home/{genre?}', 'HomeController@index')->name('home');
 Route::post('/updatemovies', 'MovieController@updateMovies');
+Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
+Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');
 Route::post('/saveMovieUser', 'UserController@saveMovieUser');
 
 

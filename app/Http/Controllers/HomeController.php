@@ -28,8 +28,6 @@ class HomeController extends Controller
     public function index($genre = NULL)
     {
 
-        MovieController::updateSavedImages();
-
         //  Movie::all();
         $user = Auth::user();
         $user_id = $user->id;
@@ -48,6 +46,7 @@ class HomeController extends Controller
                 return $q->where('movies.genre', '=', $genre);
             })
             ->orderBy('rank','ASC')
+            ->take(100)
             ->get([
                 'movies.*', 
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')

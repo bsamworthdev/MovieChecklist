@@ -2033,6 +2033,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2057,6 +2061,20 @@ __webpack_require__.r(__webpack_exports__);
     updateMovies: function updateMovies() {
       axios.post('/updatemovies').then(function (response) {
         console.log('movies updated successfully');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    updateMovieImages: function updateMovieImages() {
+      axios.post('/updatemovieimages').then(function (response) {
+        console.log('movie images updated successfully');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    updateSavedMovieImages: function updateSavedMovieImages() {
+      axios.post('/updatesavedmovieimages').then(function (response) {
+        console.log('movie saved images updated successfully');
       })["catch"](function (error) {
         console.log(error);
       });
@@ -6647,7 +6665,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n", ""]);
+exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    background: #ADADAD;\n    margin: 0 10px;\n    height: 34px;\n    width: 1px;\n}\n", ""]);
 
 // exports
 
@@ -38259,16 +38277,40 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-left" }, [
-      _c("div", { staticClass: "btn-group col-lg-4 col-md-6 col-sm-12" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-success d-none",
-            on: { click: _vm.updateMovies }
-          },
-          [_vm._v("Update Movies")]
-        )
-      ]),
+      _vm.user.id == 1
+        ? _c("div", { staticClass: "btn-group col-12" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                on: { click: _vm.updateMovies }
+              },
+              [_vm._v("Update Movies")]
+            ),
+            _vm._v(" "),
+            _c("span", { staticClass: "btn-separator" }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                on: { click: _vm.updateMovieImages }
+              },
+              [_vm._v("Update Movie Images")]
+            ),
+            _vm._v(" "),
+            _c("span", { staticClass: "btn-separator" }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                on: { click: _vm.updateSavedMovieImages }
+              },
+              [_vm._v("Update Saved Movie Images")]
+            )
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "col-sm-12" }, [
         _c("h4", [
