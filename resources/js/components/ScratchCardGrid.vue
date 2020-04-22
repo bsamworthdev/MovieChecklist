@@ -88,7 +88,12 @@
                 //this.$forceUpdate();
             },
             pickMovie() {
-                var movie = this.movies[Math.floor(Math.random() * this.movies.length)];
+
+                var unwatchedMovies = this.movies.filter(function (el) {
+                    return el.watched == false
+                });
+
+                var movie = unwatchedMovies[Math.floor(Math.random() * unwatchedMovies.length)];
                 console.log('your random movie is ' + movie.name);
                 this.randomMovie = movie;
                 this.activeModal = 1;
