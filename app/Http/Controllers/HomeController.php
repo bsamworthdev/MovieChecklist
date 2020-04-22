@@ -59,6 +59,7 @@ class HomeController extends Controller
                 'comedy'=>'Comedy',
                 'crime'=>'Crime',
                 'drama'=>'Drama',
+                'family'=>'Family',
                 'fantasy'=>'Fantasy',
                 'history'=>'History',
                 'music'=>'Music',
