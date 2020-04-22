@@ -10,6 +10,10 @@
                     <i class="fa fa-star star"></i>
                     <span>{{ ratingShort }}</span>
                 </div>
+                 <div class="platforms">
+                    <div v-if="movie.netflix" class="platform netflix" title="On netflix"></div>
+                    <div v-if="movie.amazon" class="platform amazon" title="On amazon video"></div>
+                </div>
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
                 </div>
@@ -136,6 +140,29 @@
         right:22px;
         top:9px;
         min-width:40px;
+    }
+
+    .movieCard .platforms{
+        position:absolute;
+        text-align:center;
+        right:6px;
+        top:60px;
+        min-width:40px;
+    }
+
+    .movieCard .platform {
+        width:30px;
+        height:30px;
+        background-size: cover;
+        margin-bottom:6px;
+    }
+
+    .movieCard .platform.netflix {
+        background-image: url('/images/netflix.jpg');
+    }
+
+    .movieCard .platform.amazon {
+        background-image: url('/images/amazon.jpeg');
     }
 
     .movieCard .rating span{
