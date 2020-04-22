@@ -11,6 +11,9 @@
              <div class="col-sm-12">
                 <h4>Hi {{ user.name }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ movies.length }}</b> movies.</h4>
             </div>
+            <div class="btn-group col-12">
+                <button class="btn btn-success" @click="pickMovie">Pick me a random movie!</button>
+            </div>
         </div>
         <div class="row justify-content-center">
             <scratch-card v-for="movie in movies" v-model="watchedMoviesCount" :key="movie.id" :movie="movie" @movieStatusChanged="movieStatusChanged"></scratch-card>
@@ -73,6 +76,10 @@
                     this.watchedMoviesCount--;
                 }
                 //this.$forceUpdate();
+            },
+            pickMovie() {
+                var movie = this.movies[Math.floor(Math.random() * this.movies.length)];
+                console.log('your random movie is ' + movie.name);
             }
         },
         data(){
@@ -98,7 +105,6 @@
         content: ' ';
         display: block;
         float: left;
-        background: #ADADAD;
         margin: 0 2px;
         height: 34px;
         width: 1px;

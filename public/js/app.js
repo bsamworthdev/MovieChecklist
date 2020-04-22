@@ -2037,6 +2037,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2088,6 +2091,10 @@ __webpack_require__.r(__webpack_exports__);
         this.watchedMoviesCount--;
       } //this.$forceUpdate();
 
+    },
+    pickMovie: function pickMovie() {
+      var movie = this.movies[Math.floor(Math.random() * this.movies.length)];
+      console.log('your random movie is ' + movie.name);
     }
   },
   data: function data() {
@@ -6665,7 +6672,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    background: #ADADAD;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n", ""]);
+exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n", ""]);
 
 // exports
 
@@ -38322,6 +38329,14 @@ var render = function() {
           _c("b", [_vm._v(_vm._s(_vm.movies.length))]),
           _vm._v(" movies.")
         ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "btn-group col-12" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-success", on: { click: _vm.pickMovie } },
+          [_vm._v("Pick me a movie!")]
+        )
       ])
     ]),
     _vm._v(" "),

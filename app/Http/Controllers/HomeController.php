@@ -60,7 +60,11 @@ class HomeController extends Controller
                 'crime'=>'Crime',
                 'drama'=>'Drama',
                 'fantasy'=>'Fantasy',
+                'history'=>'History',
+                'music'=>'Music',
+                'sci-fi'=>'Sci-Fi',
                 'thriller'=>'Thriller',
+                'war'=>'War',
             ];
             $selectedGenre = $genre;
 
