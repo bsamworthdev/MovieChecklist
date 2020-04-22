@@ -64,6 +64,7 @@ class HomeController extends Controller
                 'history'=>'History',
                 'music'=>'Music',
                 'sci-fi'=>'Sci-Fi',
+                'sport'=>'Sport',
                 'thriller'=>'Thriller',
                 'war'=>'War',
             ];
