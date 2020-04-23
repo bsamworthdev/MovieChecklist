@@ -56,7 +56,8 @@ class HomeController extends Controller
             ->take(100)
             ->get([
                 'movies.*', 
-                DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')
+                DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
+                DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as isFavourite')
             ]);
         
             $count = 1;

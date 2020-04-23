@@ -24,5 +24,7 @@ Route::post('/updatemovies', 'MovieController@updateMovies');
 Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
 Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');
 Route::post('/saveMovieUser', 'UserController@saveMovieUser');
+Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');
+
 
 

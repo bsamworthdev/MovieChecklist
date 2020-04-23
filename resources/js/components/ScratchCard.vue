@@ -7,6 +7,15 @@
                     <span class="filtered_rank">{{ movie.index }}</span>
                     <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
                 </div>
+                <div v-if="hasWatched" 
+                        class="favourite"
+                        :class="{ selected: (movie.isFavourite==1), active: favouriteHover }" 
+                        @mouseover="favouriteHover = true"
+                        @mouseleave="favouriteHover = false"
+                        @click="toggleIsFavourite(event)">
+                    <i class="fa fa-heart heart filled"></i>
+                    <i class="far fa-heart heart outline"></i>
+                </div>
                 <div class="rating">
                     <i class="fa fa-star star"></i>
                     <span>{{ ratingShort }}</span>
@@ -30,7 +39,6 @@
         },
         methods: {
             toggleWatched(){
-                
                 axios.post('/saveMovieUser',{
                     movie_id:this.movie.id,
                     watched:!this.hasWatched                    
@@ -46,6 +54,24 @@
             },
             movieStatusChanged() {
                 this.$emit('movieStatusChanged', this.hasWatched);
+            },
+            toggleIsFavourite(e){
+                e.stopPropagation();
+                axios.post('/setFavourite',{
+                    movie_id:this.movie.id,
+                    is_favourite:!this.isFavourite                    
+                })
+                .then((response) => {
+                    this.isFavourite = !this.isFavourite;
+                    this.movieFavouriteChanged();
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
+            movieFavouriteChanged() {
+                this.$emit('movieFavouriteChanged', this.isFavourite);
             }
         },
         computed: {
@@ -59,7 +85,8 @@
         },
         data() {
             return {
-                hasWatched: (this.movie.watched == 1)
+                hasWatched: (this.movie.watched == 1),
+                favouriteHover: false
             }
         },
         mounted() {
@@ -156,6 +183,35 @@
         min-width:40px;
     }
 
+    .movieCard .favourite{
+        opacity:0.4;
+        position:absolute;
+        text-align:center;
+        left:10px;
+        top:67px;
+        min-width:40px;
+    }
+
+    .movieCard .favourite.selected{
+        opacity:1!important;
+    }
+
+    .movieCard .favourite.active .heart.outline{
+        display:none;
+    }
+
+    .movieCard .favourite.active .heart.filled{
+        display:block;
+    }
+
+    .movieCard .favourite:not(.active) .heart.outline{
+        display:block;
+    }
+
+    .movieCard .favourite:not(.active) .heart.filled{
+        display:none;
+    }
+
     .movieCard .platforms{
         position:absolute;
         text-align:center;
@@ -191,6 +247,11 @@
     .star{
         position:absolute;
         color:yellow;
+        font-size:41px;
+    }
+    .heart{
+        position:absolute;
+        color:red;
         font-size:41px;
     }
 
