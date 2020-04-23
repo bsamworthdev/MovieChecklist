@@ -6,25 +6,45 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>
-                        My List 
-                        <form id="movie_form">
-                            <select id="time_period_select" class="form-select" onchange="return changeSelect();">
-                                @foreach ($timePeriods as $key => $value)
-                                    <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
-                                        {{ $value }} 
-                                    </option>
-                                @endforeach    
-                            </select>
-                            <select id="genre_select" class="form-select" onchange="return changeSelect();">
-                                @foreach ($genres as $key => $value)
-                                    <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
-                                        {{ $value }} 
-                                    </option>
-                                @endforeach    
-                            </select>
-                        </form>
-                    </h4>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-5 col-3">
+                                <div id="title">My List</div> 
+                            </div>
+                            <div class="col-lg-7 col-9">
+                                <form id="movie_form">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-12">
+                                                <label>
+                                                    English Language Only
+                                                    <input type="checkbox" class="form-input" id="english_only_checkbox" {{( $selectedEnglishOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3 col-12">
+                                                <select id="time_period_select" class="form-select" onchange="return changeSelection();">
+                                                    @foreach ($timePeriods as $key => $value)
+                                                        <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
+                                                            {{ $value }} 
+                                                        </option>
+                                                    @endforeach    
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-12">
+                                                <select id="genre_select" class="form-select" onchange="return changeSelection();">
+                                                    @foreach ($genres as $key => $value)
+                                                        <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
+                                                            {{ $value }} 
+                                                        </option>
+                                                    @endforeach    
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -58,11 +78,12 @@
         }
     }
 
-    function changeSelect() {
+    function changeSelection() {
         var form = document.getElementById('movie_form');
+        var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
-        form.setAttribute('action', '/home/' + genreSelect.value + '/' + timePeriodSelect.value + '/');
+        form.setAttribute('action', '/home/' + genreSelect.value + '/' + timePeriodSelect.value + '/' + (englishOnlyCheckbox.checked ? '1' : '0') + '/');
         form.submit();
     }
 
@@ -75,10 +96,19 @@
 </script>
 <style>
     #movie_form{
-        float:right;
         margin-bottom:0px;
+        text-align:left;
     }
-
+    #movie_form select{
+        min-width:95%;
+    }
+    #title{
+        font-size:22px;
+        font-weight:bold;
+    }
+    .card-header{
+        font-size:16px;
+    }
     #topButton {
         display: none;
         position: fixed;

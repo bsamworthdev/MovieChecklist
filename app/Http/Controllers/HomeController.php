@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($genre = 'all', $time_period = 'all')
+    public function index($genre = 'all', $time_period = 'all', $english_only = 0)
     {
 
         //  Movie::all();
@@ -46,10 +46,11 @@ class HomeController extends Controller
                 return $q->where('movies.genre', 'LIKE', '%'.$genre.'%');
             })
             ->when($time_period <> 'all', function ($q) use ($time_period) {
-
                 $dates = $this->parseTimePeriod($time_period);
-
                 return $q->whereBetween('movies.year', [$dates['from'], $dates['to']]);
+            })
+            ->when($english_only == 1, function ($q) {
+                return $q->where('movies.language', '=', 'english');
             })
             ->orderBy('rank','ASC')
             ->take(100)
@@ -57,6 +58,12 @@ class HomeController extends Controller
                 'movies.*', 
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched')
             ]);
+        
+            $count = 1;
+            foreach ($movies as $movie){
+                $movie->index = $count;
+                $count++;
+            }
 
             $movie_genres = [
                 'all' => 'All Genres',
@@ -91,13 +98,16 @@ class HomeController extends Controller
             ];
             $selected_time_period= $time_period;
 
+            $selected_english_only= $english_only;
+
         return view('home', [
-            "user" => $user, 
-            "movies" => $movies, 
-            "genres" => $movie_genres, 
-            'selectedGenre' => $selected_genre,
-            "timePeriods" => $time_periods,
-            'selectedTimePeriod' => $selected_time_period,
+                "user" => $user, 
+                "movies" => $movies, 
+                "genres" => $movie_genres, 
+                "selectedGenre" => $selected_genre,
+                "timePeriods" => $time_periods,
+                "selectedTimePeriod" => $selected_time_period,
+                "selectedEnglishOnly" => $selected_english_only
             ]
         );
     }

@@ -3,8 +3,9 @@
         <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
             <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small})` }">
                 <h4>{{ movie.name }}</h4>
-                <div class="rank">
-                    <span>{{ movie.rank}}</span>
+                <div class="rank" :class="{ rounded: (movie.index==movie.rank) }">
+                    <span class="filtered_rank">{{ movie.index }}</span>
+                    <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
                 </div>
                 <div class="rating">
                     <i class="fa fa-star star"></i>
@@ -120,18 +121,31 @@
 
     .movieCard .rank{
         background-color:white;
-        border-radius:22px;
         position:absolute;
+        border-radius:8px;
         text-align:center;
         left:10px;
         top:9px;
         min-width:40px;
         border:1px solid black;
+        padding-left:5px;
+        padding-right:5px;
+    }
+    .movieCard .rank.rounded{
+        border-radius:22px!important;
     }
 
-    .movieCard .rank span{
+    .movieCard .rank .filtered_rank{
         color:black;
         font-size:25px;
+    }
+
+    .movieCard .rank .actual_rank{
+        font-size:12px;
+        color:grey;
+        display:block;
+        margin-top:-9px;
+        padding-bottom:3px;
     }
 
     .movieCard .rating{
