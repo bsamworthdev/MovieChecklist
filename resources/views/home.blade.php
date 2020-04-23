@@ -9,7 +9,14 @@
                     <h4>
                         My List 
                         <form id="movie_form">
-                            <select id="movie_select" class="form-select" onchange="return changeGenre();">
+                            <select id="time_period_select" class="form-select" onchange="return changeSelect();">
+                                @foreach ($timePeriods as $key => $value)
+                                    <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
+                                        {{ $value }} 
+                                    </option>
+                                @endforeach    
+                            </select>
+                            <select id="genre_select" class="form-select" onchange="return changeSelect();">
                                 @foreach ($genres as $key => $value)
                                     <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
                                         {{ $value }} 
@@ -51,10 +58,11 @@
         }
     }
 
-    function changeGenre() {
+    function changeSelect() {
         var form = document.getElementById('movie_form');
-        var select = document.getElementById('movie_select');
-        form.setAttribute('action', '/home/' + select.value + '/');
+        var timePeriodSelect = document.getElementById('time_period_select');
+        var genreSelect = document.getElementById('genre_select');
+        form.setAttribute('action', '/home/' + genreSelect.value + '/' + timePeriodSelect.value + '/');
         form.submit();
     }
 

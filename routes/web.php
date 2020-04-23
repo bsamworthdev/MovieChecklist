@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home/{genre?}', 'HomeController@index')->name('home');
+Route::get('/home/{genre?}/{time_period?}', 'HomeController@index')->name('home');
 Route::post('/updatemovies', 'MovieController@updateMovies');
 Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
 Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');

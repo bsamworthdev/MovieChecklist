@@ -85,7 +85,6 @@
                 } else {
                     this.watchedMoviesCount--;
                 }
-                //this.$forceUpdate();
             },
             pickMovie() {
 

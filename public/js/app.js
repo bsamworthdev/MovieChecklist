@@ -2235,8 +2235,7 @@ __webpack_require__.r(__webpack_exports__);
         this.watchedMoviesCount++;
       } else {
         this.watchedMoviesCount--;
-      } //this.$forceUpdate();
-
+      }
     },
     pickMovie: function pickMovie() {
       var unwatchedMovies = this.movies.filter(function (el) {
