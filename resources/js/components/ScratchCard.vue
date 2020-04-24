@@ -7,12 +7,11 @@
                     <span class="filtered_rank">{{ movie.index }}</span>
                     <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
                 </div>
-                <div v-if="hasWatched" 
-                        class="favourite"
-                        :class="{ selected: (movie.isFavourite==1), active: favouriteHover }" 
+                <div class="favourite"
+                        :class="{ selected: isFavourite, hovering: favouriteHover }" 
                         @mouseover="favouriteHover = true"
                         @mouseleave="favouriteHover = false"
-                        @click="toggleIsFavourite(event)">
+                        @click="toggleIsFavourite($event)">
                     <i class="fa fa-heart heart filled"></i>
                     <i class="far fa-heart heart outline"></i>
                 </div>
@@ -57,22 +56,18 @@
             },
             toggleIsFavourite(e){
                 e.stopPropagation();
-                axios.post('/setFavourite',{
+                axios.post('/setMovieAsFavourite',{
                     movie_id:this.movie.id,
-                    is_favourite:!this.isFavourite                    
+                    favourite:!this.isFavourite                    
                 })
                 .then((response) => {
                     this.isFavourite = !this.isFavourite;
-                    this.movieFavouriteChanged();
                     console.log(response);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
             },
-            movieFavouriteChanged() {
-                this.$emit('movieFavouriteChanged', this.isFavourite);
-            }
         },
         computed: {
             ratingShort: function (){
@@ -86,6 +81,7 @@
         data() {
             return {
                 hasWatched: (this.movie.watched == 1),
+                isFavourite: (this.movie.favourite == 1),
                 favouriteHover: false
             }
         },
@@ -186,9 +182,8 @@
     .movieCard .favourite{
         opacity:0.4;
         position:absolute;
-        text-align:center;
-        left:10px;
-        top:67px;
+        left:15px;
+        top:65px;
         min-width:40px;
     }
 
@@ -196,19 +191,27 @@
         opacity:1!important;
     }
 
-    .movieCard .favourite.active .heart.outline{
+    .movieCard .favourite.hovering .heart.outline{
         display:none;
     }
 
-    .movieCard .favourite.active .heart.filled{
+    .movieCard .favourite.hovering .heart.filled{
         display:block;
     }
 
-    .movieCard .favourite:not(.active) .heart.outline{
+    .movieCard .favourite.selected .heart.outline{
+        display:none;
+    }
+
+    .movieCard .favourite.selected .heart.filled{
         display:block;
     }
 
-    .movieCard .favourite:not(.active) .heart.filled{
+    .movieCard .favourite:not(.hovering):not(.selected) .heart.outline{
+        display:block;
+    }
+
+    .movieCard .favourite:not(.hovering):not(.selected) .heart.filled{
         display:none;
     }
 
@@ -252,7 +255,7 @@
     .heart{
         position:absolute;
         color:red;
-        font-size:41px;
+        font-size:31px;
     }
 
     @media only screen and (max-device-width: 800px){

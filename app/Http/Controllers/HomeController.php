@@ -57,7 +57,7 @@ class HomeController extends Controller
             ->get([
                 'movies.*', 
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
-                DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as isFavourite')
+                DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite')
             ]);
         
             $count = 1;
@@ -140,7 +140,7 @@ class HomeController extends Controller
                 $yearTo = '1999';
                 break;
             case '80s':
-                $yearFrom = '1990';
+                $yearFrom = '1980';
                 $yearTo = '1989';
                 break;
             case '70s':

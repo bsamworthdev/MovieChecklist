@@ -33,12 +33,12 @@ class UserController extends Controller
     {
         $user_id = Auth::user()->id;
         $movie_id = $request->movie_id;
-        
-        if ($request->isFavourite){
-            DB::statement("update movie_user set favourite=1 where user_id=$user_id and movie_id=$movie_id");
+
+        if ($request->favourite){
+            DB::update("update movie_user set favourite=1 where user_id=? and movie_id=?", [$user_id, $movie_id]);
             // DB::insert('insert into users (email, votes) values (?, ?)', ['john@example.com', '0']);
         } else {
-            DB::statement("update movie_user set favourite=0 where user_id=$user_id and movie_id=$movie_id");
+            DB::update("update movie_user set favourite=0 where user_id=? and movie_id=?", [$user_id, $movie_id]);
         }
     }
 }
