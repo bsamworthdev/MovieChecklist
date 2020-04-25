@@ -24,15 +24,6 @@
                                                 </label>
                                             </div>
                                             <div class="col-lg-3 col-12">
-                                                <label>
-                                                    <i class="fa fa-heart heart"></i>
-                                                    Favourites
-                                                    <span class="nowrap">
-                                                        Only <input type="checkbox" class="form-input" id="favourites_only_checkbox" {{( $selectedFavouritesOnly ? "checked" : '')}} onchange="return changeSelection();">
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            <div class="col-lg-3 col-12">
                                                 <select id="time_period_select" class="form-select" onchange="return changeSelection();">
                                                     @foreach ($timePeriods as $key => $value)
                                                         <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
@@ -49,6 +40,35 @@
                                                         </option>
                                                     @endforeach    
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-12"></div>
+                                            <div class="col-lg-3 col-12">
+                                                <label>
+                                                    <i class="fa fa-heart heart"></i>
+                                                    <span class="nowrap">
+                                                        Favourites
+                                                        <input type="checkbox" 
+                                                            class="form-input" 
+                                                            id="favourites_only_checkbox" 
+                                                            {{( $selectedFavouritesOnly ? "checked" : '')}} 
+                                                            onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3 col-12">
+                                                <label>
+                                                    <img class="netflix_logo" src="/images/netflix.jpg">
+                                                    <span class="nowrap">
+                                                        Netflix
+                                                        <input type="checkbox" 
+                                                            class="form-input" 
+                                                            id="netflix_only_checkbox" 
+                                                            {{( $selectedNetflixOnly ? "checked" : '')}} 
+                                                            onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -93,12 +113,14 @@
         var form = document.getElementById('movie_form');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
+        var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         form.setAttribute('action', '/home/' + genreSelect.value + 
             '/' + timePeriodSelect.value + 
             '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
             '/');
         form.submit();
     }
@@ -150,5 +172,9 @@
     .heart{
         color:red;
         font-size:17px;
+    }
+    .netflix_logo{
+        width:20px;
+        height:20px;
     }
 </style>

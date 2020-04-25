@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $favourites_only = 0)
+    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $favourites_only = 0, $netflix_only = 0)
     {
 
         $user = Auth::user();
@@ -106,8 +106,9 @@ class HomeController extends Controller
             ];
             $selected_time_period= $time_period;
 
-            $selected_english_only= $english_only;
-            $selected_favourites_only= $favourites_only;
+            $selected_english_only = $english_only;
+            $selected_favourites_only = $favourites_only;
+            $selected_netflix_only = $netflix_only;
 
         return view('home', [
                 "user" => $user, 
