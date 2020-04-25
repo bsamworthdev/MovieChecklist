@@ -15,7 +15,6 @@ class UpdateMoviesTableAddColumnNetflix extends Migration
     {
         Schema::table('movies', function (Blueprint $table) {
             $table->tinyInteger('amazon')->default(0)->nullable()->after('year');
-            $table->tinyInteger('netflix')->default(0)->nullable()->after('year');
         });
     }
 
@@ -28,7 +27,6 @@ class UpdateMoviesTableAddColumnNetflix extends Migration
     {
         Schema::table('movies', function (Blueprint $table) {
             $table->dropColumn('amazon');
-            $table->dropColumn('netflix');
         });
     }
 }
