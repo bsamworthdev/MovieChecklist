@@ -58,6 +58,9 @@ class HomeController extends Controller
             ->when($favourites_only == 1, function ($q) {
                 return $q->where('movie_user.favourite', '=', '1');
             })
+            ->when($netflix_only == 1, function ($q) {
+                return $q->where('netflix.on_netflix', '=', '1');
+            })
             ->orderBy('rank','ASC')
             ->take(100)
             ->get([
@@ -118,7 +121,8 @@ class HomeController extends Controller
                 "timePeriods" => $time_periods,
                 "selectedTimePeriod" => $selected_time_period,
                 "selectedEnglishOnly" => $selected_english_only,
-                "selectedFavouritesOnly" => $selected_favourites_only
+                "selectedFavouritesOnly" => $selected_favourites_only,
+                "selectedNetflixOnly" => $selected_netflix_only
             ]
         );
     }

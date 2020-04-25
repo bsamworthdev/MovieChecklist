@@ -15,7 +15,7 @@
                                 <form id="movie_form">
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-lg-3 col-12">
+                                            <div class="col-lg-4 col-12">
                                                 <label>
                                                     English 
                                                     <span class="nowrap">
@@ -23,7 +23,7 @@
                                                     </span>
                                                 </label>
                                             </div>
-                                            <div class="col-lg-3 col-12">
+                                            <div class="col-lg-4 col-12">
                                                 <select id="time_period_select" class="form-select" onchange="return changeSelection();">
                                                     @foreach ($timePeriods as $key => $value)
                                                         <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
@@ -32,7 +32,7 @@
                                                     @endforeach    
                                                 </select>
                                             </div>
-                                            <div class="col-lg-3 col-12">
+                                            <div class="col-lg-4 col-12">
                                                 <select id="genre_select" class="form-select" onchange="return changeSelection();">
                                                     @foreach ($genres as $key => $value)
                                                         <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
