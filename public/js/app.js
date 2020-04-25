@@ -38681,32 +38681,34 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "favourite",
-                class: {
-                  selected: _vm.isFavourite,
-                  hovering: _vm.favouriteHover
-                },
-                on: {
-                  mouseover: function($event) {
-                    _vm.favouriteHover = true
+            _vm.hasWatched
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "favourite",
+                    class: {
+                      selected: _vm.isFavourite,
+                      hovering: _vm.favouriteHover
+                    },
+                    on: {
+                      mouseover: function($event) {
+                        _vm.favouriteHover = true
+                      },
+                      mouseleave: function($event) {
+                        _vm.favouriteHover = false
+                      },
+                      click: function($event) {
+                        return _vm.toggleIsFavourite($event)
+                      }
+                    }
                   },
-                  mouseleave: function($event) {
-                    _vm.favouriteHover = false
-                  },
-                  click: function($event) {
-                    return _vm.toggleIsFavourite($event)
-                  }
-                }
-              },
-              [
-                _c("i", { staticClass: "fa fa-heart heart filled" }),
-                _vm._v(" "),
-                _c("i", { staticClass: "far fa-heart heart outline" })
-              ]
-            ),
+                  [
+                    _c("i", { staticClass: "fa fa-heart heart filled" }),
+                    _vm._v(" "),
+                    _c("i", { staticClass: "far fa-heart heart outline" })
+                  ]
+                )
+              : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "rating" }, [
               _c("i", { staticClass: "fa fa-star star" }),

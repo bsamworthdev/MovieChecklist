@@ -8,17 +8,28 @@
                 <div class="card-header">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-5 col-3">
+                            <div class="col-lg-3 col-3">
                                 <div id="title">My List</div> 
                             </div>
-                            <div class="col-lg-7 col-9">
+                            <div class="col-lg-9 col-9">
                                 <form id="movie_form">
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-lg-6 col-12">
+                                            <div class="col-lg-3 col-12">
                                                 <label>
-                                                    English Language Only
-                                                    <input type="checkbox" class="form-input" id="english_only_checkbox" {{( $selectedEnglishOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                    English 
+                                                    <span class="nowrap">
+                                                        Only <input type="checkbox" class="form-input" id="english_only_checkbox" {{( $selectedEnglishOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3 col-12">
+                                                <label>
+                                                    <i class="fa fa-heart heart"></i>
+                                                    Favourites
+                                                    <span class="nowrap">
+                                                        Only <input type="checkbox" class="form-input" id="favourites_only_checkbox" {{( $selectedFavouritesOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                    </span>
                                                 </label>
                                             </div>
                                             <div class="col-lg-3 col-12">
@@ -81,9 +92,14 @@
     function changeSelection() {
         var form = document.getElementById('movie_form');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
+        var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
-        form.setAttribute('action', '/home/' + genreSelect.value + '/' + timePeriodSelect.value + '/' + (englishOnlyCheckbox.checked ? '1' : '0') + '/');
+        form.setAttribute('action', '/home/' + genreSelect.value + 
+            '/' + timePeriodSelect.value + 
+            '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
+            '/');
         form.submit();
     }
 
@@ -127,5 +143,12 @@
 
     #topButton:hover {
         background-color: #555; /* Add a dark-grey background on hover */
+    }
+    .nowrap {
+        white-space:nowrap;
+    }
+    .heart{
+        color:red;
+        font-size:17px;
     }
 </style>

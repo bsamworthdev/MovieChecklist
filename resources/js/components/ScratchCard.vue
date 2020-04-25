@@ -7,7 +7,7 @@
                     <span class="filtered_rank">{{ movie.index }}</span>
                     <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
                 </div>
-                <div class="favourite"
+                <div v-if="hasWatched" class="favourite"
                         :class="{ selected: isFavourite, hovering: favouriteHover }" 
                         @mouseover="favouriteHover = true"
                         @mouseleave="favouriteHover = false"

@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($genre = 'all', $time_period = 'all', $english_only = 0)
+    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $favourites_only = 0)
     {
 
         //  Movie::all();
@@ -51,6 +51,9 @@ class HomeController extends Controller
             })
             ->when($english_only == 1, function ($q) {
                 return $q->where('movies.language', '=', 'english');
+            })
+            ->when($favourites_only == 1, function ($q) {
+                return $q->where('movie_user.favourite', '=', '1');
             })
             ->orderBy('rank','ASC')
             ->take(100)
@@ -100,6 +103,7 @@ class HomeController extends Controller
             $selected_time_period= $time_period;
 
             $selected_english_only= $english_only;
+            $selected_favourites_only= $favourites_only;
 
         return view('home', [
                 "user" => $user, 
@@ -108,7 +112,8 @@ class HomeController extends Controller
                 "selectedGenre" => $selected_genre,
                 "timePeriods" => $time_periods,
                 "selectedTimePeriod" => $selected_time_period,
-                "selectedEnglishOnly" => $selected_english_only
+                "selectedEnglishOnly" => $selected_english_only,
+                "selectedFavouritesOnly" => $selected_favourites_only
             ]
         );
     }
