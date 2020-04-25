@@ -94,4 +94,34 @@ class MovieController extends Controller
             }
         }
     }
+
+    function updateNetflixStatuses(){
+        // $oneWeekAgo = \Carbon\Carbon::today()->subWeek();
+        // $movies = Movie::where('updated_at', '<', $oneWeekAgo)->get();
+        $movies = Movie::all();
+        foreach($movies as $movie) {
+
+            $url = 'https://uk.newonnetflix.info/catalogue/search/'.$movie->name.'#results';
+
+            $dom = new \DOMDocument;
+            @$dom->loadHTMLFile($url);
+            $dom->preserveWhiteSpace = false;
+            
+            $xpath = new \DOMXpath($dom);
+
+            //Create node lists
+            $nl_matches = $xpath->query('//article[contains(@class, "oldpost")]//a[contains(@class, "infopop")]//img/@alt');
+
+            $exists = 0;
+            for($i = 0; $i < count($nl_matches); $i++) {
+                if (strtolower($nl_matches->item($i)->nodeValue) == strtolower($movie->name)) {
+                    $exists = 1;
+                    break;
+                }
+            }
+            DB::insert("INSERT INTO netflix (movie_id, on_netflix, created_at, updated_at) 
+                VALUES ($movie->id, $exists, NOW(), NOW())
+                ON DUPLICATE KEY UPDATE on_netflix=$exists, updated_at=NOW()");
+        }
+    }
 }

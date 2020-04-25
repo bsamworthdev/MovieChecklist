@@ -28,16 +28,19 @@ class HomeController extends Controller
     public function index($genre = 'all', $time_period = 'all', $english_only = 0, $favourites_only = 0)
     {
 
-        //  Movie::all();
         $user = Auth::user();
         $user_id = $user->id;
 
         $movies = DB::table('movies')
+            ->leftJoin('netflix', function($join)
+            {
+                $join->on('netflix.movie_id', '=', 'movies.id');
+            })
             ->leftJoin('movie_user', function($join) use ($user_id)
-                {
-                    $join->on('movie_user.movie_id', '=', 'movies.id');
-                    $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
-                })
+            {
+                $join->on('movie_user.movie_id', '=', 'movies.id');
+                $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
+            })
             ->where(function ($q) use ($user_id) {
                 return $q->where('movie_user.user_id', '=', $user_id)
                         ->orWhere('movie_user.user_id', '=', NULL);
@@ -59,6 +62,7 @@ class HomeController extends Controller
             ->take(100)
             ->get([
                 'movies.*', 
+                DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
                 DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite')
             ]);

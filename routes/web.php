@@ -23,6 +23,8 @@ Route::get('/home/{genre?}/{time_period?}/{english_only?}/{favourites_only?}', '
 Route::post('/updatemovies', 'MovieController@updateMovies');
 Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
 Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');
+Route::post('/updatenetflixstatuses', 'MovieController@updateNetflixStatuses');
+
 Route::post('/saveMovieUser', 'UserController@saveMovieUser');
 Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');
 

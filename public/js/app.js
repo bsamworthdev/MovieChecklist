@@ -2209,6 +2209,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2249,6 +2251,13 @@ __webpack_require__.r(__webpack_exports__);
     updateSavedMovieImages: function updateSavedMovieImages() {
       axios.post('/updatesavedmovieimages').then(function (response) {
         console.log('movie saved images updated successfully');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    updateNetflixStatuses: function updateNetflixStatuses() {
+      axios.post('/updatenetflixstatuses').then(function (response) {
+        console.log('netflix statuses updated successfully');
       })["catch"](function (error) {
         console.log(error);
       });
@@ -38717,7 +38726,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "platforms" }, [
-              _vm.movie.netflix
+              _vm.movie.on_netflix == 1
                 ? _c("div", {
                     staticClass: "platform netflix",
                     attrs: { title: "On netflix" }
@@ -38801,6 +38810,17 @@ var render = function() {
                   on: { click: _vm.updateSavedMovieImages }
                 },
                 [_vm._v("Update Saved Movie Images")]
+              ),
+              _vm._v(" "),
+              _c("span", { staticClass: "btn-separator" }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  on: { click: _vm.updateNetflixStatuses }
+                },
+                [_vm._v("Get latest Netflix statuses")]
               )
             ])
           : _vm._e(),

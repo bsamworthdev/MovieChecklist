@@ -20,7 +20,7 @@
                     <span>{{ ratingShort }}</span>
                 </div>
                  <div class="platforms">
-                    <div v-if="movie.netflix" class="platform netflix" title="On netflix"></div>
+                    <div v-if="movie.on_netflix == 1" class="platform netflix" title="On netflix"></div>
                     <div v-if="movie.amazon" class="platform amazon" title="On amazon video"></div>
                 </div>
                 <div class="tickContainer">

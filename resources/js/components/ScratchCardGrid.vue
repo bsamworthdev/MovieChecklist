@@ -7,6 +7,8 @@
                 <button class="btn btn-success" @click="updateMovieImages">Update Movie Images</button>
                 <span class="btn-separator"></span>
                 <button class="btn btn-success" @click="updateSavedMovieImages">Update Saved Movie Images</button>
+                <span class="btn-separator"></span>
+                <button class="btn btn-success" @click="updateNetflixStatuses">Get latest Netflix statuses</button>
             </div>
              <div class="col-sm-12">
                 <h4>Hi {{ user.name }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ movies.length }}</b> movies.</h4>
@@ -73,6 +75,15 @@
                 axios.post('/updatesavedmovieimages')
                 .then((response) => {
                     console.log('movie saved images updated successfully');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
+            updateNetflixStatuses(){
+                axios.post('/updatenetflixstatuses')
+                .then((response) => {
+                    console.log('netflix statuses updated successfully');
                 })
                 .catch((error) => {
                     console.log(error);
