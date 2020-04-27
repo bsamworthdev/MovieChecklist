@@ -63,8 +63,10 @@ class HomeController extends Controller
                 return $q->where('movie_user.favourite', '=', '1');
             })
             ->when(($netflix_only == 1 && $amazon_only == 1), function ($q) {
-                return $q->where('netflix.on_netflix', '=', '1')
+                return $q->where(function ($q) {
+                    $q->where('netflix.on_netflix', '=', '1')
                     ->orWhere('amazon.on_amazon', '=', '1');
+                });
             })
             ->when(($netflix_only == 1 && $amazon_only == 0), function ($q) {
                 return $q->where('netflix.on_netflix', '=', '1');
