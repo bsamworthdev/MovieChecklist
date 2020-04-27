@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $favourites_only = 0, $netflix_only = 0)
+    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0)
     {
 
         $user = Auth::user();
@@ -35,6 +35,10 @@ class HomeController extends Controller
             ->leftJoin('netflix', function($join)
             {
                 $join->on('netflix.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('amazon', function($join)
+            {
+                $join->on('amazon.movie_id', '=', 'movies.id');
             })
             ->leftJoin('movie_user', function($join) use ($user_id)
             {
@@ -58,14 +62,22 @@ class HomeController extends Controller
             ->when($favourites_only == 1, function ($q) {
                 return $q->where('movie_user.favourite', '=', '1');
             })
-            ->when($netflix_only == 1, function ($q) {
+            ->when(($netflix_only == 1 && $amazon_only == 1), function ($q) {
+                return $q->where('netflix.on_netflix', '=', '1')
+                    ->orWhere('amazon.on_amazon', '=', '1');
+            })
+            ->when(($netflix_only == 1 && $amazon_only == 0), function ($q) {
                 return $q->where('netflix.on_netflix', '=', '1');
+            })
+            ->when(($netflix_only == 0 && $amazon_only == 1), function ($q) {
+                return $q->where('amazon.on_amazon', '=', '1');
             })
             ->orderBy('rank','ASC')
             ->take(100)
             ->get([
                 'movies.*', 
                 DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
+                DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
                 DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite')
             ]);
@@ -112,6 +124,7 @@ class HomeController extends Controller
             $selected_english_only = $english_only;
             $selected_favourites_only = $favourites_only;
             $selected_netflix_only = $netflix_only;
+            $selected_amazon_only = $amazon_only;
 
         return view('home', [
                 "user" => $user, 
@@ -122,7 +135,8 @@ class HomeController extends Controller
                 "selectedTimePeriod" => $selected_time_period,
                 "selectedEnglishOnly" => $selected_english_only,
                 "selectedFavouritesOnly" => $selected_favourites_only,
-                "selectedNetflixOnly" => $selected_netflix_only
+                "selectedNetflixOnly" => $selected_netflix_only,
+                "selectedAmazonOnly" => $selected_amazon_only
             ]
         );
     }

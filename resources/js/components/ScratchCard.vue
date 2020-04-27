@@ -21,7 +21,7 @@
                 </div>
                  <div class="platforms">
                     <div v-if="movie.on_netflix == 1" class="platform netflix" title="On netflix"></div>
-                    <div v-if="movie.amazon" class="platform amazon" title="On amazon video"></div>
+                    <div v-if="movie.on_amazon  == 1" class="platform amazon" title="On amazon video"></div>
                 </div>
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>

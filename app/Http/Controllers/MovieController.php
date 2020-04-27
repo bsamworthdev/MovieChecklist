@@ -124,4 +124,61 @@ class MovieController extends Controller
                 ON DUPLICATE KEY UPDATE on_netflix=$exists, updated_at=NOW()");
         }
     }
+    function updateAmazonStatuses(){
+        // $oneWeekAgo = \Carbon\Carbon::today()->subWeek();
+        // $movies = Movie::where('updated_at', '<', $oneWeekAgo)->get();
+        
+        $url = 'https://www.finder.com/uk/amazon-prime-movies';
+
+        $dom = new \DOMDocument;
+        @$dom->loadHTMLFile($url);
+        $dom->preserveWhiteSpace = false;
+        
+        $xpath = new \DOMXpath($dom);
+        
+        $nl_names = $xpath->query('//table[contains(@class, "custom-table")]//tr//td/text()');
+
+        for($i = 0; $i < count($nl_names); $i++) {
+            $movies = Movie::where('name', '=', $nl_names->item($i)->nodeValue)->get();
+
+            if ( count($movies) > 0){
+                DB::insert("INSERT INTO amazon (movie_id, on_amazon, created_at, updated_at) 
+                    VALUES (".$movies->first()->id.", '1', NOW(), NOW())
+                    ON DUPLICATE KEY UPDATE on_amazon='1', updated_at=NOW()");
+            }
+        }
+        
+        //foreach($movies as $movie) {
+
+            // $url = 'https://www.justwatch.com/uk/search?providers=amp&content_type=movie&q='.$movie->name;
+            //$url = 'https://www.justwatch.com/uk/search?providers=amp&content_type=movie&q=Jurassic%20Park';
+            // $url = 'https://www.finder.com/uk/amazon-prime-movies';
+
+            // $dom = new \DOMDocument;
+            // @$dom->loadHTMLFile($url);
+            // $dom->preserveWhiteSpace = false;
+            
+            // $xpath = new \DOMXpath($dom);
+
+            //Create node lists
+            // $nl_matches = $xpath->query('//*[contains(@class, "title-list-row__row")]');
+            // $nl_matches_titles = $xpath->query('//*[contains(@class, "title-list-row__row")]//span[contains(@class, "title-list-row__row__title")]');
+            // $nl_matches_years = $xpath->query('//*[contains(@class, "title-list-row__row")]//span[contains(@class, "title-list-row__row--muted")]');
+
+            // $exists = 0;
+            // for($i = 0; $i < count($nl_matches); $i++) {
+            //     if (strtolower($nl_matches_titles->item($i)->nodeValue) == strtolower($movie->name)) {
+            //         if ($nl_matches_years->item($i)->nodeValue == $movie->year) {
+            //             $exists = 1;
+            //             break;
+            //         }
+            //     }
+            // }
+
+            // DB::insert("INSERT INTO amazon (movie_id, on_amazon, created_at, updated_at) 
+            //     VALUES ($movie->id, $exists, NOW(), NOW())
+            //     ON DUPLICATE KEY UPDATE on_amazon=$exists, updated_at=NOW()");
+        //}
+    }
+    
 }

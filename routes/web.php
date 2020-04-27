@@ -19,11 +19,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home/{genre?}/{time_period?}/{english_only?}/{favourites_only?}/{netflix_only?}', 'HomeController@index')->name('home');
+Route::get('/home/{genre?}/{time_period?}/{english_only?}/{favourites_only?}/{netflix_only?}/{amazon_only?}', 'HomeController@index')->name('home');
 Route::post('/updatemovies', 'MovieController@updateMovies');
 Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
 Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');
 Route::post('/updatenetflixstatuses', 'MovieController@updateNetflixStatuses');
+Route::post('/updateamazonstatuses', 'MovieController@updateAmazonStatuses');
 
 Route::post('/saveMovieUser', 'UserController@saveMovieUser');
 Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');

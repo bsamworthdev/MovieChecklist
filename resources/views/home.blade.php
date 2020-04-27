@@ -43,7 +43,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-6 col-12"></div>
+                                            <div class="col-lg-3 col-12"></div>
                                             <div class="col-lg-3 col-12">
                                                 <label>
                                                     <i class="fa fa-heart heart"></i>
@@ -66,6 +66,19 @@
                                                             class="form-input" 
                                                             id="netflix_only_checkbox" 
                                                             {{( $selectedNetflixOnly ? "checked" : '')}} 
+                                                            onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-3 col-12">
+                                                <label>
+                                                    <img class="amazon_logo" src="/images/amazon.jpeg">
+                                                    <span class="nowrap">
+                                                        Amazon
+                                                        <input type="checkbox" 
+                                                            class="form-input" 
+                                                            id="amazon_only_checkbox" 
+                                                            {{( $selectedAmazonOnly ? "checked" : '')}} 
                                                             onchange="return changeSelection();">
                                                     </span>
                                                 </label>
@@ -114,6 +127,7 @@
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
         var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
+        var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         form.setAttribute('action', '/home/' + genreSelect.value + 
@@ -121,6 +135,7 @@
             '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
             '/');
         form.submit();
     }
@@ -173,7 +188,7 @@
         color:red;
         font-size:17px;
     }
-    .netflix_logo{
+    .netflix_logo, .amazon_logo{
         width:20px;
         height:20px;
     }

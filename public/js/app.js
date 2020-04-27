@@ -2211,6 +2211,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2258,6 +2260,13 @@ __webpack_require__.r(__webpack_exports__);
     updateNetflixStatuses: function updateNetflixStatuses() {
       axios.post('/updatenetflixstatuses').then(function (response) {
         console.log('netflix statuses updated successfully');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    updateAmazonStatuses: function updateAmazonStatuses() {
+      axios.post('/updateamazonstatuses').then(function (response) {
+        console.log('amazon statuses updated successfully');
       })["catch"](function (error) {
         console.log(error);
       });
@@ -38733,7 +38742,7 @@ var render = function() {
                   })
                 : _vm._e(),
               _vm._v(" "),
-              _vm.movie.amazon
+              _vm.movie.on_amazon == 1
                 ? _c("div", {
                     staticClass: "platform amazon",
                     attrs: { title: "On amazon video" }
@@ -38821,6 +38830,17 @@ var render = function() {
                   on: { click: _vm.updateNetflixStatuses }
                 },
                 [_vm._v("Get latest Netflix statuses")]
+              ),
+              _vm._v(" "),
+              _c("span", { staticClass: "btn-separator" }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  on: { click: _vm.updateAmazonStatuses }
+                },
+                [_vm._v("Get latest Amazon statuses")]
               )
             ])
           : _vm._e(),
