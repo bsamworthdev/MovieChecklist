@@ -15,35 +15,6 @@
                                 <form id="movie_form">
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-lg-4 col-12">
-                                                <label>
-                                                    English 
-                                                    <span class="nowrap">
-                                                        Only <input type="checkbox" class="form-input" id="english_only_checkbox" {{( $selectedEnglishOnly ? "checked" : '')}} onchange="return changeSelection();">
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            <div class="col-lg-4 col-12">
-                                                <select id="time_period_select" class="form-select" onchange="return changeSelection();">
-                                                    @foreach ($timePeriods as $key => $value)
-                                                        <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
-                                                            {{ $value }} 
-                                                        </option>
-                                                    @endforeach    
-                                                </select>
-                                            </div>
-                                            <div class="col-lg-4 col-12">
-                                                <select id="genre_select" class="form-select" onchange="return changeSelection();">
-                                                    @foreach ($genres as $key => $value)
-                                                        <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
-                                                            {{ $value }} 
-                                                        </option>
-                                                    @endforeach    
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-3 col-12"></div>
                                             <div class="col-lg-3 col-12">
                                                 <label>
                                                     <i class="fa fa-heart heart"></i>
@@ -59,29 +30,56 @@
                                             </div>
                                             <div class="col-lg-3 col-12">
                                                 <label>
-                                                    <img class="netflix_logo" src="/images/netflix.jpg">
+                                                    English 
                                                     <span class="nowrap">
-                                                        Netflix
-                                                        <input type="checkbox" 
-                                                            class="form-input" 
-                                                            id="netflix_only_checkbox" 
-                                                            {{( $selectedNetflixOnly ? "checked" : '')}} 
-                                                            onchange="return changeSelection();">
+                                                        Only <input type="checkbox" class="form-input" id="english_only_checkbox" {{( $selectedEnglishOnly ? "checked" : '')}} onchange="return changeSelection();">
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="col-lg-3 col-12">
-                                                <label>
-                                                    <img class="amazon_logo" src="/images/amazon.jpeg">
-                                                    <span class="nowrap">
-                                                        Amazon
-                                                        <input type="checkbox" 
-                                                            class="form-input" 
-                                                            id="amazon_only_checkbox" 
-                                                            {{( $selectedAmazonOnly ? "checked" : '')}} 
-                                                            onchange="return changeSelection();">
-                                                    </span>
-                                                </label>
+                                                <select id="time_period_select" class="form-select" onchange="return changeSelection();">
+                                                    @foreach ($timePeriods as $key => $value)
+                                                        <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
+                                                            {{ $value }} 
+                                                        </option>
+                                                    @endforeach    
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-12">
+                                                <select id="genre_select" class="form-select" onchange="return changeSelection();">
+                                                    @foreach ($genres as $key => $value)
+                                                        <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
+                                                            {{ $value }} 
+                                                        </option>
+                                                    @endforeach    
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-12"></div>
+                                            <div class="col-lg-6 col-12">
+                                                <div class="card" id="streamCard">
+                                                    <label>
+                                                        Streams:
+                                                        <span class="nowrap">
+                                                            <img class="netflix_logo" src="/images/netflix.jpg">
+                                                            <input type="checkbox" 
+                                                                class="form-input" 
+                                                                id="netflix_only_checkbox" 
+                                                                {{( $selectedNetflixOnly ? "checked" : '')}} 
+                                                                onchange="return changeSelection();">
+                                                        </span>
+                                                        &nbsp;&nbsp;
+                                                        <span class="nowrap">
+                                                            <img class="amazon_logo" src="/images/amazon.jpeg">
+                                                            <input type="checkbox" 
+                                                                class="form-input" 
+                                                                id="amazon_only_checkbox" 
+                                                                {{( $selectedAmazonOnly ? "checked" : '')}} 
+                                                                onchange="return changeSelection();">
+                                                        </span>
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -153,7 +151,7 @@
         text-align:left;
     }
     #movie_form select{
-        min-width:95%;
+        width:100%;
     }
     #title{
         font-size:22px;
@@ -191,5 +189,14 @@
     .netflix_logo, .amazon_logo{
         width:20px;
         height:20px;
+    }
+    #streamCard{
+        text-align:center;
+        padding:5px;
+        background-color:#d8d8d8;
+        margin-top:4px;
+    }
+    #streamCard label{
+        margin-bottom:0px;
     }
 </style>

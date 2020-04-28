@@ -119,9 +119,15 @@ class MovieController extends Controller
                     break;
                 }
             }
-            DB::insert("INSERT INTO netflix (movie_id, on_netflix, created_at, updated_at) 
-                VALUES ($movie->id, $exists, NOW(), NOW())
-                ON DUPLICATE KEY UPDATE on_netflix=$exists, updated_at=NOW()");
+
+            $movies_id_db =  Movie::where('imdb_id', '=', $movie->imdb_id)->get();
+            if (count($movies_id_db) == 0) {
+                DB::insert("INSERT INTO netflix (movie_id, on_netflix, created_at, updated_at) 
+                VALUES ($movie->id, $exists, NOW(), NOW())");
+            } else {
+                DB::update("UPDATE netflix SET on_netflix=$exists, updated_at=NOW() 
+                WHERE id=".$movies_id_db->first()->id);
+            }
         }
     }
     function updateAmazonStatuses(){
