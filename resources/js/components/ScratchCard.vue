@@ -26,7 +26,7 @@
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
                 </div>
-            <div v-if="user.role=='admin'" class="btn-group col-12 edit_buttons">
+            <div v-if="user.role=='editor' || user.role=='admin'" class="btn-group col-12 edit_buttons">
                 <button class="btn btn-success" @click="setMovieStreamStatus($event, 'netflix', '1')">On Netflix</button>
                 <span class="btn-separator"></span>
                 <button class="btn btn-danger" @click="setMovieStreamStatus($event, 'netflix', '0')">Not On Netflix</button>
