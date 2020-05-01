@@ -2105,9 +2105,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    movie: Object
+    movie: Object,
+    user: Object
   },
   methods: {
     toggleWatched: function toggleWatched() {
@@ -2138,6 +2144,18 @@ __webpack_require__.r(__webpack_exports__);
         favourite: !this.isFavourite
       }).then(function (response) {
         _this2.isFavourite = !_this2.isFavourite;
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    setMovieStreamStatus: function setMovieStreamStatus(e, platform, status) {
+      e.stopPropagation();
+      axios.post('/setMovieStreamStatus', {
+        movie_id: this.movie.id,
+        platform: platform,
+        status: status
+      }).then(function (response) {
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
@@ -2178,6 +2196,15 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ScratchCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ScratchCard */ "./resources/js/components/ScratchCard.vue");
 /* harmony import */ var _RandomMovieModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RandomMovieModal */ "./resources/js/components/RandomMovieModal.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6886,7 +6913,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:20px;\n    border: 4px solid #C0C0C0;\n    cursor:pointer;\n    box-shadow:7px 7px #343a40;\n}\n.movieImage h4[data-v-1e6a29e2]{\n    color:black!important;\n    margin-top:40px;\n    position:absolute;\n    color:transparent;\n    background-color:white;\n    opacity:0;\n    width:100%;\n    left:0;\n    bottom:-8px;\n    padding:4px 8px 4px 8px;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-1e6a29e2] {\n    opacity:0.5;\n}\n.tick[data-v-1e6a29e2]{\n    color:green;\n}\n.tickContainer[data-v-1e6a29e2]{\n    position:relative;\n    text-align:center;\n    width:100%;\n}\n.movieCard .movieImage[data-v-1e6a29e2] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.movieCard .movieImage[data-v-1e6a29e2]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-1e6a29e2]:before{\n    background: rgba(0,0,0,0.7);\n}\n.movieCard .rank[data-v-1e6a29e2]{\n    background-color:white;\n    position:absolute;\n    border-radius:8px;\n    text-align:center;\n    left:10px;\n    top:9px;\n    min-width:40px;\n    border:1px solid black;\n    padding-left:5px;\n    padding-right:5px;\n}\n.movieCard .rank.rounded[data-v-1e6a29e2]{\n    border-radius:22px!important;\n}\n.movieCard .rank .filtered_rank[data-v-1e6a29e2]{\n    color:black;\n    font-size:25px;\n}\n.movieCard .rank .actual_rank[data-v-1e6a29e2]{\n    font-size:12px;\n    color:grey;\n    display:block;\n    margin-top:-9px;\n    padding-bottom:3px;\n}\n.movieCard .rating[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:22px;\n    top:9px;\n    min-width:40px;\n}\n.movieCard .favourite[data-v-1e6a29e2]{\n    opacity:0.4;\n    position:absolute;\n    left:15px;\n    top:65px;\n    min-width:40px;\n}\n.movieCard .favourite.selected[data-v-1e6a29e2]{\n    opacity:1!important;\n}\n.movieCard .favourite.hovering .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.hovering .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite.selected .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.selected .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.outline[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.filled[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .platforms[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:6px;\n    top:60px;\n    min-width:40px;\n}\n.movieCard .platform[data-v-1e6a29e2] {\n    width:30px;\n    height:30px;\n    background-size: cover;\n    margin-bottom:6px;\n}\n.movieCard .platform.netflix[data-v-1e6a29e2] {\n    background-image: url('/images/netflix.jpg');\n}\n.movieCard .platform.amazon[data-v-1e6a29e2] {\n    background-image: url('/images/amazon.jpeg');\n}\n.movieCard .rating span[data-v-1e6a29e2]{\n    position:relative;\n    top:11px;\n    left:12px;\n    color:black;\n    font-size:15px;\n    width:40px;\n    text-align:center;\n}\n.star[data-v-1e6a29e2]{\n    position:absolute;\n    color:yellow;\n    font-size:41px;\n}\n.heart[data-v-1e6a29e2]{\n    position:absolute;\n    color:red;\n    font-size:31px;\n}\n@media only screen and (max-device-width: 800px){\n.movieImage h4[data-v-1e6a29e2]{\n        opacity:0.5!important;\n}\n}\n\n/*x-x-small*/\n@media (max-width: 320px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 320px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:80px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 321px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 390px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 400px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 549px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:120px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:300px;\n}\n}\n/*Extra-Small devices (portrait phones, 576px and up)*/\n@media (min-width: 576px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 242px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*Small devices (landscape phones, 576px and up)*/\n@media (min-width: 768px){\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 225px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/* Medium devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 233px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n/*Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 287px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:100px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:120px;\n}\n}\n\n", ""]);
+exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:20px;\n    border: 4px solid #C0C0C0;\n    cursor:pointer;\n    box-shadow:7px 7px #343a40;\n}\n.edit_buttons button[data-v-1e6a29e2]{\n    padding:1px!important;\n}\n.movieImage h4[data-v-1e6a29e2]{\n    color:black!important;\n    margin-top:40px;\n    position:absolute;\n    color:transparent;\n    background-color:white;\n    opacity:0;\n    width:100%;\n    left:0;\n    bottom:-8px;\n    padding:4px 8px 4px 8px;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-1e6a29e2] {\n    opacity:0.5;\n}\n.tick[data-v-1e6a29e2]{\n    color:green;\n}\n.tickContainer[data-v-1e6a29e2]{\n    position:relative;\n    text-align:center;\n    width:100%;\n}\n.movieCard .movieImage[data-v-1e6a29e2] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.movieCard .movieImage[data-v-1e6a29e2]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-1e6a29e2]:before{\n    background: rgba(0,0,0,0.7);\n}\n.movieCard .rank[data-v-1e6a29e2]{\n    background-color:white;\n    position:absolute;\n    border-radius:8px;\n    text-align:center;\n    left:10px;\n    top:9px;\n    min-width:40px;\n    border:1px solid black;\n    padding-left:5px;\n    padding-right:5px;\n}\n.movieCard .rank.rounded[data-v-1e6a29e2]{\n    border-radius:22px!important;\n}\n.movieCard .rank .filtered_rank[data-v-1e6a29e2]{\n    color:black;\n    font-size:25px;\n}\n.movieCard .rank .actual_rank[data-v-1e6a29e2]{\n    font-size:12px;\n    color:grey;\n    display:block;\n    margin-top:-9px;\n    padding-bottom:3px;\n}\n.movieCard .rating[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:22px;\n    top:9px;\n    min-width:40px;\n}\n.movieCard .favourite[data-v-1e6a29e2]{\n    opacity:0.4;\n    position:absolute;\n    left:15px;\n    top:65px;\n    min-width:40px;\n}\n.movieCard .favourite.selected[data-v-1e6a29e2]{\n    opacity:1!important;\n}\n.movieCard .favourite.hovering .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.hovering .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite.selected .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.selected .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.outline[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.filled[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .platforms[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:6px;\n    top:60px;\n    min-width:40px;\n}\n.movieCard .platform[data-v-1e6a29e2] {\n    width:30px;\n    height:30px;\n    background-size: cover;\n    margin-bottom:6px;\n}\n.movieCard .platform.netflix[data-v-1e6a29e2] {\n    background-image: url('/images/netflix.jpg');\n}\n.movieCard .platform.amazon[data-v-1e6a29e2] {\n    background-image: url('/images/amazon.jpeg');\n}\n.movieCard .rating span[data-v-1e6a29e2]{\n    position:relative;\n    top:11px;\n    left:12px;\n    color:black;\n    font-size:15px;\n    width:40px;\n    text-align:center;\n}\n.star[data-v-1e6a29e2]{\n    position:absolute;\n    color:yellow;\n    font-size:41px;\n}\n.heart[data-v-1e6a29e2]{\n    position:absolute;\n    color:red;\n    font-size:31px;\n}\n@media only screen and (max-device-width: 800px){\n.movieImage h4[data-v-1e6a29e2]{\n        opacity:0.5!important;\n}\n}\n\n/*x-x-small*/\n@media (max-width: 320px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 320px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:80px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 321px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 390px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 400px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 549px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:120px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:300px;\n}\n}\n/*Extra-Small devices (portrait phones, 576px and up)*/\n@media (min-width: 576px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 242px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*Small devices (landscape phones, 576px and up)*/\n@media (min-width: 768px){\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 225px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/* Medium devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 233px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n/*Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 287px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:100px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:120px;\n}\n}\n\n", ""]);
 
 // exports
 
@@ -38754,7 +38781,47 @@ var render = function() {
               _vm.hasWatched
                 ? _c("i", { staticClass: "fa fa-check tick" })
                 : _vm._e()
-            ])
+            ]),
+            _vm._v(" "),
+            _vm.user.role == "admin"
+              ? _c("div", { staticClass: "btn-group col-12 edit_buttons" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      on: {
+                        click: function($event) {
+                          return _vm.setMovieStreamStatus(
+                            $event,
+                            "netflix",
+                            "1"
+                          )
+                        }
+                      }
+                    },
+                    [_vm._v("On Netflix")]
+                  ),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "btn-separator" }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      on: {
+                        click: function($event) {
+                          return _vm.setMovieStreamStatus(
+                            $event,
+                            "netflix",
+                            "0"
+                          )
+                        }
+                      }
+                    },
+                    [_vm._v("Not On Netflix")]
+                  )
+                ])
+              : _vm._e()
           ]
         )
       ]
@@ -38788,7 +38855,7 @@ var render = function() {
     { staticClass: "container" },
     [
       _c("div", { staticClass: "row justify-content-left" }, [
-        _vm.user.id == 1
+        _vm.user.role == "admin"
           ? _c("div", { staticClass: "btn-group col-12" }, [
               _c(
                 "button",
@@ -38821,8 +38888,12 @@ var render = function() {
                 [_vm._v("Update Saved Movie Images")]
               ),
               _vm._v(" "),
-              _c("span", { staticClass: "btn-separator" }),
-              _vm._v(" "),
+              _c("span", { staticClass: "btn-separator" })
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.user.role == "admin"
+          ? _c("div", { staticClass: "btn-group col-12" }, [
               _c(
                 "button",
                 {
@@ -38872,7 +38943,7 @@ var render = function() {
         _vm._l(_vm.movies, function(movie) {
           return _c("scratch-card", {
             key: movie.id,
-            attrs: { movie: movie },
+            attrs: { movie: movie, user: _vm.user },
             on: { movieStatusChanged: _vm.movieStatusChanged },
             model: {
               value: _vm.watchedMoviesCount,

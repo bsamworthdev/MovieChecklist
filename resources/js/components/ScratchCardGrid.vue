@@ -1,13 +1,15 @@
 <template>
     <div class="container">
         <div class="row justify-content-left">
-            <div v-if="user.id==1" class="btn-group col-12">
+            <div v-if="user.role=='admin'" class="btn-group col-12">
                 <button class="btn btn-success" @click="updateMovies">Update Movies</button>
                 <span class="btn-separator"></span>
                 <button class="btn btn-success" @click="updateMovieImages">Update Movie Images</button>
                 <span class="btn-separator"></span>
                 <button class="btn btn-success" @click="updateSavedMovieImages">Update Saved Movie Images</button>
                 <span class="btn-separator"></span>
+            </div>
+            <div v-if="user.role=='admin'" class="btn-group col-12">
                 <button class="btn btn-success" @click="updateNetflixStatuses">Get latest Netflix statuses</button>
                 <span class="btn-separator"></span>
                 <button class="btn btn-success" @click="updateAmazonStatuses">Get latest Amazon statuses</button>
@@ -20,7 +22,14 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <scratch-card v-for="movie in movies" v-model="watchedMoviesCount" :key="movie.id" :movie="movie" @movieStatusChanged="movieStatusChanged"></scratch-card>
+            <scratch-card 
+                v-for="movie in movies" 
+                v-model="watchedMoviesCount" 
+                :key="movie.id" 
+                :movie="movie" 
+                :user="user"
+                @movieStatusChanged="movieStatusChanged">
+            </scratch-card>
         </div>
         <random-movie-modal 
             v-if="activeModal==1" 

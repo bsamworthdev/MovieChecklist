@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
@@ -120,7 +121,9 @@ class MovieController extends Controller
                 }
             }
 
-            $movies_id_db =  Movie::where('imdb_id', '=', $movie->imdb_id)->get();
+            //$movies_id_db =  Movie::where('imdb_id', '=', $movie->imdb_id)->get();
+            $movies_id_db =  DB::table('netflix')
+                ->where('movie_id', '=', $movie->id)->get();
             if (count($movies_id_db) == 0) {
                 DB::insert("INSERT INTO netflix (movie_id, on_netflix, created_at, updated_at) 
                 VALUES ($movie->id, $exists, NOW(), NOW())");
@@ -186,5 +189,69 @@ class MovieController extends Controller
             //     ON DUPLICATE KEY UPDATE on_amazon=$exists, updated_at=NOW()");
         //}
     }
+
+    // function updateAmazonStatuses(){
+    //     // $oneWeekAgo = \Carbon\Carbon::today()->subWeek();
+    //     // $movies = Movie::where('updated_at', '<', $oneWeekAgo)->get();
+        
+    //     $movies = Movie::all();
+    //     foreach($movies as $movie_count => $movie) {
+
+    //         if ($movie_count > 10) break;
+
+    //         // $url = 'https://www.justwatch.com/uk/search?providers=amp&content_type=movie&q='.$movie->name;
+    //         //$url = 'https://www.amazon.co.uk/s?k='.$movie->name.'&i=instant-video&ref=nb_sb_noss_1';
+    //         $url = 'https://www.amazon.co.uk/s?k='.$movie->name.'&i=instant-video&bbn=3010085031&rh=p_85%3A3282143031&dc&qid=1588319554&rnid=3282142031&ref=sr_nr_p_85_1';
+            
+    //         // $url = 'https://www.finder.com/uk/amazon-prime-movies';
+
+    //         $dom = new \DOMDocument;
+    //         @$dom->loadHTMLFile($url);
+    //         $dom->preserveWhiteSpace = false;
+            
+    //         $xpath = new \DOMXpath($dom);
+
+    //         // sleep(4);
+
+    //         //Create node lists
+    //         $nl_matches = $xpath->query('//div[contains(@class, "s-main-slot")]/div');
+    //         //$nl_matches_titles = $xpath->query('//div[contains(@class, "s-main-slot")]/div//h2/a/span');
+
+    //         $exists = 0;
+    //         //for($i = 0; $i < $checkLimit; $i++) {
+    //         foreach ($nl_matches as $i => $nl_match) {
+
+    //             if ($i > 1) break;
+
+    //             $nl_matches_titles = $xpath->query(".//h2/a/span", $nl_match);
+    //             if (count($nl_matches_titles) > 0 && strtolower($nl_matches_titles->item(0)->nodeValue) == strtolower($movie->name)) {
+
+    //                 //$nl_matches_prime = $xpath->query('.//a/span[contains(@class, "s-play-button")]', $nl_match);
+    //                 //if (count($nl_matches_prime) > 0){
+
+    //                     $exists = 1;
+    //                 //}
+    //                 break;
+    //             }
+    //         }
+
+    //         $movies_id_db =  DB::table('amazon')
+    //             ->where('movie_id', '=', $movie->id)->get();
+    //         if (count($movies_id_db) == 0) {
+    //             DB::insert("INSERT INTO amazon (movie_id, on_amazon, created_at, updated_at) 
+    //             VALUES ($movie->id, $exists, NOW(), NOW())");
+    //         } else {
+    //             DB::update("UPDATE amazon SET on_amazon=$exists, updated_at=NOW() 
+    //             WHERE id=".$movies_id_db->first()->id);
+    //         }
+    //     }
+    // }
     
+    function setMovieStreamStatus (Request $request) {
+        $user_id = Auth::user()->id;
+        $movie_id = $request->movie_id;
+        $status = $request->status;
+
+        DB::update("update netflix set on_netflix=? where movie_id=?", [$status, $movie_id]);
+    }
 }

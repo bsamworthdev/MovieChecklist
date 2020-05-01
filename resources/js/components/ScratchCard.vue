@@ -26,6 +26,11 @@
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
                 </div>
+            <div v-if="user.role=='admin'" class="btn-group col-12 edit_buttons">
+                <button class="btn btn-success" @click="setMovieStreamStatus($event, 'netflix', '1')">On Netflix</button>
+                <span class="btn-separator"></span>
+                <button class="btn btn-danger" @click="setMovieStreamStatus($event, 'netflix', '0')">Not On Netflix</button>
+            </div>
             </div>
         </div>
     </div>
@@ -35,6 +40,7 @@
     export default {
         props: {
             movie: Object,
+            user: Object
         },
         methods: {
             toggleWatched(){
@@ -68,6 +74,21 @@
                     console.log(error);
                 });
             },
+            setMovieStreamStatus(e, platform, status){
+                e.stopPropagation();
+                axios.post('/setMovieStreamStatus',{
+                    movie_id:this.movie.id,
+                    platform:platform,
+                    status:status                    
+                })
+                .then((response) => {
+                    
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            }
         },
         computed: {
             ratingShort: function (){
@@ -97,6 +118,9 @@
         border: 4px solid #C0C0C0;
         cursor:pointer;
         box-shadow:7px 7px #343a40;
+    }
+    .edit_buttons button{
+        padding:1px!important;
     }
     .movieImage h4{
         color:black!important;

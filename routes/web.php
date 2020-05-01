@@ -28,6 +28,6 @@ Route::post('/updateamazonstatuses', 'MovieController@updateAmazonStatuses');
 
 Route::post('/saveMovieUser', 'UserController@saveMovieUser');
 Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');
-
+Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
 
 
