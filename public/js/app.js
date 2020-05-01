@@ -38783,7 +38783,7 @@ var render = function() {
                 : _vm._e()
             ]),
             _vm._v(" "),
-            _vm.user.role == "admin"
+            _vm.user.role == "editor" || _vm.user.role == "admin"
               ? _c("div", { staticClass: "btn-group col-12 edit_buttons" }, [
                   _c(
                     "button",
