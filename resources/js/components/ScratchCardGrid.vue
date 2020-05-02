@@ -27,10 +27,16 @@
                 v-model="watchedMoviesCount" 
                 :key="movie.id" 
                 :movie="movie" 
-                :user="user"
-                @movieStatusChanged="movieStatusChanged">
+                :user="user"        
+                @movieStatusChanged="movieStatusChanged"
+                @editMovieDetailsClicked="editMovieDetailsClicked">
             </scratch-card>
         </div>
+        <edit-movie-details-modal 
+            v-if="activeModal==2" 
+            @close="activeModal=0"
+            :movie="clickedMovie">
+        </edit-movie-details-modal>
         <random-movie-modal 
             v-if="activeModal==1" 
             @close="activeModal=0"
@@ -45,14 +51,16 @@
 <script>
     import scratchCard from './ScratchCard';
     import randomMovieModal from './RandomMovieModal';
+    import editMovieDetailsModal from './EditMovieDetailsModal';
     export default {
         props: {
             movies: Array,
-            user: Object
+            user: Object,
         },
         components : {
             scratchCard,
-            randomMovieModal
+            randomMovieModal,
+            editMovieDetailsModal
         },
         methods: {
             setWatchedMoviesCount: function(){
@@ -117,6 +125,10 @@
                     this.watchedMoviesCount--;
                 }
             },
+            editMovieDetailsClicked(platform, movie) {
+                this.activeModal = 2;
+                this.clickedMovie = movie;
+            },
             pickMovie() {
 
                 var unwatchedMovies = this.movies.filter(function (el) {
@@ -127,13 +139,18 @@
                 console.log('your random movie is ' + movie.name);
                 this.randomMovie = movie;
                 this.activeModal = 1;
-            }
+            },
+        },
+        events: {
+
         },
         data(){
             return {
                 watchedMoviesCount:0,
                 activeModal: 0,
-                randomMovie:null,
+                clickedMovie: null,
+                randomMovie: null,
+                editedMovie: null
             }
         },
         mounted() {

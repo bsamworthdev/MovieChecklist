@@ -250,8 +250,27 @@ class MovieController extends Controller
     function setMovieStreamStatus (Request $request) {
         $user_id = Auth::user()->id;
         $movie_id = $request->movie_id;
+        $platform = $request->platform;
         $status = $request->status;
 
-        DB::update("update netflix set on_netflix=? where movie_id=?", [$status, $movie_id]);
+        if ($platform == 'netflix'){
+            $movies =  DB::table('netflix')->where('movie_id', '=', $movie_id)->get();
+            if (count($movies) == 0) {
+                DB::insert("INSERT INTO netflix (movie_id, on_netflix, created_at, updated_at) 
+                VALUES ($movie_id, $status, NOW(), NOW())");
+            } else {
+                DB::update("UPDATE netflix SET on_netflix=$status, updated_at=NOW() 
+                WHERE movie_id=".$movie_id);
+            }
+        } elseif ($platform == 'amazon'){
+            $movies =  DB::table('amazon')->where('movie_id', '=', $movie_id)->get();
+            if (count($movies) == 0) {
+                DB::insert("INSERT INTO amazon (movie_id, on_amazon, created_at, updated_at) 
+                VALUES ($movie_id, $status, NOW(), NOW())");
+            } else {
+                DB::update("UPDATE amazon SET on_amazon=?, updated_at=?
+                WHERE movie_id=?", [$status, NOW(), $movie_id]);
+            }
+        }
     }
 }

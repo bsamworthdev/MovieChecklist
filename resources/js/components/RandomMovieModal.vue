@@ -26,7 +26,6 @@
 <script>
     import modal from './Modal' ;
     export default {
-        name:'add-call-component',
         props: {
             parentData: Object,
             people: Array,

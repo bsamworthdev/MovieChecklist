@@ -20,17 +20,18 @@
                     <span>{{ ratingShort }}</span>
                 </div>
                  <div class="platforms">
-                    <div v-if="movie.on_netflix == 1" class="platform netflix" title="On netflix"></div>
-                    <div v-if="movie.on_amazon  == 1" class="platform amazon" title="On amazon video"></div>
+                    <div v-if="user.role=='editor' || user.role=='admin'">
+                        <div :class="{'dimmed': (isOnNetflix == 0) }" @click="editMovieDetailsClicked($event, 'netflix')" class="platform netflix" title="On netflix"></div>
+                        <div :class="{'dimmed': (isOnAmazon == 0) }" @click="editMovieDetailsClicked($event, 'amazon')" class="platform amazon" title="On amazon video"></div>
+                    </div>
+                    <div v-else>
+                        <div v-if="isOnNetflix == 1" class="platform netflix" title="On netflix"></div>
+                        <div v-if="isOnAmazon  == 1" class="platform amazon" title="On amazon video"></div>
+                    </div>                 
                 </div>
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
                 </div>
-            <div v-if="user.role=='editor' || user.role=='admin'" class="btn-group col-12 edit_buttons">
-                <button class="btn btn-success" @click="setMovieStreamStatus($event, 'netflix', '1')">On Netflix</button>
-                <span class="btn-separator"></span>
-                <button class="btn btn-danger" @click="setMovieStreamStatus($event, 'netflix', '0')">Not On Netflix</button>
-            </div>
             </div>
         </div>
     </div>
@@ -74,21 +75,10 @@
                     console.log(error);
                 });
             },
-            setMovieStreamStatus(e, platform, status){
+            editMovieDetailsClicked(e, platform) {
                 e.stopPropagation();
-                axios.post('/setMovieStreamStatus',{
-                    movie_id:this.movie.id,
-                    platform:platform,
-                    status:status                    
-                })
-                .then((response) => {
-                    
-                    console.log(response);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            }
+                this.$emit('editMovieDetailsClicked', platform, this.movie);
+            },
         },
         computed: {
             ratingShort: function (){
@@ -103,8 +93,12 @@
             return {
                 hasWatched: (this.movie.watched == 1),
                 isFavourite: (this.movie.favourite == 1),
+                isOnNetflix: (this.movie.on_netflix == 1),
+                isOnAmazon: (this.movie.on_amazon == 1),
                 favouriteHover: false
             }
+        },
+        watch: {
         },
         mounted() {
             console.log('Component mounted.')
@@ -252,6 +246,10 @@
         height:30px;
         background-size: cover;
         margin-bottom:6px;
+    }
+
+    .movieCard .platform.dimmed {
+        opacity:0.2;
     }
 
     .movieCard .platform.netflix {
