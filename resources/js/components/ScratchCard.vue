@@ -35,6 +35,7 @@
             </div>
             <div class="footer" @click="openIMDBModal($event)">
                 View on IMDb
+                <i class="externalLink fas fa-external-link-alt"></i>
             </div>
         </div>
     </div>
@@ -84,7 +85,9 @@
             },
             openIMDBModal(e){
                 e.stopPropagation();
-                this.$emit('openIMDBModal', this.movie);
+                // window.location.href = 'https://imdb.com/title/' + this.movie.imdb_id;
+                window.open('https://imdb.com/title/' + this.movie.imdb_id, '_blank');
+                //this.$emit('openIMDBModal', this.movie);
             }
         },
         computed: {
@@ -298,6 +301,10 @@
         position:absolute;
         color:red;
         font-size:31px;
+    }
+    .externalLink{
+        font-size:11px;
+        padding-left:8px;
     }
 
     @media only screen and (max-device-width: 800px){
