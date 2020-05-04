@@ -58,7 +58,7 @@
     import scratchCard from './ScratchCard';
     import randomMovieModal from './RandomMovieModal';
     import editMovieDetailsModal from './EditMovieDetailsModal';
-    import IMDBModal from './IMDBModal';
+    import imdbModal from './IMDBModal';
     export default {
         props: {
             movies: Array,
@@ -68,7 +68,7 @@
             scratchCard,
             randomMovieModal,
             editMovieDetailsModal,
-            IMDBModal
+            imdbModal
         },
         methods: {
             setWatchedMoviesCount: function(){

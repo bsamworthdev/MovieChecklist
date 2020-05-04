@@ -9,8 +9,8 @@
 
     <div slot="body">
       <div class="container">
-        hello world
-        </div>
+        <iframe id="iframeMovie" :src="'https://imdb.com/title/' + movie.imdb_id"></iframe>
+      </div>
     </div>
 
     <div slot="footer">
@@ -45,5 +45,9 @@ export default {
 };
 </script>
 <style scoped>
-
+  #iframeMovie {
+    width: 100%;
+    height: 80vh;
+    border:none;
+  }
 </style>
