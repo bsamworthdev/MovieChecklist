@@ -29,9 +29,15 @@
                 :movie="movie" 
                 :user="user"        
                 @movieStatusChanged="movieStatusChanged"
-                @editMovieDetailsClicked="editMovieDetailsClicked">
+                @editMovieDetailsClicked="editMovieDetailsClicked"
+                @openIMDBModal="openIMDBModal">
             </scratch-card>
         </div>
+        <imdb-modal 
+            v-if="activeModal==3" 
+            :movie="clickedMovie"
+            @close="activeModal=0">
+        </imdb-modal>
         <edit-movie-details-modal 
             v-if="activeModal==2" 
             @close="activeModal=0"
@@ -52,6 +58,7 @@
     import scratchCard from './ScratchCard';
     import randomMovieModal from './RandomMovieModal';
     import editMovieDetailsModal from './EditMovieDetailsModal';
+    import IMDBModal from './IMDBModal';
     export default {
         props: {
             movies: Array,
@@ -60,7 +67,8 @@
         components : {
             scratchCard,
             randomMovieModal,
-            editMovieDetailsModal
+            editMovieDetailsModal,
+            IMDBModal
         },
         methods: {
             setWatchedMoviesCount: function(){
@@ -127,6 +135,10 @@
             },
             editMovieDetailsClicked(platform, movie) {
                 this.activeModal = 2;
+                this.clickedMovie = movie;
+            },
+            openIMDBModal(movie) {
+                this.activeModal = 3;
                 this.clickedMovie = movie;
             },
             pickMovie() {

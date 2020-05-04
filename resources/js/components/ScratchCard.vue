@@ -33,6 +33,9 @@
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
                 </div>
             </div>
+            <div class="footer" @click="openIMDBModal($event)">
+                View on IMDb
+            </div>
         </div>
     </div>
 </template>
@@ -79,6 +82,10 @@
                 e.stopPropagation();
                 this.$emit('editMovieDetailsClicked', platform, this.movie);
             },
+            openIMDBModal(e){
+                e.stopPropagation();
+                this.$emit('openIMDBModal', this.movie);
+            }
         },
         computed: {
             ratingShort: function (){
@@ -109,6 +116,7 @@
 <style scoped>
     .movieCard{
         margin-bottom:20px;
+        padding-bottom:17px;
         border: 4px solid #C0C0C0;
         cursor:pointer;
         box-shadow:7px 7px #343a40;
@@ -125,8 +133,20 @@
         opacity:0;
         width:100%;
         left:0;
-        bottom:-8px;
+        bottom:9px;
         padding:4px 8px 4px 8px;
+    }
+    .movieCard .footer{
+        position:absolute;
+        background-color:#EEC748;
+        width:100%;
+        left:0;
+        bottom:0px;
+        height:17px;
+        padding:0px 8px 0px 8px;
+        line-height:17px;
+        font-weight:bold;
+        text-align:center;
     }
     .movieCard .card-header{
         min-height:50px;
