@@ -8,34 +8,14 @@
                 <div class="card-header">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-3 col-3">
-                                <div id="title">My List</div> 
-                            </div>
-                            <div class="col-lg-9 col-9">
+                            <div class="col-12">
                                 <form id="movie_form">
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-lg-3 col-12">
-                                                <label>
-                                                    <i class="fa fa-heart heart"></i>
-                                                    <span class="nowrap">
-                                                        Favourites
-                                                        <input type="checkbox" 
-                                                            class="form-input" 
-                                                            id="favourites_only_checkbox" 
-                                                            {{( $selectedFavouritesOnly ? "checked" : '')}} 
-                                                            onchange="return changeSelection();">
-                                                    </span>
-                                                </label>
+                                            <div class="col-lg-2 col-12">
+                                                <div id="title">My List</div> 
                                             </div>
-                                            <div class="col-lg-3 col-12">
-                                                <label>
-                                                    English 
-                                                    <span class="nowrap">
-                                                        Only <input type="checkbox" class="form-input" id="english_only_checkbox" {{( $selectedEnglishOnly ? "checked" : '')}} onchange="return changeSelection();">
-                                                    </span>
-                                                </label>
-                                            </div>
+                                            <div class="col-lg-4"></div>
                                             <div class="col-lg-3 col-12">
                                                 <select id="time_period_select" class="form-select" onchange="return changeSelection();">
                                                     @foreach ($timePeriods as $key => $value)
@@ -56,11 +36,9 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-6 col-12"></div>
-                                            <div class="col-lg-6 col-12">
+                                            <div class="col-lg-2 col-12">
                                                 <div class="card" id="streamCard">
                                                     <label>
-                                                        Streams:
                                                         <span class="nowrap">
                                                             <img class="netflix_logo" src="/images/netflix.jpg">
                                                             <input type="checkbox" 
@@ -80,6 +58,33 @@
                                                         </span>
                                                     </label>
                                                 </div>
+                                            </div>
+                                            <div class="col-lg-4 col-12"></div>
+                                            <div class="col-lg-2 col-12">
+                                                <label class="vertAlign">
+                                                    <span class="nowrap">
+                                                        <i class="fa fa-heart heart"></i> Favourites
+                                                        <input type="checkbox" 
+                                                            class="form-input" 
+                                                            id="favourites_only_checkbox" 
+                                                            {{( $selectedFavouritesOnly ? "checked" : '')}} 
+                                                            onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2 col-12">
+                                                <label class="vertAlign">
+                                                    <span class="nowrap">
+                                                        English Only <input type="checkbox" class="form-input" id="english_only_checkbox" {{( $selectedEnglishOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2 col-12">
+                                                <label class="vertAlign">
+                                                    <span class="nowrap">
+                                                        Unwatched Only <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -123,6 +128,7 @@
     function changeSelection() {
         var form = document.getElementById('movie_form');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
+        var unwatchedOnlyCheckbox = document.getElementById('unwatched_only_checkbox');
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
         var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
         var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
@@ -131,6 +137,7 @@
         form.setAttribute('action', '/home/' + genreSelect.value + 
             '/' + timePeriodSelect.value + 
             '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + (unwatchedOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
@@ -198,5 +205,10 @@
     }
     #streamCard label{
         margin-bottom:0px;
+    }
+    .vertAlign { 
+        height:100%;
+        display: flex;
+        align-items: center;
     }
 </style>

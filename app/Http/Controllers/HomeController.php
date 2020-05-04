@@ -25,7 +25,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0)
+    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0)
     {
 
         $user = Auth::user();
@@ -73,6 +73,9 @@ class HomeController extends Controller
             })
             ->when(($netflix_only == 0 && $amazon_only == 1), function ($q) {
                 return $q->where('amazon.on_amazon', '=', '1');
+            })
+            ->when($unwatched_only == 1, function ($q) {
+                return $q->where('movie_user.user_id', '=', NULL);
             })
             ->orderBy('rank','ASC')
             ->take(100)
@@ -124,6 +127,7 @@ class HomeController extends Controller
             $selected_time_period= $time_period;
 
             $selected_english_only = $english_only;
+            $selected_unwatched_only = $unwatched_only;
             $selected_favourites_only = $favourites_only;
             $selected_netflix_only = $netflix_only;
             $selected_amazon_only = $amazon_only;
@@ -136,6 +140,7 @@ class HomeController extends Controller
                 "timePeriods" => $time_periods,
                 "selectedTimePeriod" => $selected_time_period,
                 "selectedEnglishOnly" => $selected_english_only,
+                "selectedUnwatchedOnly" => $selected_unwatched_only,
                 "selectedFavouritesOnly" => $selected_favourites_only,
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only
