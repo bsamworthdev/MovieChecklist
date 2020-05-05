@@ -13,6 +13,10 @@
         <style>
             html, body {
                 background-color: #fff;
+                background-image: url('/images/curtainBG.jpg');
+                background-repeat:no-repeat;
+                background-position:center;
+                background-size:cover;
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
@@ -42,6 +46,8 @@
 
             .content {
                 text-align: center;
+                background-color:white;
+                padding:20px;
             }
 
             .title {
@@ -49,7 +55,7 @@
             }
 
             .links > a {
-                color: #636b6f;
+                color: #FFF;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -59,7 +65,7 @@
             }
 
             .m-b-md {
-                margin-bottom: 30px;
+                margin-bottom: 0px;
             }
         </style>
     </head>
