@@ -207,8 +207,9 @@
         margin-bottom:0px;
     }
     .vertAlign { 
-        height:100%;
+        height:40px;
         display: flex;
         align-items: center;
+        margin-bottom:0px;
     }
 </style>

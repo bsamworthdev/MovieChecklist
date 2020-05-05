@@ -19,15 +19,23 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{netflix_only?}/{amazon_only?}', 'HomeController@index')->name('home');
-Route::post('/updatemovies', 'MovieController@updateMovies');
-Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
-Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');
-Route::post('/updatenetflixstatuses', 'MovieController@updateNetflixStatuses');
-Route::post('/updateamazonstatuses', 'MovieController@updateAmazonStatuses');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{netflix_only?}/{amazon_only?}', 'HomeController@index')->name('home');
+    Route::get('/friends', 'FriendshipController@index')->name('friend');;
 
-Route::post('/saveMovieUser', 'UserController@saveMovieUser');
-Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');
-Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
+    Route::post('/updatemovies', 'MovieController@updateMovies');
+    Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
+    Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');
+    Route::post('/updatenetflixstatuses', 'MovieController@updateNetflixStatuses');
+    Route::post('/updateamazonstatuses', 'MovieController@updateAmazonStatuses');
+
+    Route::post('/saveMovieUser', 'UserController@saveMovieUser');
+    Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');
+    Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
+
+    Route::post('/addfriend', 'FriendshipController@add');
+    Route::post('/editfriend', 'FriendshipController@edit');
+    Route::post('/deletefriend', 'FriendshipController@delete');
+});
 
 
