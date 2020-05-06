@@ -40383,7 +40383,7 @@ var render = function() {
                 staticClass: "friends",
                 attrs: {
                   title:
-                    _vm.movie.friendsWatched.length +
+                    _vm.movie.friendsWatched +
                     " of your friends also watched this"
                 },
                 on: {
@@ -40396,7 +40396,7 @@ var render = function() {
                 _c("i", { staticClass: "fas fa-user" }),
                 _vm._v(" "),
                 _c("span", { staticClass: "friendsCount" }, [
-                  _vm._v(" x " + _vm._s(_vm.movie.friendsWatched.length))
+                  _vm._v(" x " + _vm._s(_vm.movie.friendsWatched))
                 ])
               ]
             ),

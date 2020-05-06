@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Movie;
+use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -32,25 +33,22 @@ class HomeController extends Controller
         $user_id = $user->id;
 
         $movies = DB::table('movies')
-            ->leftJoin('netflix', function($join)
-            {
+            ->leftJoin('netflix', function ($join) {
                 $join->on('netflix.movie_id', '=', 'movies.id');
             })
-            ->leftJoin('amazon', function($join)
-            {
+            ->leftJoin('amazon', function ($join) {
                 $join->on('amazon.movie_id', '=', 'movies.id');
             })
-            ->leftJoin('movie_user', function($join) use ($user_id)
-            {
+            ->leftJoin('movie_user', function ($join) use ($user_id) {
                 $join->on('movie_user.movie_id', '=', 'movies.id');
                 $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
             })
             ->where(function ($q) use ($user_id) {
                 return $q->where('movie_user.user_id', '=', $user_id)
-                        ->orWhere('movie_user.user_id', '=', NULL);
+                    ->orWhere('movie_user.user_id', '=', NULL);
             })
             ->when($genre <> 'all', function ($q) use ($genre) {
-                return $q->where('movies.genre', 'LIKE', '%'.$genre.'%');
+                return $q->where('movies.genre', 'LIKE', '%' . $genre . '%');
             })
             ->when($time_period <> 'all', function ($q) use ($time_period) {
                 $dates = $this->parseTimePeriod($time_period);
@@ -65,7 +63,7 @@ class HomeController extends Controller
             ->when(($netflix_only == 1 && $amazon_only == 1), function ($q) {
                 return $q->where(function ($q) {
                     $q->where('netflix.on_netflix', '=', '1')
-                    ->orWhere('amazon.on_amazon', '=', '1');
+                        ->orWhere('amazon.on_amazon', '=', '1');
                 });
             })
             ->when(($netflix_only == 1 && $amazon_only == 0), function ($q) {
@@ -77,70 +75,82 @@ class HomeController extends Controller
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user.user_id', '=', NULL);
             })
-            ->orderBy('rank','ASC')
+            ->orderBy('rank', 'ASC')
             ->take(100)
             ->get([
-                'movies.*', 
+                'movies.*',
                 DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                 DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
                 DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite')
             ]);
-        
-            $count = 1;
-            foreach ($movies as $movie){
-                $movie->index = $count;
-                $count++;
-            }
 
-            $movie_genres = [
-                'all' => 'All Genres',
-                'action'=>'Action',
-                'animation'=>'Animated',
-                'comedy'=>'Comedy',
-                'crime'=>'Crime',
-                'drama'=>'Drama',
-                'family'=>'Family',
-                'fantasy'=>'Fantasy',
-                'history'=>'History',
-                'music'=>'Music',
-                'sci-fi'=>'Sci-Fi',
-                'sport'=>'Sport',
-                'thriller'=>'Thriller',
-                'war'=>'War',
-            ];
-            $selected_genre = $genre;
-
-            $time_periods = [
-                'all' => 'All Years',
-                'last_50_years' => 'Last 50 Years',
-                'last_25_years' => 'Last 25 Years',
-                'last_10_years' => 'Last 10 Years',
-                '2010s' => '2010s',
-                '2000s' => '2000s',
-                '90s' => '90s',
-                '80s' => '80s',
-                '80s' => '80s',
-                '70s' => '70s',
-                '60s' => '60s',
-            ];
-            $selected_time_period= $time_period;
-
-            $selected_english_only = $english_only;
-            $selected_unwatched_only = $unwatched_only;
-            $selected_favourites_only = $favourites_only;
-            $selected_netflix_only = $netflix_only;
-            $selected_amazon_only = $amazon_only;
-
-
-        foreach ($movies as &$movie){
-            $movie->friendsWatched = Movie::find($movie->id)->getFriendsWatched();
+        $count = 1;
+        foreach ($movies as $movie) {
+            $movie->index = $count;
+            $count++;
         }
 
-        return view('home', [
-                "user" => $user, 
-                "movies" => $movies, 
-                "genres" => $movie_genres, 
+        $movie_genres = [
+            'all' => 'All Genres',
+            'action' => 'Action',
+            'animation' => 'Animated',
+            'comedy' => 'Comedy',
+            'crime' => 'Crime',
+            'drama' => 'Drama',
+            'family' => 'Family',
+            'fantasy' => 'Fantasy',
+            'history' => 'History',
+            'music' => 'Music',
+            'sci-fi' => 'Sci-Fi',
+            'sport' => 'Sport',
+            'thriller' => 'Thriller',
+            'war' => 'War',
+        ];
+        $selected_genre = $genre;
+
+        $time_periods = [
+            'all' => 'All Years',
+            'last_50_years' => 'Last 50 Years',
+            'last_25_years' => 'Last 25 Years',
+            'last_10_years' => 'Last 10 Years',
+            '2010s' => '2010s',
+            '2000s' => '2000s',
+            '90s' => '90s',
+            '80s' => '80s',
+            '80s' => '80s',
+            '70s' => '70s',
+            '60s' => '60s',
+        ];
+        $selected_time_period = $time_period;
+
+        $selected_english_only = $english_only;
+        $selected_unwatched_only = $unwatched_only;
+        $selected_favourites_only = $favourites_only;
+        $selected_netflix_only = $netflix_only;
+        $selected_amazon_only = $amazon_only;
+
+
+        $friendsA = User::find($user_id)->friendshipsA()->get();
+        $friendsB = User::find($user_id)->friendshipsB()->get();
+        foreach ($movies as &$movie) {
+            $count = 0;
+            foreach ($friendsA as $friend) {
+                $thisFriend = User::find($friend->person_B_user_id);
+                $count += $thisFriend->hasWatchedMovie($movie->id) ? 1 : 0;
+            }
+            foreach ($friendsB as $friend) {
+                $thisFriend = User::find($friend->person_A_user_id);
+                $count += $thisFriend->hasWatchedMovie($movie->id) ? 1 : 0;
+            }
+            $movie->friendsWatched = $count;
+        }
+        return view(
+            'home',
+            [
+                "user" => $user,
+                "movies" => $movies,
+                "genres" => $movie_genres,
                 "selectedGenre" => $selected_genre,
                 "timePeriods" => $time_periods,
                 "selectedTimePeriod" => $selected_time_period,
@@ -153,7 +163,8 @@ class HomeController extends Controller
         );
     }
 
-    function parseTimePeriod($time_period){
+    function parseTimePeriod($time_period)
+    {
         switch ($time_period) {
             case 'last_50_years':
                 $yearFrom = '1970';
@@ -194,7 +205,7 @@ class HomeController extends Controller
             default:
                 break;
         }
-        $dates =[
+        $dates = [
             'from' => $yearFrom,
             'to' => $yearTo
         ];

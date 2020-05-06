@@ -15,10 +15,10 @@
                     <i class="fa fa-heart heart filled"></i>
                     <i class="far fa-heart heart outline"></i>
                 </div>
-                <div class="friends" :title="movie.friendsWatched.length + ' of your friends also watched this'"
+                <div class="friends" :title="movie.friendsWatched + ' of your friends also watched this'"
                     @click="showFriendsPopup($event)">
                     <i class="fas fa-user"></i>
-                    <span class="friendsCount"> x {{ movie.friendsWatched.length }}</span>
+                    <span class="friendsCount"> x {{ movie.friendsWatched }}</span>
                 </div>
                 <div class="rating">
                     <i class="fa fa-star star"></i>
