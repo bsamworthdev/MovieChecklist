@@ -21,11 +21,22 @@ class FriendshipController extends Controller
         $user_id = Auth::user()->id;
 
         //$friends = Friendship::find($user_id);
+        // $user = User::find($user_id);
+        // $friends = $user->friendships()
+        //     ->join('users', 'users.id', '=', 'friendships.person_B_user_id')
+        //     ->get('*');
+
+         $friends = Friendship::find($user_id);
         $user = User::find($user_id);
-        $friends = $user->friendships()
+        $friendsA = $user->friendshipsA()
             ->join('users', 'users.id', '=', 'friendships.person_B_user_id')
             ->get('*');
 
+        $friendsB = $user->friendshipsB()
+            ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
+            ->get('*');
+
+        $friends = $friendsA->merge($friendsB);
 
         foreach($friends as &$friend){
             $friendUser = User::find($friend->id);

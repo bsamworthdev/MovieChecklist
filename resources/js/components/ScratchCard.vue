@@ -15,6 +15,11 @@
                     <i class="fa fa-heart heart filled"></i>
                     <i class="far fa-heart heart outline"></i>
                 </div>
+                <div class="friends" :title="movie.friendsWatched.length + ' of your friends also watched this'"
+                    @click="showFriendsPopup($event)">
+                    <i class="fas fa-user"></i>
+                    <span class="friendsCount"> x {{ movie.friendsWatched.length }}</span>
+                </div>
                 <div class="rating">
                     <i class="fa fa-star star"></i>
                     <span>{{ ratingShort }}</span>
@@ -78,6 +83,9 @@
                 .catch((error) => {
                     console.log(error);
                 });
+            },
+            showFriendsPopup(e, platform) {
+                e.stopPropagation();
             },
             editMovieDetailsClicked(e, platform) {
                 e.stopPropagation();
@@ -224,7 +232,7 @@
         opacity:0.4;
         position:absolute;
         left:15px;
-        top:65px;
+        top:94px;
         min-width:40px;
     }
 
@@ -262,6 +270,21 @@
         right:6px;
         top:60px;
         min-width:40px;
+    }
+
+    .movieCard .friends{
+        position:absolute;
+        text-align:center;
+        left:10px;
+        top:60px;
+        min-width:40px;
+        font-size:16px;
+        color:#C0C0C0;
+    }
+
+    .movieCard .friends .friendsCount{
+        font-size:18px;
+        color:#C0C0C0;
     }
 
     .movieCard .platform {

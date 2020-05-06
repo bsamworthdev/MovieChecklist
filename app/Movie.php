@@ -11,5 +11,10 @@ class Movie extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    public function getFriendsWatched()
+    {
+        return ['Bob','Geoff'];
+    }
     
 }

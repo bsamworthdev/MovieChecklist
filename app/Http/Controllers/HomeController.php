@@ -132,6 +132,11 @@ class HomeController extends Controller
             $selected_netflix_only = $netflix_only;
             $selected_amazon_only = $amazon_only;
 
+
+        foreach ($movies as &$movie){
+            $movie->friendsWatched = Movie::find($movie->id)->getFriendsWatched();
+        }
+
         return view('home', [
                 "user" => $user, 
                 "movies" => $movies, 
