@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -45,5 +46,35 @@ class User extends Authenticatable
     public function friendships()
     {
         return $this->hasMany('App\Friendship','person_a_user_id','id');
+    }
+
+    public function getStats(){
+        $user_id = $this->id;
+
+        $userMovies = DB::select("select movies.name,movies.imdb_id, 
+                IFNULL(movie_user.user_id,0)>0 as watched 
+            from movies 
+            left join movie_user on 
+                (movies.id=movie_user.movie_id 
+                and movie_user.user_id=$user_id) 
+            where 
+                (movie_user.user_id=$user_id 
+                or movie_user.user_id IS NULL) 
+            order by movies.id");
+        
+        $stats['overall']['watched'] = 0;
+        $stats['overall']['unwatched'] = 0;
+        //$stats_categorised = [];
+        foreach ($userMovies as $userMovie){
+            if (($stats['overall']['watched'] + $stats['overall']['unwatched']) < 100){
+                if ($userMovie->watched == 1) {
+                    $stats['overall']['watched'] += 1;
+                } else {
+                    $stats['overall']['unwatched'] += 1;
+                }
+            }
+        }
+
+        return $stats;
     }
 }

@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     //
     function updateMovies(){
 

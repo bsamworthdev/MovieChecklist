@@ -1,22 +1,21 @@
 <template>
     <div id="friendsList" :class="{ 'modal-open': activeModal > 0 }">
-        <div class="form-group">
-            <div class="col-lg-4 pl-0">
-                <select class="form-control" v-model="selectedPersonId" @change="filter($event)" id="add_person">
-                    <option value="0">My Friends</option>
-                    <option v-for="person in people" :key="person.id" :value="person.id">{{ person.firstname }} {{ person.surname }}</option>
-                </select>
-            </div>
-        </div>
         <div class="container">
             <div class="row">
-                <button type="button" class="btn btn-primary" @click="addButtonClicked">+ Add Friend</button>
+                <div class="btn-group col-6">
+                    <button type="button" class="btn btn-primary" @click="addButtonClicked">+ Add Friend</button>
+                </div>
             </div>
             <br>
             <div class="row">
                 <div v-for="friend in friends" :key="friend.id" class="friend card col-12 col-md-4 col-lg-3">
-                    <h3>{{ friend.name }}</h3>
-                    <div class="btn-group"  role="group">
+                    <div class="card-header">
+                        <h3>{{ friend.name }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>Overall: {{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</h5>
+                    </div>
+                    <div class="card-footer">
                         <button type="button" class="btn btn-primary" @click="editButtonClicked(friend)">
                             Edit
                         </button>
@@ -126,7 +125,11 @@
         text-align:center;
     }
     .friend{
-        padding:20px;
-        background-color: #C0C0C0;
+        margin:5px;
+        padding:0px;
+        background-color: #F7F7F7;
+    }
+    .card-footer{
+        text-align:center;
     }
 </style>

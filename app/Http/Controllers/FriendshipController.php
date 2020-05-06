@@ -9,6 +9,12 @@ use App\User;
 
 class FriendshipController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
 
@@ -19,6 +25,12 @@ class FriendshipController extends Controller
         $friends = $user->friendships()
             ->join('users', 'users.id', '=', 'friendships.person_B_user_id')
             ->get('*');
+
+
+        foreach($friends as &$friend){
+            $friendUser = User::find($friend->id);
+            $friend['stats'] = $friendUser->getStats();
+        }
 
         return view('friends', [
                 "friends" => $friends

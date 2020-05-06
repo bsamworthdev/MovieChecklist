@@ -29,7 +29,7 @@
             parentData: {
                 type: Object
             },
-            activeFriend:{
+            friend:{
                 required:true,
                 type: Object
             }
