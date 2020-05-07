@@ -30,9 +30,16 @@
                 :user="user"        
                 @movieStatusChanged="movieStatusChanged"
                 @editMovieDetailsClicked="editMovieDetailsClicked"
-                @openIMDBModal="openIMDBModal">
+                @openIMDBModal="openIMDBModal"
+                @showFriendsPopup="showFriendsPopup">
             </scratch-card>
         </div>
+        <friends-watched-modal 
+            v-if="activeModal==7" 
+            @close="activeModal=0"
+            :movie="clickedMovie"
+            :friendsStats="friendsStats">
+        </friends-watched-modal>
         <imdb-modal 
             v-if="activeModal==3" 
             :movie="clickedMovie"
@@ -58,6 +65,7 @@
     import scratchCard from './ScratchCard';
     import randomMovieModal from './RandomMovieModal';
     import editMovieDetailsModal from './EditMovieDetailsModal';
+    import friendsWatchedModal from './FriendsWatchedModal';
     import imdbModal from './IMDBModal';
     export default {
         props: {
@@ -68,7 +76,8 @@
             scratchCard,
             randomMovieModal,
             editMovieDetailsModal,
-            imdbModal
+            imdbModal,
+            friendsWatchedModal
         },
         methods: {
             setWatchedMoviesCount: function(){
@@ -141,6 +150,20 @@
                 this.activeModal = 3;
                 this.clickedMovie = movie;
             },
+            showFriendsPopup(movie) {
+
+                axios.post('/getFriendsStats/' + movie.id)
+                .then((response) => {
+                    console.log(response);
+                    this.activeModal = 7;
+                    this.friendsStats = response.data;
+                    this.clickedMovie = movie;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+            },
             pickMovie() {
 
                 var unwatchedMovies = this.movies.filter(function (el) {
@@ -162,7 +185,8 @@
                 activeModal: 0,
                 clickedMovie: null,
                 randomMovie: null,
-                editedMovie: null
+                editedMovie: null,
+                friendsStats: null
             }
         },
         mounted() {

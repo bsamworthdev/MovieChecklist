@@ -15,7 +15,8 @@
                     <i class="fa fa-heart heart filled"></i>
                     <i class="far fa-heart heart outline"></i>
                 </div>
-                <div class="friends" :title="movie.friendsWatched + ' of your friends also watched this'"
+                <div class="friends" 
+                    :title="movie.friendsWatched + ' of your friends also watched this'"
                     @click="showFriendsPopup($event)">
                     <i class="fas fa-user"></i>
                     <span class="friendsCount"> x {{ movie.friendsWatched }}</span>
@@ -84,8 +85,9 @@
                     console.log(error);
                 });
             },
-            showFriendsPopup(e, platform) {
+            showFriendsPopup(e) {
                 e.stopPropagation();
+                this.$emit('showFriendsPopup', this.movie);
             },
             editMovieDetailsClicked(e, platform) {
                 e.stopPropagation();

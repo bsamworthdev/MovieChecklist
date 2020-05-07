@@ -55,4 +55,8 @@
   .modal-header > div{
     width:100%;
   }
+  .modal-body {
+    height:72vh;
+    overflow:auto;
+  }
 </style>

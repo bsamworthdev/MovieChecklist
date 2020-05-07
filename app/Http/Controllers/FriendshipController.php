@@ -40,8 +40,13 @@ class FriendshipController extends Controller
 
         foreach($friends as &$friend){
             $friendUser = User::find($friend->id);
+            $friend->name = $friendUser->name;
             $friend['stats'] = $friendUser->getStats();
         }
+
+        // dd($friends);
+        //sort alphabetically
+        // usort($friends,function($a,$b) {return strcmp($a['name'],$b['name']);});
 
         return view('friends', [
                 "friends" => $friends
