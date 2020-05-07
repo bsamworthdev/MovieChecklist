@@ -137,15 +137,24 @@ class HomeController extends Controller
 
         $friendsA = $UserObj->friendshipsA()->get();
         $friendsB = $UserObj->friendshipsB()->get();
+        $friends =[];
+        foreach ($friendsA as $friend) {
+            $friends[]=$friend->person_B_user_id;
+        }
+        foreach ($friendsB as $friend) {
+            $friends[]=$friend->person_A_user_id;
+        }
         
         foreach ($movies as &$movie) {
             $count = 0;
-            foreach ($friendsA as $friend) {
-                $count += count(DB::select('select * from movie_user where movie_id=? and user_id=?',[$movie->id, $friend->person_B_user_id])) > 0;
-            }
-            foreach ($friendsB as $friend) {
-                $count += count(DB::select('select * from movie_user where movie_id=? and user_id=?',[$movie->id, $friend->person_A_user_id])) > 0;
-            }
+
+            $count += DB::table('movie_user')
+                ->where ('movie_id', '=', $movie->id)
+                ->whereIn('user_id', $friends)
+                ->get()
+                ->count();
+
+            $count += count(DB::select('select * from movie_user where movie_id=? and user_id=?',[$movie->id, $friend->person_A_user_id])) > 0;
             $movie->friendsWatched = $count;
         }
 

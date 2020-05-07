@@ -40273,13 +40273,13 @@ var render = function() {
         _vm._v(" "),
         _c("br"),
         _vm._v(" "),
-        _c("div", { staticClass: "col-sm-12" }, [
+        _c("div", { staticClass: "col-12" }, [
           _c(
             "div",
             { staticClass: "container", attrs: { id: "friendsContainer" } },
             _vm._l(_vm.friendsStats, function(friend) {
               return _c("div", { key: friend.id, staticClass: "row" }, [
-                _c("div", { staticClass: "col-sm-6" }, [
+                _c("div", { staticClass: "col-6" }, [
                   _vm._v(
                     "\n                            " +
                       _vm._s(friend.name) +
@@ -40287,7 +40287,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-2" }, [
+                _c("div", { staticClass: "col-2" }, [
                   friend.hasWatched
                     ? _c("i", {
                         staticClass: "fa fa-check greenTick",
@@ -40303,7 +40303,7 @@ var render = function() {
                       })
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-2" }, [
+                _c("div", { staticClass: "col-2" }, [
                   friend.isFavourite
                     ? _c("i", {
                         staticClass: "fa fa-heart redHeart",
@@ -40312,7 +40312,7 @@ var render = function() {
                     : _vm._e()
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-2" })
+                _c("div", { staticClass: "col-2" })
               ])
             }),
             0

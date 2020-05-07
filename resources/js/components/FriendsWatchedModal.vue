@@ -9,20 +9,20 @@
             <div class="container">
                 <h5>{{ movie.friendsWatched }} friends also watched {{ movie.name }}</h5>
                 <br>
-                <div class="col-sm-12">
+                <div class="col-12">
                     <div id="friendsContainer" class="container">
                         <div class="row" v-for="friend in friendsStats" :key="friend.id">
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 {{ friend.name }}
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-2">
                                 <i v-if="friend.hasWatched" class="fa fa-check greenTick" :title="friend.name + ' has watched this movie'"></i>
                                 <i v-else class="fa fa-times redCross" :title="friend.name + ' has not watched this movie'"></i>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-2">
                                 <i v-if="friend.isFavourite" class="fa fa-heart redHeart" :title="friend.name + ' loves this movie'"></i>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-2">
                             </div>
                         </div>
                     </div>
