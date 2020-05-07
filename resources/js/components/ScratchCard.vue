@@ -8,14 +8,14 @@
                     <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
                 </div>
                 <div v-if="hasWatched" class="favourite"
-                        :class="{ selected: isFavourite, hovering: favouriteHover }" 
+                        :class="{ selected: isFavourite, hovering: favouriteHover, hasFriends: user.friendsCount > 0 }" 
                         @mouseover="favouriteHover = true"
                         @mouseleave="favouriteHover = false"
                         @click="toggleIsFavourite($event)">
                     <i class="fa fa-heart heart filled"></i>
                     <i class="far fa-heart heart outline"></i>
                 </div>
-                <div class="friends" 
+                <div v-if="user.friendsCount > 0" class="friends" 
                     :title="movie.friendsWatched + ' of your friends also watched this'"
                     @click="showFriendsPopup($event)">
                     <i class="fas fa-user"></i>
@@ -234,7 +234,7 @@
         opacity:0.4;
         position:absolute;
         left:15px;
-        top:94px;
+        top:59px;
         min-width:40px;
     }
 
@@ -248,6 +248,10 @@
 
     .movieCard .favourite.hovering .heart.filled{
         display:block;
+    }
+
+    .movieCard .favourite.hasFriends{
+        top:94px!important;
     }
 
     .movieCard .favourite.selected .heart.outline{

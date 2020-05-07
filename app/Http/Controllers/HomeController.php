@@ -29,9 +29,13 @@ class HomeController extends Controller
     public function index($genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0)
     {
 
+        //Users
         $user = Auth::user();
         $user_id = $user->id;
+        $UserObj = User::find($user_id);
+        $user->friendsCount = $UserObj->friendsCount();
 
+        //Movies
         $movies = DB::table('movies')
             ->leftJoin('netflix', function ($join) {
                 $join->on('netflix.movie_id', '=', 'movies.id');
@@ -131,20 +135,21 @@ class HomeController extends Controller
         $selected_amazon_only = $amazon_only;
 
 
-        $friendsA = User::find($user_id)->friendshipsA()->get();
-        $friendsB = User::find($user_id)->friendshipsB()->get();
+        $friendsA = $UserObj->friendshipsA()->get();
+        $friendsB = $UserObj->friendshipsB()->get();
         foreach ($movies as &$movie) {
             $count = 0;
             foreach ($friendsA as $friend) {
-                $thisFriend = User::find($friend->person_B_user_id);
-                $count += $thisFriend->hasWatchedMovie($movie->id) ? 1 : 0;
+                $FriendObj = User::find($friend->person_B_user_id);
+                $count += $FriendObj->hasWatchedMovie($movie->id) ? 1 : 0;
             }
             foreach ($friendsB as $friend) {
-                $thisFriend = User::find($friend->person_A_user_id);
-                $count += $thisFriend->hasWatchedMovie($movie->id) ? 1 : 0;
+                $FriendObj = User::find($friend->person_A_user_id);
+                $count += $FriendObj->hasWatchedMovie($movie->id) ? 1 : 0;
             }
             $movie->friendsWatched = $count;
         }
+
         return view(
             'home',
             [

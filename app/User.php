@@ -52,6 +52,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Friendship','person_b_user_id','id');
     }
+    
+    public function friendsCount(){
+        $friendsACount = $this->friendshipsA()->get()->count();
+        $friendsBCount = $this->friendshipsB()->get()->count();
+        return ($friendsACount + $friendsBCount);
+    }
 
     public function hasWatchedMovie($movie_id){
         $rows=DB::select("select * from movie_user where user_id=? and movie_id=?",[$this->id, $movie_id]);
