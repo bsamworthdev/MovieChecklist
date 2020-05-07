@@ -154,7 +154,8 @@ class HomeController extends Controller
                 ->get()
                 ->count();
 
-            $count += count(DB::select('select * from movie_user where movie_id=? and user_id=?',[$movie->id, $friend->person_A_user_id])) > 0;
+            // $count += count(DB::select('select * from movie_user where movie_id=? and user_id=?',[$movie->id, $friend->person_A_user_id])) > 0;
+            
             $movie->friendsWatched = $count;
         }
 
