@@ -13,7 +13,7 @@
         <style>
             html, body {
                 background-color: #fff;
-                background-image: url('/images/curtainBG.jpg');
+                background-image: url('/images/curtainBg.jpg');
                 background-repeat:no-repeat;
                 background-position:center;
                 background-size:cover;
