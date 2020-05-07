@@ -40266,7 +40266,7 @@ var render = function() {
         _c("h5", [
           _vm._v(
             _vm._s(_vm.movie.friendsWatched) +
-              " friends also watched " +
+              " of your friends has also watched " +
               _vm._s(_vm.movie.name)
           )
         ]),
