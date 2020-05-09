@@ -20,7 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/home/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{netflix_only?}/{amazon_only?}', 'HomeController@index')->name('home');
+    Route::get('/home/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{netflix_only?}/{amazon_only?}/{search_text?}', 'HomeController@index')->name('home');
     Route::get('/friends', 'FriendshipController@index')->name('friend');;
 
     Route::post('/updatemovies', 'MovieController@updateMovies');

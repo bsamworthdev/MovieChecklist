@@ -26,7 +26,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0)
+    public function index(
+        $genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, 
+        $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $search_text = "")
     {
 
         //Users
@@ -78,6 +80,9 @@ class HomeController extends Controller
             })
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user.user_id', '=', NULL);
+            })
+            ->when($search_text != '', function ($q) use ($search_text) {
+                return $q->where('movies.name', 'LIKE', '%'.$search_text.'%');
             })
             ->orderBy('rank', 'ASC')
             ->take(100)
@@ -133,6 +138,7 @@ class HomeController extends Controller
         $selected_favourites_only = $favourites_only;
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
+        $selected_search_text = $search_text;
 
 
         $friendsA = $UserObj->friendshipsA()->get();
@@ -172,7 +178,8 @@ class HomeController extends Controller
                 "selectedUnwatchedOnly" => $selected_unwatched_only,
                 "selectedFavouritesOnly" => $selected_favourites_only,
                 "selectedNetflixOnly" => $selected_netflix_only,
-                "selectedAmazonOnly" => $selected_amazon_only
+                "selectedAmazonOnly" => $selected_amazon_only,
+                "selectedSearchText" => $selected_search_text
             ]
         );
     }

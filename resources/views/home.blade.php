@@ -15,9 +15,12 @@
                                             <div class="col-lg-2 col-12">
                                                 <div id="title">My List</div> 
                                             </div>
-                                            <div class="col-lg-4"></div>
+                                            <div class="col-lg-4 col-12">
+                                                <input id="search_input" type="text" class="form-control" placeholder="Search" 
+                                                    onkeypress="return searchChanged(event);" value="{{ $selectedSearchText }}"/>
+                                            </div>
                                             <div class="col-lg-3 col-12">
-                                                <select id="time_period_select" class="form-select" onchange="return changeSelection();">
+                                                <select id="time_period_select" class="form-control" onchange="return changeSelection();">
                                                     @foreach ($timePeriods as $key => $value)
                                                         <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
                                                             {{ $value }} 
@@ -26,7 +29,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-lg-3 col-12">
-                                                <select id="genre_select" class="form-select" onchange="return changeSelection();">
+                                                <select id="genre_select" class="form-control" onchange="return changeSelection();">
                                                     @foreach ($genres as $key => $value)
                                                         <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
                                                             {{ $value }} 
@@ -125,6 +128,13 @@
         }
     }
 
+    function searchChanged(e){
+        if(e.charCode == 13){
+            changeSelection();
+            e.stopPropagation();
+        }
+    }
+    
     function changeSelection() {
         var form = document.getElementById('movie_form');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
@@ -134,6 +144,7 @@
         var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
+        var searchInput = document.getElementById('search_input');
         form.setAttribute('action', '/home/' + genreSelect.value + 
             '/' + timePeriodSelect.value + 
             '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
@@ -141,6 +152,7 @@
             '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + searchInput.value + 
             '/');
         form.submit();
     }
