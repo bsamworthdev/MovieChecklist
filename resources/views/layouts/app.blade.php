@@ -36,7 +36,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/home">Home</a>
                         </li>
-                        <li class="nav-item d-none">
+                        <li class="nav-item">
                             <a class="nav-link" href="/friends">Friends</a>
                         </li>
                     </ul>

@@ -56,7 +56,8 @@
     width:100%;
   }
   .modal-body {
-    height:72vh;
+    max-height:72vh;
+    min-height:200px;
     overflow:auto;
   }
 </style>

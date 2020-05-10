@@ -8,20 +8,22 @@
             </div>
             <br>
             <div class="row">
-                <div v-for="friend in friends" :key="friend.id" class="friend card col-12 col-md-4 col-lg-3">
-                    <div class="card-header">
-                        <h3>{{ friend.name }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <h5>Overall: {{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</h5>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-primary" @click="editButtonClicked(friend)">
-                            Edit
-                        </button>
-                        <button type="button" class="btn btn-danger" @click="deleteButtonClicked(friend)">
-                            Delete
-                        </button>
+                <div v-for="friend in friends" :key="friend.id" class="col-12 col-md-4 col-lg-3">
+                    <div class="friend card">
+                        <div class="card-header">
+                            <h4>{{ friend.name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Overall: {{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</h5>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary" @click="editButtonClicked(friend)">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-danger" @click="deleteButtonClicked(friend)">
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -125,7 +127,7 @@
         text-align:center;
     }
     .friend{
-        margin:5px;
+        margin-bottom:15px;
         padding:0px;
         background-color: #F7F7F7;
     }

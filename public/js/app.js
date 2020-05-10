@@ -1930,6 +1930,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'add-friend',
@@ -1950,6 +1953,11 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Component mounted.');
   },
   methods: {
+    emailChanged: function emailChanged(e) {// e.stopPropagation();
+      //    if (isValidEmail){
+      //        enable the button
+      //    }
+    },
     close: function close() {
       this.$emit('close');
     }
@@ -2234,6 +2242,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AddFriend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddFriend */ "./resources/js/components/AddFriend.vue");
 /* harmony import */ var _EditFriend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EditFriend */ "./resources/js/components/EditFriend.vue");
 /* harmony import */ var _DeleteFriend__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DeleteFriend */ "./resources/js/components/DeleteFriend.vue");
+//
+//
 //
 //
 //
@@ -7594,7 +7604,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin: 5px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}", ""]);
+exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin-bottom: 15px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}", ""]);
 
 // exports
 
@@ -7632,7 +7642,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.form-group label[data-v-73901578] {\n    clear:both;\n    float:left;\n    vertical-align: top;\n}\n.form-group div[data-v-73901578] {\n    float:left;\n    padding-bottom:5px;\n}\n", ""]);
+exports.push([module.i, "\n.form-group label[data-v-73901578] {\n    clear:both;\n    float:left;\n    vertical-align: top;\n}\n.form-group div[data-v-73901578] {\n    float:left;\n    padding-bottom:5px;\n}\n#sendButton[data-v-73901578]{\n    margin-top:10px;\n}\n", ""]);
 
 // exports
 
@@ -7746,7 +7756,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal.show[data-v-53ab54d2] {\n  display:block;\n}\n.modal-header > div[data-v-53ab54d2]{\n  width:100%;\n}\n.modal-body[data-v-53ab54d2] {\n  height:72vh;\n  overflow:auto;\n}\n", ""]);
+exports.push([module.i, "\n.modal.show[data-v-53ab54d2] {\n  display:block;\n}\n.modal-header > div[data-v-53ab54d2]{\n  width:100%;\n}\n.modal-body[data-v-53ab54d2] {\n  max-height:72vh;\n  min-height:200px;\n  overflow:auto;\n}\n", ""]);
 
 // exports
 
@@ -39635,14 +39645,36 @@ var render = function() {
           "form",
           {
             staticClass: "form-horizontal",
-            attrs: { action: "/addfriend", method: "POST" }
+            attrs: { action: "/createFriendRequest", method: "POST" }
           },
           [
             _c("div", { staticClass: "form-group" }, [
               _c("input", {
-                staticClass: "input-form",
-                attrs: { type: "text", placeholder: "Enter Pairing Code" }
-              })
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "email",
+                  placeholder: "Friend Email"
+                },
+                on: {
+                  keydown: function($event) {
+                    return _vm.emailChanged($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success form-control",
+                  attrs: { id: "sendButton", type: "submit" }
+                },
+                [
+                  _vm._v(
+                    "\n                    Send Friend Request\n                "
+                  )
+                ]
+              )
             ])
           ]
         )
@@ -40103,65 +40135,64 @@ var render = function() {
           _vm._l(_vm.friends, function(friend) {
             return _c(
               "div",
-              {
-                key: friend.id,
-                staticClass: "friend card col-12 col-md-4 col-lg-3"
-              },
+              { key: friend.id, staticClass: "col-12 col-md-4 col-lg-3" },
               [
-                _c("div", { staticClass: "card-header" }, [
-                  _c("h3", [_vm._v(_vm._s(friend.name))])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body" }, [
-                  _c("h5", [
-                    _vm._v(
-                      "Overall: " +
-                        _vm._s(friend.stats.overall.watched) +
-                        " of " +
-                        _vm._s(
-                          friend.stats.overall.watched +
-                            friend.stats.overall.unwatched
+                _c("div", { staticClass: "friend card" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h4", [_vm._v(_vm._s(friend.name))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("h5", [
+                      _vm._v(
+                        "Overall: " +
+                          _vm._s(friend.stats.overall.watched) +
+                          " of " +
+                          _vm._s(
+                            friend.stats.overall.watched +
+                              friend.stats.overall.unwatched
+                          )
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.editButtonClicked(friend)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Edit\n                        "
                         )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.deleteButtonClicked(friend)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Delete\n                        "
+                        )
+                      ]
                     )
                   ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-footer" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editButtonClicked(friend)
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Edit\n                    "
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-danger",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          return _vm.deleteButtonClicked(friend)
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Delete\n                    "
-                      )
-                    ]
-                  )
                 ])
               ]
             )

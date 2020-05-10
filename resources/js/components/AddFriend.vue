@@ -6,9 +6,12 @@
         </div>
 
         <div slot="body">
-            <form action="/addfriend" method="POST" class="form-horizontal">
+            <form action="/createFriendRequest" method="POST" class="form-horizontal">
                 <div class="form-group">
-                    <input type="text" class="input-form" placeholder="Enter Pairing Code"/>
+                    <input type="text" name="email" class="form-control" @keydown="emailChanged($event)" placeholder="Friend Email"/>
+                    <button id="sendButton" type="submit" class="btn btn-success form-control">
+                        Send Friend Request
+                    </button>
                 </div>    
             </form>
         </div>
@@ -40,6 +43,12 @@
             console.log('Component mounted.')
         },
         methods: {
+            emailChanged: function(e) {
+               // e.stopPropagation();
+            //    if (isValidEmail){
+            //        enable the button
+            //    }
+            },
             close: function() {
                 this.$emit('close')
             }
@@ -55,5 +64,8 @@
     .form-group div {
         float:left;
         padding-bottom:5px;
+    }
+    #sendButton{
+        margin-top:10px;
     }
 </style>

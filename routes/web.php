@@ -34,9 +34,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
     Route::post('/getFriendsStats/{movie_id?}/', 'UserController@getFriendsStats'); 
 
-    Route::post('/addfriend', 'FriendshipController@add');
     Route::post('/editfriend', 'FriendshipController@edit');
     Route::post('/deletefriend', 'FriendshipController@delete');
+
+    Route::post('/createFriendRequest', 'FriendRequestController@create');  
 });
+
+Route::get('/acceptFriendRequest/{token}', 'FriendRequestController@accept');
 
 
