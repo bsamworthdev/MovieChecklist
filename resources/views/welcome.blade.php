@@ -8,11 +8,12 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
+                background-color: #000000;
                 background-image: url('/images/curtainBg.jpg');
                 background-repeat:no-repeat;
                 background-position:center;
@@ -50,8 +51,45 @@
                 padding:20px;
             }
 
-            .title {
-                font-size: 84px;
+            @media only screen and (orientation:portrait) and (max-width: 600px) {
+                .title {
+                    font-size: 40px;
+                }
+                .subtitle {
+                    font-size: 24px;
+                }
+            }
+
+            @media only screen and (orientation:landscape) and (max-width: 850px) {
+                .title {
+                    font-size: 40px;
+                }
+                .subtitle {
+                    font-size: 24px;
+                }
+                .screenshot{
+                    display:none;
+                }
+            }
+
+            @media only screen and (orientation:portrait) and (min-width: 601px) {
+                .title {
+                    font-size: 84px;
+                }
+
+                .subtitle {
+                    font-size: 34px;
+                }
+            }
+
+            @media only screen and (orientation:landscape) and (min-width: 851px) {
+                .title {
+                    font-size: 84px;
+                }
+
+                .subtitle {
+                    font-size: 34px;
+                }
             }
 
             .links > a {
@@ -66,6 +104,17 @@
 
             .m-b-md {
                 margin-bottom: 0px;
+            }
+
+            .screenshot{
+                width:auto;
+                height:25vh;
+                min-height:180px;
+                margin-bottom:20px;
+            }
+
+            .registerButton{
+                font-size:30px;
             }
         </style>
     </head>
@@ -89,6 +138,17 @@
                 <div class="title m-b-md">
                     Movie Checklist
                 </div>
+                <div class="subtitle m-b-md">
+                    How many top 100 movies have you seen?
+                </div>
+                <img class="screenshot" src="images/moviechecklist screenshot.png" />
+                <br>
+                @if (Route::has('register'))
+                    <button class="registerButton btn btn-success" onclick="location.href='{{ route('register') }}'">Sign Up (It's free)</button>
+                    <br>
+                    <a href="{{ route('login') }}">I already have an account</a>
+                @endif
+               
             </div>
         </div>
     </body>
