@@ -32,6 +32,6 @@ class FriendRequestAcceptMailable extends Mailable
     public function build()
     {
         //return $this->view('view.name');
-        return $this->view('emails.friend-request-accept');
+        return $this->view('emails.friend-request-accepted');
     }
 }

@@ -17,7 +17,7 @@
                             <h5>Overall: {{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</h5>
                         </div>
                         <div class="card-footer">
-                            <button type="button" class="btn btn-primary" @click="editButtonClicked(friend)">
+                            <button type="button" class="btn btn-primary d-none" @click="editButtonClicked(friend)">
                                 Edit
                             </button>
                             <button type="button" class="btn btn-danger" @click="deleteButtonClicked(friend)">

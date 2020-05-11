@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware('guest');;
 
 Auth::routes();
 
@@ -40,6 +40,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/createFriendRequest', 'FriendRequestController@create');  
 });
 
-Route::get('/acceptFriendRequest/{token}', 'FriendRequestController@accept');
+Route::get('/acceptFriendRequest/{token}', 'FriendRequestResponseController@accept');
 
 

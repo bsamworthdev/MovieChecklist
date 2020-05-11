@@ -143,11 +143,13 @@
                 </div>
                 <img class="screenshot" src="images/moviechecklist screenshot.png" />
                 <br>
-                @if (Route::has('register'))
-                    <button class="registerButton btn btn-success" onclick="location.href='{{ route('register') }}'">Sign Up (It's free)</button>
-                    <br>
-                    <a href="{{ route('login') }}">I already have an account</a>
-                @endif
+                @guest
+                    @if (Route::has('register'))
+                        <button class="registerButton btn btn-success" onclick="location.href='{{ route('register') }}'">Sign Up (It's free)</button>
+                        <br>
+                        <a href="{{ route('login') }}">I already have an account</a>
+                    @endif
+                @endguest
                
             </div>
         </div>

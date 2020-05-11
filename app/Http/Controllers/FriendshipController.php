@@ -29,21 +29,28 @@ class FriendshipController extends Controller
          $friends = Friendship::find($user_id);
         $user = User::find($user_id);
         $friendsA = $user->friendshipsA()
-            ->join('users', 'users.id', '=', 'friendships.person_B_user_id')
-            ->get('*');
+            ->join('users', 'users.id', '=', 'friendships.person_B_user_id');
 
-        $friendsB = $user->friendshipsB()
+        // $friendsB = $user->friendshipsB()
+        //     ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
+        //     ->get('*')
+        //     ->sortBy('name');
+
+        $friends = $user->friendshipsB()
             ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
+            ->union($friendsA)
+            ->orderBy('name')
             ->get('*');
 
-        $friends = $friendsA->merge($friendsB);
+        // $friends = $friendsA->merge($friendsB);
 
         foreach($friends as &$friend){
             $friendUser = User::find($friend->id);
             $friend->name = $friendUser->name;
-            $friend['stats'] = $friendUser->getStats();
+            $friend->stats = $friendUser->getStats();
         }
 
+        // $friends = $friends;
         // dd($friends);
         //sort alphabetically
         // usort($friends,function($a,$b) {return strcmp($a['name'],$b['name']);});

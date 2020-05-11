@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Friend Request Accepted</title>
-</head>
-<body>
-    You have accepted the friend request from {{ $user->name }}.
-</body>
-</html>
+@extends('layouts.nonauth')
+
+@section('content')
+    <h4>
+        <i class="fa fa-check" style="color:green; margin-right:30px; font-size:30px;"></i>
+        You have accepted the friend request from {{ $user->name }}.
+    </h4>
+@endsection

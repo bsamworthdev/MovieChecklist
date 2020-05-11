@@ -2,7 +2,7 @@
     <modal :parentData="{modalId: parentData.modalId}"  @close="close">
         <div slot="header">
             <button type="button" class="close" @click="$emit('close')" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h5 class="modal-title">Add Call</h5>
+            <h5 class="modal-title">Add Friend</h5>
         </div>
 
         <div slot="body">

@@ -39637,7 +39637,7 @@ var render = function() {
           [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
         ),
         _vm._v(" "),
-        _c("h5", { staticClass: "modal-title" }, [_vm._v("Add Call")])
+        _c("h5", { staticClass: "modal-title" }, [_vm._v("Add Friend")])
       ]),
       _vm._v(" "),
       _c("div", { attrs: { slot: "body" }, slot: "body" }, [
@@ -40160,7 +40160,7 @@ var render = function() {
                     _c(
                       "button",
                       {
-                        staticClass: "btn btn-primary",
+                        staticClass: "btn btn-primary d-none",
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
