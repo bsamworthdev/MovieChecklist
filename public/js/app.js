@@ -40804,7 +40804,7 @@ var render = function() {
     [
       _c("div", { staticClass: "row justify-content-left" }, [
         _vm.user.role == "admin"
-          ? _c("div", { staticClass: "btn-group col-12" }, [
+          ? _c("div", { staticClass: "d-none btn-group col-12" }, [
               _c(
                 "button",
                 {
@@ -40823,10 +40823,12 @@ var render = function() {
                   on: { click: _vm.updateMovieImages }
                 },
                 [_vm._v("Update Movie Images")]
-              ),
-              _vm._v(" "),
-              _c("span", { staticClass: "btn-separator" }),
-              _vm._v(" "),
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.user.role == "admin"
+          ? _c("div", { staticClass: "btn-group col-12" }, [
               _c(
                 "button",
                 {
@@ -40834,14 +40836,12 @@ var render = function() {
                   on: { click: _vm.updateSavedMovieImages }
                 },
                 [_vm._v("Update Saved Movie Images")]
-              ),
-              _vm._v(" "),
-              _c("span", { staticClass: "btn-separator" })
+              )
             ])
           : _vm._e(),
         _vm._v(" "),
         _vm.user.role == "admin"
-          ? _c("div", { staticClass: "btn-group col-12" }, [
+          ? _c("div", { staticClass: "d-none btn-group col-12" }, [
               _c(
                 "button",
                 {
