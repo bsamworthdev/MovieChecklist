@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\User;
 
-class FriendRequestAcceptMailable extends Mailable
+class FriendInvitationMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,6 +18,7 @@ class FriendRequestAcceptMailable extends Mailable
      * @return void
      */
     public $user;
+    public $token;
 
     public function __construct(User $user)
     {
@@ -31,7 +32,6 @@ class FriendRequestAcceptMailable extends Mailable
      */
     public function build()
     {
-        //return $this->view('view.name');
-        return $this->subject('Movie Checklist Friend Request Accepted')->view('emails.friend-request-accepted');
+        return $this->subject('Movie Checklist Invitation')->view('emails.friend-invitation');
     }
 }

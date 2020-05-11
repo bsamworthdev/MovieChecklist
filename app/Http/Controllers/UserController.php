@@ -74,4 +74,11 @@ class UserController extends Controller
 
         return $friendsStats;
     }
+
+    public function findUserByEmail(Request $request){
+        $email = $request->email;
+        $userCount = User::where('email', '=', $email)->count();
+        
+        return ($userCount > 0);
+    }
 }

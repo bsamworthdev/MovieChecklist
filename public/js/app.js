@@ -1933,6 +1933,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'add-friend',
@@ -1953,14 +1956,32 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Component mounted.');
   },
   methods: {
-    emailChanged: function emailChanged(e) {// e.stopPropagation();
-      //    if (isValidEmail){
+    emailChanged: function emailChanged(e) {
+      var _this = this;
+
+      e.stopPropagation(); //    if (isValidEmail){
       //        enable the button
       //    }
+
+      axios.post('/findUserByEmail/', {
+        email: this.enteredEmail
+      }).then(function (response) {
+        _this.userExists = response.data;
+        console.log(response);
+      })["catch"](function (error) {
+        _this.userExists = false;
+        console.log(error);
+      });
     },
     close: function close() {
       this.$emit('close');
     }
+  },
+  data: function data() {
+    return {
+      userExists: false,
+      enteredEmail: ''
+    };
   }
 });
 
@@ -39650,15 +39671,31 @@ var render = function() {
           [
             _c("div", { staticClass: "form-group" }, [
               _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.enteredEmail,
+                    expression: "enteredEmail"
+                  }
+                ],
                 staticClass: "form-control",
                 attrs: {
                   type: "text",
                   name: "email",
-                  placeholder: "Friend Email"
+                  placeholder: "Friend Email",
+                  value: ""
                 },
+                domProps: { value: _vm.enteredEmail },
                 on: {
-                  keydown: function($event) {
+                  keyup: function($event) {
                     return _vm.emailChanged($event)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.enteredEmail = $event.target.value
                   }
                 }
               }),
@@ -39667,6 +39704,21 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-success form-control",
+                  class: { "d-none": _vm.userExists },
+                  attrs: { id: "sendButton", type: "submit" }
+                },
+                [
+                  _vm._v(
+                    "\n                    Invite a friend\n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success form-control",
+                  class: { "d-none": !_vm.userExists },
                   attrs: { id: "sendButton", type: "submit" }
                 },
                 [

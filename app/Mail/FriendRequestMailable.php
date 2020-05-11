@@ -34,6 +34,6 @@ class FriendRequestMailable extends Mailable
     public function build()
     {
         //return $this->view('view.name');
-        return $this->view('emails.friend-request');
+        return $this->subject('Movie Checklist Friend Request')->view('emails.friend-request');
     }
 }

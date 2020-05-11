@@ -38,6 +38,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/deletefriend', 'FriendshipController@delete');
 
     Route::post('/createFriendRequest', 'FriendRequestController@create');  
+    Route::post('/findUserByEmail', 'UserController@findUserByEmail'); 
+    
 });
 
 Route::get('/acceptFriendRequest/{token}', 'FriendRequestResponseController@accept');

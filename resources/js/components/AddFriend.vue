@@ -8,8 +8,11 @@
         <div slot="body">
             <form action="/createFriendRequest" method="POST" class="form-horizontal">
                 <div class="form-group">
-                    <input type="text" name="email" class="form-control" @keydown="emailChanged($event)" placeholder="Friend Email"/>
-                    <button id="sendButton" type="submit" class="btn btn-success form-control">
+                    <input type="text" name="email" class="form-control" @keyup="emailChanged($event)" placeholder="Friend Email" v-model="enteredEmail" value=""/>
+                    <button id="sendButton" type="submit" :class="{'d-none':userExists}" class="btn btn-success form-control">
+                        Invite a friend
+                    </button>
+                    <button id="sendButton" type="submit" :class="{'d-none':!userExists}" class="btn btn-success form-control">
                         Send Friend Request
                     </button>
                 </div>    
@@ -44,13 +47,31 @@
         },
         methods: {
             emailChanged: function(e) {
-               // e.stopPropagation();
+                e.stopPropagation();
             //    if (isValidEmail){
             //        enable the button
             //    }
+
+            axios.post('/findUserByEmail/',{
+                    email:this.enteredEmail                  
+                })
+                .then((response) => {
+                    this.userExists = response.data;
+                    console.log(response);
+                })
+                .catch((error) => {
+                    this.userExists = false;
+                    console.log(error);
+                });
             },
             close: function() {
                 this.$emit('close')
+            }
+        },
+        data() {
+            return {
+                userExists: false,
+                enteredEmail: ''
             }
         }
     }
