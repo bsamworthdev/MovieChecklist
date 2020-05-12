@@ -26,7 +26,11 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-right">
+                                {{ __('E-Mail Address') }}&nbsp; 
+                                <i class="fas fa-info-circle" style="color:#212529" data-toggle="tooltip" data-placement="top" title="This is just required for verification. 
+                                It will NOT be used for spamming or passed on to third-parties. EVER."></i>
+                            </label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
@@ -75,3 +79,9 @@
     </div>
 </div>
 @endsection
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
