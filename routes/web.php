@@ -43,5 +43,6 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/acceptFriendRequest/{token}', 'FriendRequestResponseController@accept');
+Route::get('/about', 'AboutController@index');
 
 
