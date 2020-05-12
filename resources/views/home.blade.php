@@ -38,7 +38,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mt-3">
                                             <div class="col-lg-2 col-12">
                                                 <div class="card" id="streamCard">
                                                     <label>
@@ -62,7 +62,6 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4 col-12"></div>
                                             <div class="col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
@@ -83,6 +82,18 @@
                                                 </label>
                                             </div>
                                             <div class="col-lg-2 col-12">
+                                                <label class="vertAlign" style="white-space: nowrap;">
+                                                    Unwatched By &nbsp;
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-4 col-12">
+                                                <friend-multi-select
+                                                    :options="{{ json_encode($user->friends, TRUE) }}"
+                                                    onclick="friendMultiSelectChanged()"
+                                                    >
+                                                </friend-multi-select>
+                                            </div>
+                                            <div class="d-none col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
                                                         Unwatched Only <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
@@ -134,11 +145,16 @@
             e.stopPropagation();
         }
     }
+
+    function friendMultiSelectChanged(){
+        changeSelection();
+    }
     
     function changeSelection() {
         var form = document.getElementById('movie_form');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
         var unwatchedOnlyCheckbox = document.getElementById('unwatched_only_checkbox');
+        var friendMultiSelect = document.getElementById('friendMultiSelect');
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
         var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
         var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
@@ -153,6 +169,7 @@
             '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
             '/' + searchInput.value + 
+            '/' + friendMultiSelect.value +
             '/');
         form.submit();
     }

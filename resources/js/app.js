@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('scratch-card-grid', require('./components/ScratchCardGrid.vue').default);
+Vue.component('friend-multi-select', require('./components/FriendMultiSelect.vue').default);
 Vue.component('scratch-card', require('./components/ScratchCard.vue').default);
 Vue.component('friends-list', require('./components/FriendsList.vue').default);
 Vue.component('stats-table', require('./components/StatsTable.vue').default);

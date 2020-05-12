@@ -141,22 +141,41 @@ class HomeController extends Controller
         $selected_search_text = $search_text;
 
 
-        $friendsA = $UserObj->friendshipsA()->get();
-        $friendsB = $UserObj->friendshipsB()->get();
-        $friends =[];
-        foreach ($friendsA as $friend) {
-            $friends[]=$friend->person_B_user_id;
+        // $friendsA = $UserObj->friendshipsA()->get();
+        // $friendsB = $UserObj->friendshipsB()->get();
+        // $friend_ids =[];
+        // foreach ($friendsA as $friend) {
+        //     $friend_ids[]=$friend->person_B_user_id;
+        // }
+        // foreach ($friendsB as $friend) {
+        //     $friend_ids[]=$friend->person_A_user_id;
+        // }
+
+        $friendsA = $UserObj->friendshipsA()
+            ->join('users', 'users.id', '=', 'friendships.person_B_user_id');
+
+        $friends = $UserObj->friendshipsB()
+            ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
+            ->union($friendsA)
+            ->orderBy('name')
+            ->get('*');
+        
+        foreach ($friends as $friend) {
+            $friend_ids[]=$friend->id;
         }
-        foreach ($friendsB as $friend) {
-            $friends[]=$friend->person_A_user_id;
+
+        $friends = [];
+        foreach ($friend_ids as $friend_id) {
+            $friends[] = User::find($friend_id);
         }
+        $user->friends = $friends;
         
         foreach ($movies as &$movie) {
             $count = 0;
 
             $count += DB::table('movie_user')
                 ->where ('movie_id', '=', $movie->id)
-                ->whereIn('user_id', $friends)
+                ->whereIn('user_id', $friend_ids)
                 ->get()
                 ->count();
 

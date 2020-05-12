@@ -26,15 +26,9 @@ class FriendshipController extends Controller
         //     ->join('users', 'users.id', '=', 'friendships.person_B_user_id')
         //     ->get('*');
 
-         $friends = Friendship::find($user_id);
         $user = User::find($user_id);
         $friendsA = $user->friendshipsA()
             ->join('users', 'users.id', '=', 'friendships.person_B_user_id');
-
-        // $friendsB = $user->friendshipsB()
-        //     ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
-        //     ->get('*')
-        //     ->sortBy('name');
 
         $friends = $user->friendshipsB()
             ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
