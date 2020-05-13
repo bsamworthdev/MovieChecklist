@@ -32,6 +32,9 @@ class FriendInvitationMailable extends Mailable
      */
     public function build()
     {
-        return $this->subject('Movie Checklist Invitation')->view('emails.friend-invitation');
+        return $this->view('emails.friend-invitation')
+        ->with(['message' => $this])
+        ->subject('Movie Checklist Invitation');
+        
     }
 }
