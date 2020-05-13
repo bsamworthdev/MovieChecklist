@@ -7,6 +7,9 @@
   <title>Document</title>
 </head>
 <body>
-  <h4>{{ $user->name }} has accepted your friend request</h4>
+  <h4>Hi</h4>
+  <p>  
+    Just an automated message to let you know that {{ $user->name }} has accepted your friend request Movie Checklist</h4>
+  </p>
 </body>
 </html>
