@@ -27,7 +27,7 @@ class UserController extends Controller
         $movie_id = $request->movie_id;
         
         if ($request->watched){
-            DB::statement("insert into movie_user (user_id,movie_id) values ($user_id, $movie_id)");
+            DB::statement("insert into movie_user (user_id,movie_id, created_at, updated_at) values ($user_id, $movie_id, NOW(), NOW())");
             // DB::insert('insert into users (email, votes) values (?, ?)', ['john@example.com', '0']);
         } else {
             DB::statement("delete from movie_user where user_id=$user_id and movie_id=$movie_id");
@@ -40,7 +40,7 @@ class UserController extends Controller
         $movie_id = $request->movie_id;
 
         if ($request->favourite){
-            DB::update("update movie_user set favourite=1 where user_id=? and movie_id=?", [$user_id, $movie_id]);
+            DB::update("update movie_user set favourite=1, updated_at=NOW() where user_id=? and movie_id=?", [$user_id, $movie_id]);
             // DB::insert('insert into users (email, votes) values (?, ?)', ['john@example.com', '0']);
         } else {
             DB::update("update movie_user set favourite=0 where user_id=? and movie_id=?", [$user_id, $movie_id]);
