@@ -43,7 +43,7 @@ class UserController extends Controller
             DB::update("update movie_user set favourite=1, updated_at=NOW() where user_id=? and movie_id=?", [$user_id, $movie_id]);
             // DB::insert('insert into users (email, votes) values (?, ?)', ['john@example.com', '0']);
         } else {
-            DB::update("update movie_user set favourite=0 where user_id=? and movie_id=?", [$user_id, $movie_id]);
+            DB::update("update movie_user set favourite=0, updated_at=NOW() where user_id=? and movie_id=?", [$user_id, $movie_id]);
         }
     }
 

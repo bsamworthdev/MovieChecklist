@@ -21,18 +21,20 @@
                                             </div>
                                             <div class="col-lg-3 col-12">
                                                 <select id="time_period_select" class="form-control" onchange="return changeSelection();">
-                                                    @foreach ($timePeriods as $key => $value)
-                                                        <option value="{{ $key }}" {{ ( $key == $selectedTimePeriod) ? 'selected' : '' }}> 
-                                                            {{ $value }} 
+                                                    <option value="all" {{ ( $selectedTimePeriod =="all") ? 'selected' : '' }}> All Years </option>
+                                                    @foreach ($timePeriods as $timePeriod)
+                                                        <option value="{{ $timePeriod->time_period }}" {{ ( $timePeriod->time_period == $selectedTimePeriod) ? 'selected' : '' }}> 
+                                                            {{ $timePeriod->label }} 
                                                         </option>
                                                     @endforeach    
                                                 </select>
                                             </div>
                                             <div class="col-lg-3 col-12">
                                                 <select id="genre_select" class="form-control" onchange="return changeSelection();">
-                                                    @foreach ($genres as $key => $value)
-                                                        <option value="{{ $key }}" {{ ( $key == $selectedGenre) ? 'selected' : '' }}> 
-                                                            {{ $value }} 
+                                                    <option value="all" {{ ( $selectedGenre =="all") ? 'selected' : '' }}> All Genres </option>
+                                                    @foreach ($genres as $genre)    
+                                                        <option value="{{ $genre->genre }}" {{ ( $genre->genre  == $selectedGenre) ? 'selected' : '' }}> 
+                                                            {{ $genre->label }} 
                                                         </option>
                                                     @endforeach    
                                                 </select>
