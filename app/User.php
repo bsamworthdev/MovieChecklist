@@ -78,11 +78,11 @@ class User extends Authenticatable
             from movies 
             left join movie_user on 
                 (movies.id=movie_user.movie_id 
-                and movie_user.user_id=$user_id) 
+                and movie_user.user_id=?) 
             where 
-                (movie_user.user_id=$user_id 
+                (movie_user.user_id=? 
                 or movie_user.user_id IS NULL) 
-            order by movies.id");
+            order by movies.id",[$user_id, $user_id]);
         
         $stats['overall']['watched'] = 0;
         $stats['overall']['unwatched'] = 0;

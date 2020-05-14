@@ -19,22 +19,12 @@ class FriendshipController extends Controller
     {
 
         $user_id = Auth::user()->id;
-
-        //$friends = Friendship::find($user_id);
-        // $user = User::find($user_id);
-        // $friends = $user->friendships()
-        //     ->join('users', 'users.id', '=', 'friendships.person_B_user_id')
-        //     ->get('*');
-
-         $friends = Friendship::find($user_id);
+        $friends = Friendship::find($user_id);
         $user = User::find($user_id);
+
+        //Get friend IDs
         $friendsA = $user->friendshipsA()
             ->join('users', 'users.id', '=', 'friendships.person_B_user_id');
-
-        // $friendsB = $user->friendshipsB()
-        //     ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
-        //     ->get('*')
-        //     ->sortBy('name');
 
         $friends = $user->friendshipsB()
             ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
@@ -42,18 +32,13 @@ class FriendshipController extends Controller
             ->orderBy('name')
             ->get('*');
 
-        // $friends = $friendsA->merge($friendsB);
 
+        //Get friends' stats
         foreach($friends as &$friend){
             $friendUser = User::find($friend->id);
             $friend->name = $friendUser->name;
             $friend->stats = $friendUser->getStats();
         }
-
-        // $friends = $friends;
-        // dd($friends);
-        //sort alphabetically
-        // usort($friends,function($a,$b) {return strcmp($a['name'],$b['name']);});
 
         return view('friends', [
                 "friends" => $friends
