@@ -102,39 +102,10 @@ class HomeController extends Controller
             $count++;
         }
 
-        // $movie_genres = [
-        //     'all' => 'All Genres',
-        //     'action' => 'Action',
-        //     'animation' => 'Animated',
-        //     'comedy' => 'Comedy',
-        //     'crime' => 'Crime',
-        //     'drama' => 'Drama',
-        //     'family' => 'Family',
-        //     'fantasy' => 'Fantasy',
-        //     'history' => 'History',
-        //     'music' => 'Music',
-        //     'sci-fi' => 'Sci-Fi',
-        //     'sport' => 'Sport',
-        //     'thriller' => 'Thriller',
-        //     'war' => 'War',
-        // ];
         $movie_genres = MovieGenre::all();
         $selected_genre = $genre;
 
         $time_periods = MovieTimePeriod::all();
-        // $time_periods = [
-        //     'all' => 'All Years',
-        //     'last_50_years' => 'Last 50 Years',
-        //     'last_25_years' => 'Last 25 Years',
-        //     'last_10_years' => 'Last 10 Years',
-        //     '2010s' => '2010s',
-        //     '2000s' => '2000s',
-        //     '90s' => '90s',
-        //     '80s' => '80s',
-        //     '80s' => '80s',
-        //     '70s' => '70s',
-        //     '60s' => '60s',
-        // ];
         $selected_time_period = $time_period;
 
         $selected_english_only = $english_only;
