@@ -73,6 +73,33 @@ class User extends Authenticatable
     public function getStats(){
         $user_id = $this->id;
 
+        $stats['overall'] = $this->getSpecificStats();
+
+        $movie_genres = MovieGenre::all();
+        foreach ($movie_genres as $movie_genre){
+            $stats['genre'][$movie_genre->genre] = $this->getSpecificStats('genre','%'.$movie_genre->genre.'%');
+        }
+
+        $movie_time_periods = MovieTimePeriod::all();
+        foreach ($movie_time_periods as $movie_time_period){
+            $stats['time_period'][$movie_time_period->time_period] = $this->getSpecificStats('time_period', $movie_time_period->time_period);
+        }
+
+        return $stats;
+    }
+
+    public function getSpecificStats($filterType = NULL, $filterValue  = NULL){
+        $user_id = $this->id;
+
+        if ($filterType && $filterValue) {
+            $filterSQL = " AND $filterType LIKE '$filterValue'";
+        }
+
+        if ($filterType == 'time_period'){
+            $dates = Movie::parseTimePeriod($filterValue);
+            $filterSQL = "AND movies.year BETWEEN ".$dates['from']." AND ".$dates['to']." ";
+        }
+
         $userMovies = DB::select("select movies.name,movies.imdb_id, 
                 IFNULL(movie_user.user_id,0)>0 as watched 
             from movies 
@@ -81,18 +108,19 @@ class User extends Authenticatable
                 and movie_user.user_id=?) 
             where 
                 (movie_user.user_id=? 
-                or movie_user.user_id IS NULL) 
-            order by movies.id",[$user_id, $user_id]);
+                or movie_user.user_id IS NULL) ".
+                (isset($filterSQL) ? $filterSQL : '').
+            "order by movies.id",[$user_id, $user_id]);
         
-        $stats['overall']['watched'] = 0;
-        $stats['overall']['unwatched'] = 0;
+        $stats['watched'] = 0;
+        $stats['unwatched'] = 0;
         //$stats_categorised = [];
         foreach ($userMovies as $userMovie){
-            if (($stats['overall']['watched'] + $stats['overall']['unwatched']) < 100){
+            if (($stats['watched'] + $stats['unwatched']) < 100){
                 if ($userMovie->watched == 1) {
-                    $stats['overall']['watched'] += 1;
+                    $stats['watched'] += 1;
                 } else {
-                    $stats['overall']['unwatched'] += 1;
+                    $stats['unwatched'] += 1;
                 }
             }
         }

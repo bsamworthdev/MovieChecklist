@@ -2319,6 +2319,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2354,6 +2366,20 @@ __webpack_require__.r(__webpack_exports__);
     },
     filter: function filter(event) {
       this.selectedPersonId = parseInt(event.target.value);
+    },
+    statRating: function statRating(genre) {
+      var percent = genre.watched / (genre.watched + genre.unwatched) * 100;
+      var rating = '';
+
+      if (percent > 40) {
+        rating = 'good';
+      } else if (percent > 20) {
+        rating = 'medium';
+      } else {
+        rating = 'bad';
+      }
+
+      return rating;
     }
   },
   data: function data() {
@@ -7625,7 +7651,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin-bottom: 15px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}", ""]);
+exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin-bottom: 15px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}\n.stat.good[data-v-7f617538] {\n  color: green;\n}\n.stat.medium[data-v-7f617538] {\n  color: orange;\n}\n.stat.bad[data-v-7f617538] {\n  color: red;\n}\nspan.genre[data-v-7f617538], span.time_period[data-v-7f617538] {\n  min-width: 100px;\n}", ""]);
 
 // exports
 
@@ -40194,19 +40220,88 @@ var render = function() {
                     _c("h4", [_vm._v(_vm._s(friend.name))])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "card-body" }, [
-                    _c("h5", [
-                      _vm._v(
-                        "Overall: " +
-                          _vm._s(friend.stats.overall.watched) +
-                          " of " +
-                          _vm._s(
-                            friend.stats.overall.watched +
-                              friend.stats.overall.unwatched
+                  _c(
+                    "div",
+                    { staticClass: "card-body" },
+                    [
+                      _c("h5", [
+                        _vm._v("Top 100: "),
+                        _c(
+                          "span",
+                          {
+                            staticClass: "stat",
+                            class: _vm.statRating(friend.stats.overall)
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(friend.stats.overall.watched) +
+                                " of " +
+                                _vm._s(
+                                  friend.stats.overall.watched +
+                                    friend.stats.overall.unwatched
+                                )
+                            )
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(friend.stats.genre, function(genre, key) {
+                        return _c("div", { key: key }, [
+                          _c("span", { staticClass: "genre" }, [
+                            _vm._v(_vm._s(key) + ":")
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "stat",
+                              class: _vm.statRating(genre)
+                            },
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(genre.watched) +
+                                  " of " +
+                                  _vm._s(genre.watched + genre.unwatched) +
+                                  "\n                            "
+                              )
+                            ]
                           )
-                      )
-                    ])
-                  ]),
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _vm._l(friend.stats.time_period, function(
+                        time_period,
+                        key
+                      ) {
+                        return _c("div", { key: key }, [
+                          _c("span", { staticClass: "time_period" }, [
+                            _vm._v(_vm._s(key) + ":")
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "stat",
+                              class: _vm.statRating(time_period)
+                            },
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(time_period.watched) +
+                                  " of " +
+                                  _vm._s(
+                                    time_period.watched + time_period.unwatched
+                                  ) +
+                                  "\n                            "
+                              )
+                            ]
+                          )
+                        ])
+                      })
+                    ],
+                    2
+                  ),
                   _vm._v(" "),
                   _c("div", { staticClass: "card-footer" }, [
                     _c(

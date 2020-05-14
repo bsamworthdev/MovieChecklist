@@ -14,7 +14,19 @@
                             <h4>{{ friend.name }}</h4>
                         </div>
                         <div class="card-body">
-                            <h5>Overall: {{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</h5>
+                            <h5>Top 100: <span class="stat" :class="statRating(friend.stats.overall)">{{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</span></h5>
+                            <div v-for="(genre, key) in friend.stats.genre" :key="key">
+                                <span class="genre">{{key}}:</span>
+                                <span class="stat" :class="statRating(genre)">
+                                    {{ genre.watched }} of {{ genre.watched + genre.unwatched }}
+                                </span>
+                            </div>
+                            <div v-for="(time_period, key) in friend.stats.time_period" :key="key">
+                                <span class="time_period">{{key}}:</span>
+                                <span class="stat" :class="statRating(time_period)">
+                                    {{ time_period.watched }} of {{ time_period.watched + time_period.unwatched }}
+                                </span>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <button type="button" class="btn btn-primary d-none" @click="editButtonClicked(friend)">
@@ -91,6 +103,20 @@
             },
             filter(event) {
                 this.selectedPersonId = parseInt(event.target.value);
+            },
+            statRating(genre) {
+                var percent = (genre.watched/(genre.watched+genre.unwatched))*100;
+                var rating = '';
+                if (percent > 40){
+                    rating = 'good';
+                }
+                else if (percent > 20){
+                    rating = 'medium';
+                }
+                else {
+                    rating = 'bad';
+                }
+                return rating;
             }
         },
         data() {
@@ -133,5 +159,17 @@
     }
     .card-footer{
         text-align:center;
+    }
+    .stat.good{
+        color:green;
+    }
+    .stat.medium{
+        color:orange;
+    }
+    .stat.bad{
+        color:red;
+    }
+    span.genre, span.time_period{
+        min-width:100px;
     }
 </style>
