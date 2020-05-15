@@ -13,10 +13,10 @@
                         <div class="card-header">
                             <h4>
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-8 title">
                                         {{ friend.name }} 
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4 starContainer">
                                         <i class="fa fa-star star"></i>
                                         <i class="fa fa-star star"></i>
                                         <i class="fa fa-star star"></i>
@@ -236,6 +236,10 @@
         text-shadow: 0 0 3px #000;
         font-size:16px;
     }
+    .starContainer{
+        line-height:16px;
+        white-space:nowrap;
+    }
     .friend.bad .star:nth-of-type(1),
     .friend.medium .star:nth-of-type(1),
     .friend.good .star:nth-of-type(1){
@@ -247,5 +251,31 @@
     }
     .friend.good .star:nth-of-type(3){
         color:yellow;
+    }
+    .friend .card-header{
+        padding-bottom:1px;
+    }
+
+    @media (max-width: 1200px) {
+        .star {
+            font-size:12px;
+        }
+        .starContainer{
+            line-height:12px;
+        }
+        .title{
+            font-size:18px;
+        }
+    }
+    @media (max-width: 767px) {
+        .star {
+            font-size:16px;
+        }
+        .starContainer{
+            line-height:16px;
+        }
+        .title{
+            font-size:22px;
+        }
     }
 </style>
