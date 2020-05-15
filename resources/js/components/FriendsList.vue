@@ -2,38 +2,62 @@
     <div id="friendsList" :class="{ 'modal-open': activeModal > 0 }">
         <div class="container">
             <div class="row">
-                <div class="btn-group col-6">
-                    <button type="button" class="btn btn-primary" @click="addButtonClicked">+ Add Friend</button>
+                <div class="btn-group col-12">
+                    <button type="button" class="btn btn-success" @click="addButtonClicked">+ Add Friend</button>
                 </div>
             </div>
             <br>
             <div class="row">
-                <div v-for="friend in friends" :key="friend.id" class="col-12 col-md-4 col-lg-3">
-                    <div class="friend card">
+                <div v-for="friend in friends" :key="friend.id" class="col-12 col-md-6 col-lg-4">
+                    <div class="friend card" :class="statRating(friend.stats.overall)">
                         <div class="card-header">
                             <h4>{{ friend.name }}</h4>
                         </div>
                         <div class="card-body">
-                            <h5>Top 100: <span class="stat" :class="statRating(friend.stats.overall)">{{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</span></h5>
-                            <div v-for="(genre, key) in friend.stats.genre" :key="key">
-                                <span class="genre">{{key}}:</span>
-                                <span class="stat" :class="statRating(genre)">
-                                    {{ genre.watched }} of {{ genre.watched + genre.unwatched }}
-                                </span>
+                            <h5>Top 100 Movies: <span class="stat" :class="statRating(friend.stats.overall)">{{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</span></h5>
+                            <button class="btn btn-primary col-12" type="button" data-toggle="collapse" data-target="#genresContainer" aria-expanded="false" aria-controls="genresContainer">
+                            Stats By Genre
+                            </button>
+                            <div class="collapse" id="genresContainer">
+                                <div class="card card-body">
+                                    <div class="row" v-for="(genre, key) in friend.stats.genre" :key="key">
+                                        <div class="col-7">
+                                            <span class="genre">{{key}}:</span>
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="stat" :class="statRating(genre)">
+                                                {{ genre.watched }} / {{ genre.watched + genre.unwatched }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div v-for="(time_period, key) in friend.stats.time_period" :key="key">
-                                <span class="time_period">{{key}}:</span>
-                                <span class="stat" :class="statRating(time_period)">
-                                    {{ time_period.watched }} of {{ time_period.watched + time_period.unwatched }}
-                                </span>
+
+                            <button class="btn btn-primary showYearStats col-12" type="button" data-toggle="collapse" data-target="#yearsContainer" aria-expanded="false" aria-controls="yearsContainer">
+                            Stats By Year
+                            </button>
+                            <div class="collapse" id="yearsContainer">
+                                <div class="card card-body">
+                                    <div class="row" v-for="(time_period, key) in friend.stats.time_period" :key="key">
+                                        <div class="col-7">
+                                            <span class="time_period">{{key}}:</span>
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="stat" :class="statRating(time_period)">
+                                                {{ time_period.watched }} / {{ time_period.watched + time_period.unwatched }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                         <div class="card-footer">
                             <button type="button" class="btn btn-primary d-none" @click="editButtonClicked(friend)">
                                 Edit
                             </button>
                             <button type="button" class="btn btn-danger" @click="deleteButtonClicked(friend)">
-                                Delete
+                                Remove Friend
                             </button>
                         </div>
                     </div>
@@ -160,16 +184,34 @@
     .card-footer{
         text-align:center;
     }
+
+    .friend.good{
+        background-color:#d4f8d4;
+    }
+
+    .friend.medium{
+        background-color:#fff1d8;
+    }
+    .friend.bad{
+        background-color:#ffb2b2;
+    }
+    
     .stat.good{
         color:green;
     }
     .stat.medium{
-        color:orange;
+        color:#e59400;
     }
     .stat.bad{
         color:red;
     }
     span.genre, span.time_period{
         min-width:100px;
+    }
+    .showYearStats{
+        margin-top:5px;
+    }
+    .genresContainer{
+        margin-bottom:5px;
     }
 </style>

@@ -57,7 +57,10 @@
   }
   .modal-body {
     max-height:72vh;
-    min-height:200px;
+    min-height:140px;
     overflow:auto;
+  }
+  .modal,.modal-dialog{
+    height:100%;
   }
 </style>

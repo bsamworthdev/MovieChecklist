@@ -2331,6 +2331,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -7651,7 +7675,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin-bottom: 15px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}\n.stat.good[data-v-7f617538] {\n  color: green;\n}\n.stat.medium[data-v-7f617538] {\n  color: orange;\n}\n.stat.bad[data-v-7f617538] {\n  color: red;\n}\nspan.genre[data-v-7f617538], span.time_period[data-v-7f617538] {\n  min-width: 100px;\n}", ""]);
+exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin-bottom: 15px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}\n.friend.good[data-v-7f617538] {\n  background-color: #d4f8d4;\n}\n.friend.medium[data-v-7f617538] {\n  background-color: #fff1d8;\n}\n.friend.bad[data-v-7f617538] {\n  background-color: #ffb2b2;\n}\n.stat.good[data-v-7f617538] {\n  color: green;\n}\n.stat.medium[data-v-7f617538] {\n  color: #e59400;\n}\n.stat.bad[data-v-7f617538] {\n  color: red;\n}\nspan.genre[data-v-7f617538], span.time_period[data-v-7f617538] {\n  min-width: 100px;\n}\n.showYearStats[data-v-7f617538] {\n  margin-top: 5px;\n}\n.genresContainer[data-v-7f617538] {\n  margin-bottom: 5px;\n}", ""]);
 
 // exports
 
@@ -7803,7 +7827,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal.show[data-v-53ab54d2] {\n  display:block;\n}\n.modal-header > div[data-v-53ab54d2]{\n  width:100%;\n}\n.modal-body[data-v-53ab54d2] {\n  max-height:72vh;\n  min-height:200px;\n  overflow:auto;\n}\n", ""]);
+exports.push([module.i, "\n.modal.show[data-v-53ab54d2] {\n  display:block;\n}\n.modal-header > div[data-v-53ab54d2]{\n  width:100%;\n}\n.modal-body[data-v-53ab54d2] {\n  max-height:72vh;\n  min-height:140px;\n  overflow:auto;\n}\n.modal[data-v-53ab54d2],.modal-dialog[data-v-53ab54d2]{\n  height:100%;\n}\n", ""]);
 
 // exports
 
@@ -40192,11 +40216,11 @@ var render = function() {
     [
       _c("div", { staticClass: "container" }, [
         _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "btn-group col-6" }, [
+          _c("div", { staticClass: "btn-group col-12" }, [
             _c(
               "button",
               {
-                staticClass: "btn btn-primary",
+                staticClass: "btn btn-success",
                 attrs: { type: "button" },
                 on: { click: _vm.addButtonClicked }
               },
@@ -40213,19 +40237,22 @@ var render = function() {
           _vm._l(_vm.friends, function(friend) {
             return _c(
               "div",
-              { key: friend.id, staticClass: "col-12 col-md-4 col-lg-3" },
+              { key: friend.id, staticClass: "col-12 col-md-6 col-lg-4" },
               [
-                _c("div", { staticClass: "friend card" }, [
-                  _c("div", { staticClass: "card-header" }, [
-                    _c("h4", [_vm._v(_vm._s(friend.name))])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "card-body" },
-                    [
+                _c(
+                  "div",
+                  {
+                    staticClass: "friend card",
+                    class: _vm.statRating(friend.stats.overall)
+                  },
+                  [
+                    _c("div", { staticClass: "card-header" }, [
+                      _c("h4", [_vm._v(_vm._s(friend.name))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-body" }, [
                       _c("h5", [
-                        _vm._v("Top 100: "),
+                        _vm._v("Top 100 Movies: "),
                         _c(
                           "span",
                           {
@@ -40245,102 +40272,186 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _vm._l(friend.stats.genre, function(genre, key) {
-                        return _c("div", { key: key }, [
-                          _c("span", { staticClass: "genre" }, [
-                            _vm._v(_vm._s(key) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              staticClass: "stat",
-                              class: _vm.statRating(genre)
-                            },
-                            [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(genre.watched) +
-                                  " of " +
-                                  _vm._s(genre.watched + genre.unwatched) +
-                                  "\n                            "
-                              )
-                            ]
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary col-12",
+                          attrs: {
+                            type: "button",
+                            "data-toggle": "collapse",
+                            "data-target": "#genresContainer",
+                            "aria-expanded": "false",
+                            "aria-controls": "genresContainer"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Stats By Genre\n                        "
                           )
-                        ])
-                      }),
+                        ]
+                      ),
                       _vm._v(" "),
-                      _vm._l(friend.stats.time_period, function(
-                        time_period,
-                        key
-                      ) {
-                        return _c("div", { key: key }, [
-                          _c("span", { staticClass: "time_period" }, [
-                            _vm._v(_vm._s(key) + ":")
-                          ]),
-                          _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "collapse",
+                          attrs: { id: "genresContainer" }
+                        },
+                        [
                           _c(
-                            "span",
-                            {
-                              staticClass: "stat",
-                              class: _vm.statRating(time_period)
-                            },
-                            [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(time_period.watched) +
-                                  " of " +
-                                  _vm._s(
-                                    time_period.watched + time_period.unwatched
-                                  ) +
-                                  "\n                            "
+                            "div",
+                            { staticClass: "card card-body" },
+                            _vm._l(friend.stats.genre, function(genre, key) {
+                              return _c(
+                                "div",
+                                { key: key, staticClass: "row" },
+                                [
+                                  _c("div", { staticClass: "col-7" }, [
+                                    _c("span", { staticClass: "genre" }, [
+                                      _vm._v(_vm._s(key) + ":")
+                                    ])
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-5" }, [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass: "stat",
+                                        class: _vm.statRating(genre)
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(genre.watched) +
+                                            " / " +
+                                            _vm._s(
+                                              genre.watched + genre.unwatched
+                                            ) +
+                                            "\n                                        "
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ]
                               )
-                            ]
+                            }),
+                            0
                           )
-                        ])
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary d-none",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.editButtonClicked(friend)
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary showYearStats col-12",
+                          attrs: {
+                            type: "button",
+                            "data-toggle": "collapse",
+                            "data-target": "#yearsContainer",
+                            "aria-expanded": "false",
+                            "aria-controls": "yearsContainer"
                           }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Edit\n                        "
-                        )
-                      ]
-                    ),
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Stats By Year\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "collapse",
+                          attrs: { id: "yearsContainer" }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "card card-body" },
+                            _vm._l(friend.stats.time_period, function(
+                              time_period,
+                              key
+                            ) {
+                              return _c(
+                                "div",
+                                { key: key, staticClass: "row" },
+                                [
+                                  _c("div", { staticClass: "col-7" }, [
+                                    _c("span", { staticClass: "time_period" }, [
+                                      _vm._v(_vm._s(key) + ":")
+                                    ])
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "col-5" }, [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass: "stat",
+                                        class: _vm.statRating(time_period)
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(time_period.watched) +
+                                            " / " +
+                                            _vm._s(
+                                              time_period.watched +
+                                                time_period.unwatched
+                                            ) +
+                                            "\n                                        "
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        ]
+                      )
+                    ]),
                     _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-danger",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.deleteButtonClicked(friend)
+                    _c("div", { staticClass: "card-footer" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary d-none",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.editButtonClicked(friend)
+                            }
                           }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Delete\n                        "
-                        )
-                      ]
-                    )
-                  ])
-                ])
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Edit\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteButtonClicked(friend)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Remove Friend\n                        "
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                )
               ]
             )
           }),

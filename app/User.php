@@ -77,12 +77,12 @@ class User extends Authenticatable
 
         $movie_genres = MovieGenre::all();
         foreach ($movie_genres as $movie_genre){
-            $stats['genre'][$movie_genre->genre] = $this->getSpecificStats('genre','%'.$movie_genre->genre.'%');
+            $stats['genre'][$movie_genre->label] = $this->getSpecificStats('genre','%'.$movie_genre->genre.'%');
         }
 
         $movie_time_periods = MovieTimePeriod::all();
         foreach ($movie_time_periods as $movie_time_period){
-            $stats['time_period'][$movie_time_period->time_period] = $this->getSpecificStats('time_period', $movie_time_period->time_period);
+            $stats['time_period'][$movie_time_period->label] = $this->getSpecificStats('time_period', $movie_time_period->time_period);
         }
 
         return $stats;

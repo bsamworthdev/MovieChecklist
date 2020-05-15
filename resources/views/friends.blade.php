@@ -53,5 +53,8 @@
 
 </script>
 <style>
-    
+    #title {
+        font-size: 22px;
+        font-weight: bold;
+    }
 </style>
