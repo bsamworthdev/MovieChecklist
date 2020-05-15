@@ -57,4 +57,24 @@
         font-size: 22px;
         font-weight: bold;
     }
+
+    #topButton {
+        display: none;
+        position: fixed;
+        bottom: 20px; 
+        right: 30px; 
+        z-index: 99; 
+        outline: none; 
+        background-color: black; 
+        color: white; 
+        cursor: pointer; 
+        padding: 10px;
+        border-radius: 10px; 
+        font-size: 18px;
+        opacity:0.7;
+    }
+
+    #topButton:hover {
+        background-color: #555; /* Add a dark-grey background on hover */
+    }
 </style>
