@@ -11,7 +11,18 @@
                 <div v-for="friend in friends" :key="friend.id" class="col-12 col-md-6 col-lg-4">
                     <div class="friend card" :class="statRating(friend.stats.overall)">
                         <div class="card-header">
-                            <h4>{{ friend.name }}</h4>
+                            <h4>
+                                <div class="row">
+                                    <div class="col-8">
+                                        {{ friend.name }} 
+                                    </div>
+                                    <div class="col-4">
+                                        <i class="fa fa-star star"></i>
+                                        <i class="fa fa-star star"></i>
+                                        <i class="fa fa-star star"></i>
+                                    </div>
+                                </div>
+                            </h4>
                         </div>
                         <div class="card-body">
                             <h5>Top 100 Movies: <span class="stat" :class="statRating(friend.stats.overall)">{{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</span></h5>
@@ -131,14 +142,20 @@
             statRating(genre) {
                 var percent = (genre.watched/(genre.watched+genre.unwatched))*100;
                 var rating = '';
-                if (percent > 40){
+                if (percent > 70){
+                    rating = 'amazing';
+                }
+                else if (percent > 40){
                     rating = 'good';
                 }
                 else if (percent > 20){
                     rating = 'medium';
                 }
-                else {
+                else if (percent > 2){
                     rating = 'bad';
+                }
+                else {
+                    rating = 'terrible';
                 }
                 return rating;
             }
@@ -185,24 +202,24 @@
         text-align:center;
     }
 
-    .friend.good{
+    .friend.good, .friend.amazing{
         background-color:#d4f8d4;
     }
 
     .friend.medium{
         background-color:#fff1d8;
     }
-    .friend.bad{
+    .friend.bad, .friend.terrible{
         background-color:#ffb2b2;
     }
     
-    .stat.good{
+    .stat.good, .stat.amazing{
         color:green;
     }
     .stat.medium{
         color:#e59400;
     }
-    .stat.bad{
+    .stat.bad, .stat.terrible{
         color:red;
     }
     span.genre, span.time_period{
@@ -213,5 +230,22 @@
     }
     .genresContainer{
         margin-bottom:5px;
+    }
+    .star{
+        color:#C0C0C0;
+        text-shadow: 0 0 3px #000;
+        font-size:16px;
+    }
+    .friend.bad .star:nth-of-type(1),
+    .friend.medium .star:nth-of-type(1),
+    .friend.good .star:nth-of-type(1){
+        color:yellow;
+    }
+    .friend.medium .star:nth-of-type(2),
+    .friend.good .star:nth-of-type(2){
+        color:yellow;
+    }
+    .friend.good .star:nth-of-type(3){
+        color:yellow;
     }
 </style>
