@@ -26,10 +26,10 @@
                         </div>
                         <div class="card-body">
                             <h5>Top 100 Movies: <span class="stat" :class="statRating(friend.stats.overall)">{{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</span></h5>
-                            <button class="btn btn-primary col-12" type="button" data-toggle="collapse" data-target="#genresContainer" aria-expanded="false" aria-controls="genresContainer">
+                            <button class="btn btn-primary col-12" type="button" data-toggle="collapse" :data-target="'#genresContainer' + friend.id" aria-expanded="false" :aria-controls="'genresContainer' + friend.id">
                             Stats By Genre
                             </button>
-                            <div class="collapse" id="genresContainer">
+                            <div class="collapse" :id="'genresContainer' + friend.id">
                                 <div class="card card-body">
                                     <div class="row" v-for="(genre, key) in friend.stats.genre" :key="key">
                                         <div class="col-7">
@@ -44,10 +44,15 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary showYearStats col-12" type="button" data-toggle="collapse" data-target="#yearsContainer" aria-expanded="false" aria-controls="yearsContainer">
+                            <button class="btn btn-primary showYearStats col-12" 
+                            type="button" 
+                            data-toggle="collapse" 
+                            :data-target="'#yearsContainer' + friend.id" 
+                            aria-expanded="false" 
+                            aria-controls="'yearsContainer' + friend.id">
                             Stats By Year
                             </button>
-                            <div class="collapse" id="yearsContainer">
+                            <div class="collapse" :id="'yearsContainer' + friend.id">
                                 <div class="card card-body">
                                     <div class="row" v-for="(time_period, key) in friend.stats.time_period" :key="key">
                                         <div class="col-7">
@@ -227,9 +232,6 @@
     }
     .showYearStats{
         margin-top:5px;
-    }
-    .genresContainer{
-        margin-bottom:5px;
     }
     .star{
         color:#C0C0C0;
