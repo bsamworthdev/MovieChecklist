@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Friendship;
+use App\FriendTag;
+use App\FriendTagName;
 use App\User;
 
 class FriendshipController extends Controller
@@ -33,11 +35,14 @@ class FriendshipController extends Controller
             ->get('*');
 
 
-        //Get friends' stats
+        
         foreach($friends as &$friend){
             $friendUser = User::find($friend->id);
             $friend->name = $friendUser->name;
+            //Get friends' stats
             $friend->stats = $friendUser->getStats();
+            //Get friends' tags
+            $friend->tags = $friendUser->getTags($user_id);
         }
 
         return view('friends', [
@@ -56,14 +61,40 @@ class FriendshipController extends Controller
     }
 
     function edit(Request $request) {
-        $friendship = Friendship::find($request->id);
-        $friendship->people_id = $request->people_id;
-        $friendship->friendship_time = $request->friendshiptime;
-        $friendship->answered = $request->answered ? 1 : 0;
-        $friendship->requires_followup = $request->requiresfollowup ? 1 : 0;
-        $friendship->notes = $request->notes;
+        $user_id = Auth::user()->id;
+
+        // $friendTag = FriendTag::where('subject_user_id', $user_id)
+        // ->where('object_user_id', $request->id)
+        // ->get();
+
+        // $friendship->tags = $request->tags;
         
-        $friendship->save();
+        // dd($request);
+        $tags = json_decode($request->tags);
+
+        //Remove existing friend tags
+        FriendTag::where('subject_user_id', $user_id)
+            ->where('object_user_id', $request->id)
+            ->delete();
+
+        foreach ($tags as $tag){
+            $friendTagName = FriendTagName::where('name',$tag)->first();
+
+            //Add tag name if it doesn't already exist
+            if (!$friendTagName){
+                $friendTagName = new FriendTagName;
+                $friendTagName->name = $tag;
+                $friendTagName->save();
+                $friendTagName = FriendTagName::where('name',$tag)->first();
+            }
+
+            $friendTag = new FriendTag;
+            $friendTag->subject_user_id = $user_id;
+            $friendTag->object_user_id = $request->id;
+            $friendTag->tag_id = $friendTagName->id;
+
+            $friendTag->save();
+        }
         
         return back()->with('message', 'friend edited successfully');
     }

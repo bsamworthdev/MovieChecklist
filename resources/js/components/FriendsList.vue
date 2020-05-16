@@ -69,10 +69,10 @@
 
                         </div>
                         <div class="card-footer">
-                            <button type="button" class="btn btn-primary d-none" @click="editButtonClicked(friend)">
+                            <button type="button" class="btn btn-primary col-4" @click="editButtonClicked(friend)">
                                 Edit
                             </button>
-                            <button type="button" class="btn btn-danger" @click="deleteButtonClicked(friend)">
+                            <button type="button" class="btn btn-danger col-7" @click="deleteButtonClicked(friend)">
                                 Remove Friend
                             </button>
                         </div>
@@ -91,7 +91,7 @@
         <edit-friend 
             v-if="activeModal==5" 
             @close="activeModal=0" 
-            :activeFriend = "activeFriend" 
+            :friend = "activeFriend" 
             :parentData="editFriendData">
         </edit-friend>
         <delete-friend 
@@ -132,6 +132,7 @@
         methods:{
             addButtonClicked(){
                 this.activeModal=4; 
+                this.activeFriend=friend;
             },
             editButtonClicked(friend){
                 this.activeModal=5; 

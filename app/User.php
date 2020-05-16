@@ -88,6 +88,20 @@ class User extends Authenticatable
         return $stats;
     }
 
+    public function getTags($subject_user_id){
+        $object_user_id = $this->id;
+        $friendTags = FriendTag::where('subject_user_id', $subject_user_id)
+            ->where('object_user_id', $object_user_id)
+            ->get();
+
+        $tags = [];    
+        foreach($friendTags as $friendTag){
+            $tags[] = FriendTagName::find($friendTag->tag_id)->name;
+        }
+
+        return $tags;
+    }
+
     public function getSpecificStats($filterType = NULL, $filterValue  = NULL){
         $user_id = $this->id;
 
