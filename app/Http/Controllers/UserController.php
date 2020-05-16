@@ -76,7 +76,13 @@ class UserController extends Controller
     }
 
     public function findUserByEmail(Request $request){
+
+        $user_id = Auth::user()->id;
+        $user_email = User::find($user_id)->email;
         $email = $request->email;
+
+        if ($user_email == $email) return 0;
+
         $userCount = User::where('email', '=', $email)->count();
         
         return ($userCount > 0);

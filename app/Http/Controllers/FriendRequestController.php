@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\FriendRequest;
+use App\FriendInvitation;
 use App\Friendship;
 use App\User;
 use App\Mail\FriendRequestMailable;
@@ -29,6 +30,12 @@ class FriendRequestController extends Controller
         //Find recipient user_id by email
         $recipientUser = User::where('email', '=', $request->email)->first();
         if ($recipientUser === null) {
+
+            $friendInvitation = new FriendInvitation;
+            $friendInvitation->user_id = $user_id;
+            $friendInvitation->email = $request->email;
+            $friendInvitation->save();
+
             //Send email
             Mail::to($request->email)
                 ->send(new FriendInvitationMailable($userObj));
