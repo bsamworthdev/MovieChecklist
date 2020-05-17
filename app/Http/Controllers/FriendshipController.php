@@ -38,9 +38,13 @@ class FriendshipController extends Controller
             ->orderBy('name')
             ->get('*');
         
+        //Add logged in user too
+        $friends->prepend($user);
+
         $filteredFriends = [];
         foreach($friends as &$friend){
             $friendUser = User::find($friend->id);
+            $friend->isCurrentUser = ($friend->id == $user ->id);
             $friend->name = $friendUser->name;
             //Get friends' stats
             $friend->stats = $friendUser->getStats();
@@ -60,8 +64,7 @@ class FriendshipController extends Controller
                 $matchFound=true;
             }
             $friend->matchesTagFilter = $matchFound;
-        }
-
+        } 
 
         $friendTagNames = [];
         $friendTags = FriendTag::where('subject_user_id', $user_id)->get();

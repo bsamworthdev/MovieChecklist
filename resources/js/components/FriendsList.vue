@@ -10,11 +10,11 @@
             <div class="row">
                 <div v-for="friend in filteredFriends" :key="friend.id" class="col-12 col-md-6 col-lg-4">
                     <div class="friend card" :class="statRating(friend.stats.overall)">
-                        <div class="card-header">
+                        <div class="card-header" :class="{'isCurrentUser' : friend.isCurrentUser}">
                             <h4>
                                 <div class="row">
                                     <div class="col-8 title">
-                                        {{ friend.name }} 
+                                        {{ friend.name }} {{ friend.isCurrentUser ? ' (ME)' : '' }}
                                     </div>
                                     <div class="col-4 starContainer">
                                         <i class="fa fa-star star"></i>
@@ -31,7 +31,7 @@
                                 </div>
                             </h4>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" :class="{'isCurrentUser' : friend.isCurrentUser}">
                             <h5>Top 100 Movies: <span class="stat" :class="statRating(friend.stats.overall)">{{ friend.stats.overall.watched }} of {{ friend.stats.overall.watched + friend.stats.overall.unwatched }}</span></h5>
                             <button class="btn btn-primary col-12" type="button" data-toggle="collapse" :data-target="'#genresContainer' + friend.id" aria-expanded="false" :aria-controls="'genresContainer' + friend.id">
                             Stats By Genre
@@ -75,11 +75,11 @@
                             </div>
 
                         </div>
-                        <div class="card-footer">
-                            <button type="button" class="btn btn-primary col-4" @click="editButtonClicked(friend)">
+                        <div class="card-footer" :class="{'isCurrentUser' : friend.isCurrentUser}">
+                            <button v-if="!friend.isCurrentUser" type="button" class="btn btn-primary col-4" @click="editButtonClicked(friend)">
                                 Edit
                             </button>
-                            <button type="button" class="btn btn-danger col-7" @click="deleteButtonClicked(friend)">
+                            <button v-if="!friend.isCurrentUser" type="button" class="btn btn-danger col-7" @click="deleteButtonClicked(friend)">
                                 Remove Friend
                             </button>
                         </div>
@@ -138,7 +138,7 @@
         },
         computed: {
             filteredFriends: function (){
-                return this.friends.filter(i => i.matchesTagFilter === true)
+                return this.friends.filter(i => (i.matchesTagFilter === true || i.isCurrentUser))
             }
         },
         methods:{
@@ -279,6 +279,12 @@
         border-radius: 3px;
         margin-right: 3px;
         padding: 3px;
+    }
+    .card-header.isCurrentUser, .card-footer.isCurrentUser{
+        background-color:gold;
+    }
+    .card-body.isCurrentUser{
+        background-color:#FFFFA7;
     }
 
     @media (max-width: 1200px) {
