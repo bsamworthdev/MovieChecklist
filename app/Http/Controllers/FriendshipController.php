@@ -17,12 +17,16 @@ class FriendshipController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    public function index($friendTagNameId = "0")
     {
 
         $user_id = Auth::user()->id;
         $friends = Friendship::find($user_id);
         $user = User::find($user_id);
+
+        if ($friendTagNameId <> 0) {
+            $friendTagName = FriendTagName::find($friendTagNameId);
+        }
 
         //Get friend IDs
         $friendsA = $user->friendshipsA()
@@ -33,9 +37,8 @@ class FriendshipController extends Controller
             ->union($friendsA)
             ->orderBy('name')
             ->get('*');
-
-
         
+        $filteredFriends = [];
         foreach($friends as &$friend){
             $friendUser = User::find($friend->id);
             $friend->name = $friendUser->name;
@@ -43,10 +46,39 @@ class FriendshipController extends Controller
             $friend->stats = $friendUser->getStats();
             //Get friends' tags
             $friend->tags = $friendUser->getTags($user_id);
+
+            //Filter by selected tag
+            if ($friendTagNameId <> 0){
+                $matchFound = false;
+                foreach ($friend->tags as $tag){
+                    if ($friendTagName->name == $tag){
+                        $matchFound=true;
+                        break;
+                    }
+                }
+            } else {
+                $matchFound=true;
+            }
+            $friend->matchesTagFilter = $matchFound;
         }
 
+
+        $friendTagNames = [];
+        $friendTags = FriendTag::where('subject_user_id', $user_id)->get();
+        foreach ($friendTags as $friendTag) {
+            $friendTagName = FriendTagName::find($friendTag->tag_id);
+            if(!in_array($friendTagName, $friendTagNames)){
+                $friendTagNames[] = $friendTagName;
+            }
+        }
+        usort($friendTagNames,function($a,$b) {return strnatcasecmp($a['name'],$b['name']);});
+
+        $selectedFriendTagNameId = $friendTagNameId;
+
         return view('friends', [
-                "friends" => $friends
+                "friends" => $friends,
+                "friendTagNames" => $friendTagNames,
+                "selectedFriendTagNameId" => $selectedFriendTagNameId
             ]
         );
     }

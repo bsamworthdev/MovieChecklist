@@ -2429,6 +2429,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2449,6 +2456,13 @@ __webpack_require__.r(__webpack_exports__);
     addFriend: _AddFriend__WEBPACK_IMPORTED_MODULE_0__["default"],
     editFriend: _EditFriend__WEBPACK_IMPORTED_MODULE_1__["default"],
     deleteFriend: _DeleteFriend__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  computed: {
+    filteredFriends: function filteredFriends() {
+      return this.friends.filter(function (i) {
+        return i.matchesTagFilter === true;
+      });
+    }
   },
   methods: {
     addButtonClicked: function addButtonClicked() {
@@ -7754,7 +7768,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin-bottom: 15px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}\n.friend.good[data-v-7f617538], .friend.amazing[data-v-7f617538] {\n  background-color: #d4f8d4;\n}\n.friend.medium[data-v-7f617538] {\n  background-color: #fff1d8;\n}\n.friend.bad[data-v-7f617538], .friend.terrible[data-v-7f617538] {\n  background-color: #ffb2b2;\n}\n.stat.good[data-v-7f617538], .stat.amazing[data-v-7f617538] {\n  color: green;\n}\n.stat.medium[data-v-7f617538] {\n  color: #e59400;\n}\n.stat.bad[data-v-7f617538], .stat.terrible[data-v-7f617538] {\n  color: red;\n}\nspan.genre[data-v-7f617538], span.time_period[data-v-7f617538] {\n  min-width: 100px;\n}\n.showYearStats[data-v-7f617538] {\n  margin-top: 5px;\n}\n.star[data-v-7f617538] {\n  color: #C0C0C0;\n  text-shadow: 0 0 3px #000;\n  font-size: 16px;\n}\n.starContainer[data-v-7f617538] {\n  line-height: 16px;\n  white-space: nowrap;\n}\n.friend.bad .star[data-v-7f617538]:nth-of-type(1),\n.friend.medium .star[data-v-7f617538]:nth-of-type(1),\n.friend.good .star[data-v-7f617538]:nth-of-type(1) {\n  color: yellow;\n}\n.friend.medium .star[data-v-7f617538]:nth-of-type(2),\n.friend.good .star[data-v-7f617538]:nth-of-type(2) {\n  color: yellow;\n}\n.friend.good .star[data-v-7f617538]:nth-of-type(3) {\n  color: yellow;\n}\n.friend .card-header[data-v-7f617538] {\n  padding-bottom: 1px;\n}\n@media (max-width: 1200px) {\n.star[data-v-7f617538] {\n    font-size: 12px;\n}\n.starContainer[data-v-7f617538] {\n    line-height: 12px;\n}\n.title[data-v-7f617538] {\n    font-size: 18px;\n}\n}\n@media (max-width: 767px) {\n.star[data-v-7f617538] {\n    font-size: 16px;\n}\n.starContainer[data-v-7f617538] {\n    line-height: 16px;\n}\n.title[data-v-7f617538] {\n    font-size: 22px;\n}\n}", ""]);
+exports.push([module.i, ".table[data-v-7f617538] {\n  margin-top: 5px;\n}\n.form-group label[data-v-7f617538] {\n  width: 150px;\n  vertical-align: top;\n}\n#emptyRecord[data-v-7f617538] {\n  font-style: italic;\n  text-align: center;\n}\n.friend[data-v-7f617538] {\n  margin-bottom: 15px;\n  padding: 0px;\n  background-color: #F7F7F7;\n}\n.card-footer[data-v-7f617538] {\n  text-align: center;\n}\n.friend.good[data-v-7f617538], .friend.amazing[data-v-7f617538] {\n  background-color: #d4f8d4;\n}\n.friend.medium[data-v-7f617538] {\n  background-color: #fff1d8;\n}\n.friend.bad[data-v-7f617538], .friend.terrible[data-v-7f617538] {\n  background-color: #ffb2b2;\n}\n.stat.good[data-v-7f617538], .stat.amazing[data-v-7f617538] {\n  color: green;\n}\n.stat.medium[data-v-7f617538] {\n  color: #e59400;\n}\n.stat.bad[data-v-7f617538], .stat.terrible[data-v-7f617538] {\n  color: red;\n}\nspan.genre[data-v-7f617538], span.time_period[data-v-7f617538] {\n  min-width: 100px;\n}\n.showYearStats[data-v-7f617538] {\n  margin-top: 5px;\n}\n.star[data-v-7f617538] {\n  color: #C0C0C0;\n  text-shadow: 0 0 3px #000;\n  font-size: 16px;\n}\n.starContainer[data-v-7f617538] {\n  line-height: 16px;\n  white-space: nowrap;\n}\n.friend.bad .star[data-v-7f617538]:nth-of-type(1),\n.friend.medium .star[data-v-7f617538]:nth-of-type(1),\n.friend.good .star[data-v-7f617538]:nth-of-type(1) {\n  color: yellow;\n}\n.friend.medium .star[data-v-7f617538]:nth-of-type(2),\n.friend.good .star[data-v-7f617538]:nth-of-type(2) {\n  color: yellow;\n}\n.friend.good .star[data-v-7f617538]:nth-of-type(3) {\n  color: yellow;\n}\n.friend .card-header[data-v-7f617538] {\n  padding-bottom: 1px;\n}\n.tag[data-v-7f617538] {\n  font-size: 12px;\n  color: #212529;\n  background-color: #C0C0C0;\n  border: 1px solid rgba(0, 0, 0, 0.125);\n  float: left;\n  border-radius: 3px;\n  margin-right: 3px;\n  padding: 3px;\n}\n@media (max-width: 1200px) {\n.star[data-v-7f617538] {\n    font-size: 12px;\n}\n.starContainer[data-v-7f617538] {\n    line-height: 12px;\n}\n.title[data-v-7f617538] {\n    font-size: 18px;\n}\n}\n@media (max-width: 767px) {\n.star[data-v-7f617538] {\n    font-size: 16px;\n}\n.starContainer[data-v-7f617538] {\n    line-height: 16px;\n}\n.title[data-v-7f617538] {\n    font-size: 22px;\n}\n}", ""]);
 
 // exports
 
@@ -40366,7 +40380,7 @@ var render = function() {
         _c(
           "div",
           { staticClass: "row" },
-          _vm._l(_vm.friends, function(friend) {
+          _vm._l(_vm.filteredFriends, function(friend) {
             return _c(
               "div",
               { key: friend.id, staticClass: "col-12 col-md-6 col-lg-4" },
@@ -40390,6 +40404,27 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _vm._m(0, true)
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "row" }, [
+                          _c(
+                            "div",
+                            { staticClass: "col-12 tags" },
+                            _vm._l(friend.tags, function(tag) {
+                              return _c(
+                                "div",
+                                { key: tag, staticClass: "tag" },
+                                [
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(tag) +
+                                      "\n                                    "
+                                  )
+                                ]
+                              )
+                            }),
+                            0
+                          )
                         ])
                       ])
                     ]),

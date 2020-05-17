@@ -8,8 +8,20 @@
                 <div class="card-header">
                     <div class="container">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div id="title">My Friends</div> 
+                            </div>
+                            <div class="col-6">
+                                <form id="friend_form">
+                                    <select id="tag_select" class="form-control" onchange="return changeSelection();">
+                                        <option value="all" {{ ( $selectedFriendTagNameId == "0") ? 'selected' : '' }}> All Friends </option>
+                                        @foreach ($friendTagNames as $friendTagName)
+                                            <option value="{{ $friendTagName->id }}" {{ ( $friendTagName->id == $selectedFriendTagNameId) ? 'selected' : '' }}> 
+                                                {{ $friendTagName->name }} 
+                                            </option>
+                                        @endforeach    
+                                    </select>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -43,6 +55,14 @@
         } else {
             topButton.style.display = "none";
         }
+    }
+
+    function changeSelection() {
+        var form = document.getElementById('friend_form');
+        var tagSelect = document.getElementById('tag_select');
+        form.setAttribute('action', '/friends/' + tagSelect.value + 
+            '/');
+        form.submit();
     }
 
     // When the user clicks on the button, scroll to the top of the document

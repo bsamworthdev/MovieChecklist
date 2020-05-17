@@ -8,7 +8,7 @@
             </div>
             <br>
             <div class="row">
-                <div v-for="friend in friends" :key="friend.id" class="col-12 col-md-6 col-lg-4">
+                <div v-for="friend in filteredFriends" :key="friend.id" class="col-12 col-md-6 col-lg-4">
                     <div class="friend card" :class="statRating(friend.stats.overall)">
                         <div class="card-header">
                             <h4>
@@ -20,6 +20,13 @@
                                         <i class="fa fa-star star"></i>
                                         <i class="fa fa-star star"></i>
                                         <i class="fa fa-star star"></i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 tags">
+                                        <div class="tag" v-for="tag in friend.tags" :key="tag">
+                                            {{ tag }}
+                                        </div>
                                     </div>
                                 </div>
                             </h4>
@@ -128,6 +135,11 @@
             addFriend,
             editFriend,
             deleteFriend
+        },
+        computed: {
+            filteredFriends: function (){
+                return this.friends.filter(i => i.matchesTagFilter === true)
+            }
         },
         methods:{
             addButtonClicked(){
@@ -257,6 +269,16 @@
     }
     .friend .card-header{
         padding-bottom:1px;
+    }
+    .tag{
+        font-size: 12px;
+        color: #212529;
+        background-color: #C0C0C0;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        float: left;
+        border-radius: 3px;
+        margin-right: 3px;
+        padding: 3px;
     }
 
     @media (max-width: 1200px) {
