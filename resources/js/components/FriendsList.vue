@@ -56,7 +56,7 @@
                             data-toggle="collapse" 
                             :data-target="'#yearsContainer' + friend.id" 
                             aria-expanded="false" 
-                            aria-controls="'yearsContainer' + friend.id">
+                            :aria-controls="'yearsContainer' + friend.id">
                             Stats By Year
                             </button>
                             <div class="collapse" :id="'yearsContainer' + friend.id">
@@ -69,6 +69,25 @@
                                             <span class="stat" :class="statRating(time_period)">
                                                 {{ time_period.watched }} / {{ time_period.watched + time_period.unwatched }}
                                             </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button :class="{'disabled':friend.stats.overall.favourites.length == 0}" class="btn btn-primary showFavourites col-12" 
+                            type="button" 
+                            :data-toggle="friend.stats.overall.favourites.length > 0 ? 'collapse' :''" 
+                            :data-target="'#favouritesContainer' + friend.id" 
+                            aria-expanded="false" 
+                            :aria-controls="'favouritesContainer' + friend.id">
+                                <i class="fa fa-heart heart"></i>
+                                Favourites ({{ friend.stats.overall.favourites.length }})
+                            </button>
+                            <div class="collapse" :id="'favouritesContainer' + friend.id">
+                                <div class="card card-body">
+                                    <div class="row" v-for="favourite in friend.stats.overall.favourites" :key="favourite.id">
+                                        <div class="col-12">
+                                            <span class="favourite">({{ favourite.rank }}) {{favourite.name}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -218,6 +237,7 @@
     }
     .card-footer{
         text-align:center;
+        min-height:62px;
     }
 
     .friend.good, .friend.amazing{
@@ -244,6 +264,9 @@
         min-width:100px;
     }
     .showYearStats{
+        margin-top:5px;
+    }
+    .showFavourites{
         margin-top:5px;
     }
     .star{
@@ -285,6 +308,10 @@
     }
     .card-body.isCurrentUser{
         background-color:#FFFFA7;
+    }
+    .heart{
+        color:red;
+        font-size:17px;
     }
 
     @media (max-width: 1200px) {

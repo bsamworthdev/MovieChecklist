@@ -114,7 +114,10 @@ class User extends Authenticatable
             $filterSQL = "AND movies.year BETWEEN ".$dates['from']." AND ".$dates['to']." ";
         }
 
-        $userMovies = DB::select("select movies.name,movies.imdb_id, 
+        $userMovies = DB::select("select movies.name,
+                movies.rank,
+                movies.imdb_id,
+                movie_user.favourite, 
                 IFNULL(movie_user.user_id,0)>0 as watched 
             from movies 
             left join movie_user on 
@@ -128,6 +131,7 @@ class User extends Authenticatable
         
         $stats['watched'] = 0;
         $stats['unwatched'] = 0;
+        $stats['favourites'] = [];
         //$stats_categorised = [];
         foreach ($userMovies as $userMovie){
             if (($stats['watched'] + $stats['unwatched']) < 100){
@@ -135,6 +139,11 @@ class User extends Authenticatable
                     $stats['watched'] += 1;
                 } else {
                     $stats['unwatched'] += 1;
+                }
+            }
+            if (!$filterType && !$filterValue) {
+                if ($userMovie->favourite){
+                    $stats['favourites'][] = $userMovie;
                 }
             }
         }
