@@ -21,7 +21,7 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{netflix_only?}/{amazon_only?}/{search_text?}', 'HomeController@index')->name('home');
-    Route::get('/friends/{tag?}', 'FriendshipController@index')->name('friend');;
+    Route::get('/friends/{tag?}', 'FriendshipController@index')->name('friend');
 
     Route::post('/updatemovies', 'MovieController@updateMovies');
     Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
@@ -40,6 +40,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/createFriendRequest', 'FriendRequestController@create');  
     Route::post('/findUserByEmail', 'UserController@findUserByEmail'); 
     
+});
+
+Route::group(['middleware' => 'admin'], function () {
+    Route::get('/admin', 'AdminController@index')->name('admin');
 });
 
 Route::get('/acceptFriendRequest/{token}', 'FriendRequestResponseController@accept');

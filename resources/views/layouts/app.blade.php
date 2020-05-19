@@ -41,6 +41,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/friends">Friends</a>
                         </li>
+                        @if (Auth::user()->role == 'admin')
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin">Admin</a>
+                            </li>
+                        @endif
                         @endguest
                     </ul>
 
