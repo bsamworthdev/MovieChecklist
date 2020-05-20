@@ -3,7 +3,7 @@
         <div class="container">
              <div class="row">
                 <div class="col-12">
-                    <h5>Users: {{ filteredUsers.length }}</h5>
+                    <h5>Users: {{ sortedUsers.length }}</h5>
                 </div>
             </div>
             <div class="row">
@@ -16,14 +16,14 @@
                 <div class="col-12">
                     <table class="table">
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Movies Watched</th>
+                            <th @click="sort('name')">Name</th>
+                            <th @click="sort('email')">Email</th>
+                            <th @click="sort('watchedCount')">Movies Watched</th>
                         </tr>
-                        <tr v-for="user in filteredUsers" :key="user.id">
+                        <tr v-for="user in sortedUsers" :key="user.id">
                             <td>{{ user.name }}</td>
                             <td>{{ user.email }}</td>
-                            <td>{{ user.stats['watched']}}</td>
+                            <td>{{ user.watchedCount}}</td>
                         </tr>
                     </table>
                 </div>   
@@ -71,22 +71,41 @@
                     rating = 'terrible';
                 }
                 return rating;
+            },
+             sort:function(s) {
+                //if s == current sort, reverse
+                if(s === this.currentSort) {
+                    this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+                }
+                this.currentSort = s;
             }
         },
         computed: {
-            filteredUsers: function (){
+            sortedUsers: function() {
+
                 var filter = new RegExp(this.userFilter, 'gi');
-                return this.users.filter(i => (i.name.match(filter)));
+                return this.users.filter(i => (i.name.match(filter))).sort((a,b) => {
+                    let modifier = 1;
+                    if(this.currentSortDir === 'desc') modifier = -1;
+
+                    var new_a = a[this.currentSort];
+                    var new_b = b[this.currentSort];
+                    if (isNaN(new_a) && isNaN('undefined')){
+                            new_a = new_a.toLowerCase();
+                            new_b = new_b.toLowerCase();
+                    } 
+                    if(new_a < new_b) return -1 * modifier;
+                    if(new_a > new_b) return 1 * modifier;
+                    return 0;
+                });
             }
-        },
-        watch: {
-            filteredUsers: function(newVal, oldVal) {
-                console.log('Prop changed: ', newVal, ' | was: ', oldVal)
-            }
+           
         },
         data() {
             return {
-                userFilter:''
+                userFilter:'',
+                currentSort:'name',
+                currentSortDir:'asc'
             }
         },
         mounted() {

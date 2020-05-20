@@ -3286,6 +3286,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'usersTable',
   props: {
@@ -3321,24 +3322,45 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return rating;
+    },
+    sort: function sort(s) {
+      //if s == current sort, reverse
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+      }
+
+      this.currentSort = s;
     }
   },
   computed: {
-    filteredUsers: function filteredUsers() {
+    sortedUsers: function sortedUsers() {
+      var _this = this;
+
       var filter = new RegExp(this.userFilter, 'gi');
       return this.users.filter(function (i) {
         return i.name.match(filter);
+      }).sort(function (a, b) {
+        var modifier = 1;
+        if (_this.currentSortDir === 'desc') modifier = -1;
+        var new_a = a[_this.currentSort];
+        var new_b = b[_this.currentSort];
+
+        if (isNaN(new_a) && isNaN('undefined')) {
+          new_a = new_a.toLowerCase();
+          new_b = new_b.toLowerCase();
+        }
+
+        if (new_a < new_b) return -1 * modifier;
+        if (new_a > new_b) return 1 * modifier;
+        return 0;
       });
-    }
-  },
-  watch: {
-    filteredUsers: function filteredUsers(newVal, oldVal) {
-      console.log('Prop changed: ', newVal, ' | was: ', oldVal);
     }
   },
   data: function data() {
     return {
-      userFilter: ''
+      userFilter: '',
+      currentSort: 'name',
+      currentSortDir: 'asc'
     };
   },
   mounted: function mounted() {
@@ -41896,7 +41918,7 @@ var render = function() {
     _c("div", { staticClass: "container" }, [
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-12" }, [
-          _c("h5", [_vm._v("Users: " + _vm._s(_vm.filteredUsers.length))])
+          _c("h5", [_vm._v("Users: " + _vm._s(_vm.sortedUsers.length))])
         ])
       ]),
       _vm._v(" "),
@@ -41930,21 +41952,59 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-12" }, [
           _c(
             "table",
             { staticClass: "table" },
             [
-              _vm._m(0),
+              _c("tr", [
+                _c(
+                  "th",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.sort("name")
+                      }
+                    }
+                  },
+                  [_vm._v("Name")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.sort("email")
+                      }
+                    }
+                  },
+                  [_vm._v("Email")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.sort("watchedCount")
+                      }
+                    }
+                  },
+                  [_vm._v("Movies Watched")]
+                )
+              ]),
               _vm._v(" "),
-              _vm._l(_vm.filteredUsers, function(user) {
+              _vm._l(_vm.sortedUsers, function(user) {
                 return _c("tr", { key: user.id }, [
                   _c("td", [_vm._v(_vm._s(user.name))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.email))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.stats["watched"]))])
+                  _c("td", [_vm._v(_vm._s(user.watchedCount))])
                 ])
               })
             ],
@@ -41955,20 +42015,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("th", [_vm._v("Name")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Email")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Movies Watched")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

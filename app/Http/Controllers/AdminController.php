@@ -17,6 +17,7 @@ class AdminController extends Controller
 
         foreach ($users as &$user){           
             $user->stats = $user->getSpecificStats();
+            $user->watchedCount = $user->stats['watched'];
         }
 
         return view(
