@@ -23,6 +23,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('scratch-card-grid', require('./components/ScratchCardGrid.vue').default);
 Vue.component('scratch-card', require('./components/ScratchCard.vue').default);
 Vue.component('friends-list', require('./components/FriendsList.vue').default);
+Vue.component('users-table', require('./components/UsersTable.vue').default);
 Vue.component('stats-table', require('./components/StatsTable.vue').default);
 
 /**

@@ -17,20 +17,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Movies Watched</th>
-                        </tr>
-                        @foreach ($users as $user)
-                        <tr>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->stats['watched'] }}</td>
-                        </tr>
-                        @endforeach
-                    </table>
+                    <users-table
+                        :users = "{{ $users }}">
+                    </users-table>
                 </div>
             </div>
         </div>
