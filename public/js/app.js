@@ -1952,14 +1952,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'add-friend',
   props: {
-    parentData: Object,
-    people: Array,
-    selectedPersonId: {
-      type: Number,
-      "default": function _default() {
-        return 0;
-      }
-    }
+    parentData: Object
   },
   components: {
     modal: _Modal__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -2453,8 +2446,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 
@@ -2486,7 +2477,6 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     addButtonClicked: function addButtonClicked() {
       this.activeModal = 4;
-      this.activeFriend = friend;
     },
     editButtonClicked: function editButtonClicked(friend) {
       this.activeModal = 5;
@@ -40928,11 +40918,7 @@ var render = function() {
       _vm._v(" "),
       _vm.activeModal == 4
         ? _c("add-friend", {
-            attrs: {
-              people: _vm.people,
-              parentData: _vm.addFriendData,
-              selectedPersonId: _vm.selectedPersonId
-            },
+            attrs: { parentData: _vm.addFriendData },
             on: {
               close: function($event) {
                 _vm.activeModal = 0
