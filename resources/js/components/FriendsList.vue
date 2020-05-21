@@ -110,9 +110,7 @@
         <add-friend 
             v-if="activeModal==4" 
             @close="activeModal=0" 
-            :people = "people"
-            :parentData="addFriendData"
-            :selectedPersonId="selectedPersonId">
+            :parentData="addFriendData">
         </add-friend>
         <edit-friend 
             v-if="activeModal==5" 
