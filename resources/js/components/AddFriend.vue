@@ -31,13 +31,6 @@
         name:'add-friend',
         props: {
             parentData: Object,
-            people: Array,
-            selectedPersonId: {
-                type: Number,
-                default() { 
-                    return 0; 
-                }
-            }
         },
         components: {
             modal

@@ -31,10 +31,10 @@ class FriendRequestController extends Controller
         $recipientUser = User::where('email', '=', $request->email)->first();
         if ($recipientUser === null) {
 
-            $friendInvitation = new FriendInvitation;
-            $friendInvitation->user_id = $user_id;
-            $friendInvitation->email = $request->email;
-            $friendInvitation->save();
+            FriendInvitation::create([
+                "user_id" => $user_id,
+                "email" => $request->email
+            ]);
 
             //Send email
             Mail::to($request->email)
@@ -50,12 +50,12 @@ class FriendRequestController extends Controller
 
             //Create new friend request
             $token = Str::uuid();
-            $friendRequest = new FriendRequest;
-            $friendRequest->sender_user_id = $user_id;
-            $friendRequest->recipient_user_id = $recipientUser->id;
-            $friendRequest->token = $token;
-            $friendRequest->status = 'pending';
-            $friendRequest->save();
+            FriendRequest::create([
+                "sender_user_id" => $user_id,
+                "recipient_user_id" => $recipientUser->id,
+                "token" => $token,
+                "status" => 'pending',
+            ]);
 
             //Send email
             Mail::to($request->email)

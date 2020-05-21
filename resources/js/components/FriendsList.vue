@@ -162,8 +162,7 @@
         },
         methods:{
             addButtonClicked(){
-                this.activeModal=4; 
-                this.activeFriend=friend;
+                this.activeModal=4;
             },
             editButtonClicked(friend){
                 this.activeModal=5; 

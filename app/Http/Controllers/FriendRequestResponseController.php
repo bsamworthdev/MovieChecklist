@@ -15,7 +15,7 @@ class FriendRequestResponseController extends Controller
 {
     //Warning: this controller is deliberately not authenticated, so be careful with it.
 
-    function accept(Request $request) {
+    function index(Request $request) {
 
         $friendRequest = FriendRequest::where('token','=',$request->token)->first();
 

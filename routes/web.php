@@ -46,7 +46,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin', 'AdminController@index')->name('admin');
 });
 
-Route::get('/acceptFriendRequest/{token}', 'FriendRequestResponseController@accept');
+Route::get('/acceptFriendRequest/{token}', 'FriendRequestResponseController@index');
 Route::get('/about', 'AboutController@index');
 
 
