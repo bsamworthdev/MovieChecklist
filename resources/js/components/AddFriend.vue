@@ -45,7 +45,7 @@
             //        enable the button
             //    }
 
-                axios.post('https://moviechecklist.co.uk/findUserByEmail/',{
+                axios.post('/findUserByEmail',{
                     email:this.enteredEmail                  
                 })
                 .then((response) => {

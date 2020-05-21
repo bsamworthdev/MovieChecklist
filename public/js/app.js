@@ -1968,7 +1968,7 @@ __webpack_require__.r(__webpack_exports__);
       //        enable the button
       //    }
 
-      axios.post('https://moviechecklist.co.uk/findUserByEmail/', {
+      axios.post('/findUserByEmail', {
         email: this.enteredEmail
       }).then(function (response) {
         _this.userExists = response.data;
