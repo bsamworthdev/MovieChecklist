@@ -29,6 +29,7 @@ class FriendRequestController extends Controller
 
         //Find recipient user_id by email
         $recipientUser = User::where('email', '=', $request->email)->first();
+
         if ($recipientUser === null) {
 
             FriendInvitation::create([
@@ -42,6 +43,21 @@ class FriendRequestController extends Controller
 
             return back()->with('message', 'friend invitation sent');
         } else {
+
+            //Check friendship does not already exist
+            $friendshipExists = Friendship::where([
+                ['person_A_user_id', '=', $user_id],
+                ['person_B_user_id', '=', $recipientUser->id]
+            ])
+            ->orWhere([                        
+                ['person_A_user_id', '=', $recipientUser->id],
+                ['person_B_user_id', '=', $user_id]
+            ])->count() > 0;
+
+            if ($friendshipExists) {
+                return back()->with('message', 'Already friends with this person');
+            }
+
             //Cancel existing friend requests
             $friendRequest = FriendRequest::where('sender_user_id', '=', $user_id)
                 ->where('recipient_user_id', '=', $recipientUser->id)
