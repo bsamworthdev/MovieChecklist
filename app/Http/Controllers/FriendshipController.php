@@ -86,15 +86,6 @@ class FriendshipController extends Controller
         );
     }
 
-    function add(Request $request) {
-        $friendship = new Friendship;
-        $friendship->person_A_ = $request->people_id;
-
-        $friendship->save();
-        
-        return back()->with('message', 'friend added successfully');
-    }
-
     function edit(Request $request) {
         $user_id = Auth::user()->id;
 

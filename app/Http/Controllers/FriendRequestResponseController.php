@@ -35,22 +35,23 @@ class FriendRequestResponseController extends Controller
                 //accept
 
                 //Add friendship
-                $friendship = new Friendship;
-                $friendship->person_A_user_id = $friendRequest->sender_user_id;
-                $friendship->person_B_user_id = $friendRequest->recipient_user_id;
-                $friendship->save();
+                Friendship::create([
+                    "person_A_user_id" => $friendRequest->sender_user_id,
+                    "person_B_user_id" => $friendRequest->recipient_user_id
+                ]);
 
                 //Update friend request
                 $friendRequest->status = 'active';
                 $friendRequest->save();
 
                 //Email confirmation
-                $user = User::find($friendRequest->sender_user_id);
-                Mail::to($user->email)
+                $sender = User::find($friendRequest->sender_user_id);
+                $user = User::find($friendRequest->recipient_user_id);
+                Mail::to($sender->email)
                      ->send(new FriendRequestAcceptMailable($user));
 
                 return view('friend-request-accept', [
-                    "user" => $user
+                    "user" => $sender
                 ]);
             }
         }

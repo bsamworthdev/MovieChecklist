@@ -41,10 +41,7 @@
         methods: {
             emailChanged: function(e) {
                 e.stopPropagation();
-            //    if (isValidEmail){
-            //        enable the button
-            //    }
-
+                
                 axios.post('/findUserByEmail',{
                     email:this.enteredEmail                  
                 })

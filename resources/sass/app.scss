@@ -6,3 +6,9 @@
 @import '~bootstrap/scss/bootstrap';
 // font awesome
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
+.fa-trophy {
+    font-size: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-shadow: 0 0 3px #000;
+}
