@@ -15,7 +15,7 @@
                 <button class="btn btn-success" @click="updateAmazonStatuses">Get latest Amazon statuses</button>
             </div>
              <div class="col-sm-12">
-                <h4>Hi {{ user.name }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ movies.length }}</b> movies.</h4>
+                <h4>Hi {{ user.name ? user.name:user.username }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ movies.length }}</b> movies.</h4>
             </div>
             <div class="btn-group col-12">
                 <button class="btn btn-success" @click="pickMovie">Pick me a random movie!</button>

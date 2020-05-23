@@ -41584,7 +41584,11 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "col-sm-12" }, [
           _c("h4", [
-            _vm._v("Hi " + _vm._s(_vm.user.name) + ", you have watched "),
+            _vm._v(
+              "Hi " +
+                _vm._s(_vm.user.name ? _vm.user.name : _vm.user.username) +
+                ", you have watched "
+            ),
             _c("span", { staticClass: "watchedMovies" }, [
               _vm._v(_vm._s(_vm.watchedMoviesCount))
             ]),
