@@ -41987,7 +41987,9 @@ var render = function() {
               _vm._v(" "),
               _vm._l(_vm.sortedUsers, function(user) {
                 return _c("tr", { key: user.id }, [
-                  _c("td", [_vm._v(_vm._s(user.name))]),
+                  _c("td", [
+                    _vm._v(_vm._s(user.name ? user.name : user.username))
+                  ]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.email))]),
                   _vm._v(" "),
