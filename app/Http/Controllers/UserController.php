@@ -47,6 +47,18 @@ class UserController extends Controller
         }
     }
 
+    public function toggleMovieInWatchList(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $movie_id = $request->movie_id;
+        
+        if ($request->onWatchList){
+            DB::statement("insert into watch_list (user_id,movie_id, created_at, updated_at) values ($user_id, $movie_id, NOW(), NOW())");
+        } else {
+            DB::statement("delete from watch_list where user_id=$user_id and movie_id=$movie_id");
+        }
+    }
+
     public function getFriendsStats(Request $request)
     {
         $user_id = Auth::user()->id;

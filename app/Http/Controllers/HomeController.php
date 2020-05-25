@@ -47,6 +47,9 @@ class HomeController extends Controller
             ->leftJoin('amazon', function ($join) {
                 $join->on('amazon.movie_id', '=', 'movies.id');
             })
+            ->leftJoin('watch_list', function ($join) {
+                $join->on('watch_list.movie_id', '=', 'movies.id');
+            })
             ->leftJoin('movie_user', function ($join) use ($user_id) {
                 $join->on('movie_user.movie_id', '=', 'movies.id');
                 $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
@@ -93,7 +96,8 @@ class HomeController extends Controller
                 DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                 DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
-                DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite')
+                DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite'),
+                DB::raw('IF(ISNULL(watch_list.movie_id), \'0\', \'1\') as on_watch_list')
             ]);
 
         $count = 1;
@@ -140,10 +144,27 @@ class HomeController extends Controller
             $movie->friendsWatched = $count;
         }
 
+        $watch_list = DB::table('watch_list')
+                ->where('user_id', $user_id)
+                ->join('movies','movies.id','watch_list.movie_id')
+                ->leftJoin('netflix', function ($join) {
+                    $join->on('netflix.movie_id', '=', 'movies.id');
+                })
+                ->leftJoin('amazon', function ($join) {
+                    $join->on('amazon.movie_id', '=', 'movies.id');
+                })
+                ->orderBy('rank', 'ASC')
+                ->get([
+                    'movies.*',
+                    DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
+                    DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon')
+                ]);
+        
         return view(
             'home',
             [
                 "user" => $user,
+                "watchList" => $watch_list,
                 "movies" => $movies,
                 "genres" => $movie_genres,
                 "selectedGenre" => $selected_genre,

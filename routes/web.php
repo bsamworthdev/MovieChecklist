@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');
     Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
     Route::post('/getFriendsStats/{movie_id?}/', 'UserController@getFriendsStats'); 
+    Route::post('/toggleMovieInWatchList', 'UserController@toggleMovieInWatchList');
 
     Route::post('/editfriend', 'FriendshipController@edit');
     Route::post('/deletefriend', 'FriendshipController@delete');

@@ -13,7 +13,7 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-lg-2 col-12">
-                                                <div id="title">My List</div> 
+                                                <div id="title">Movies</div> 
                                             </div>
                                             <div class="col-lg-4 col-12">
                                                 <input id="search_input" type="text" class="form-control" placeholder="Search" 
@@ -108,6 +108,7 @@
 
                     <scratch-card-grid 
                         :user="{{ $user }}" 
+                        :watch_list="{{ $watchList }}" 
                         :movies="{{ $movies }}" >
                     </scratch-card-grid>
                 </div>

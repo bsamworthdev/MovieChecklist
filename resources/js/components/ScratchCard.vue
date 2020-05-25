@@ -15,10 +15,19 @@
                     <i class="fa fa-heart heart filled"></i>
                     <i class="far fa-heart heart outline"></i>
                 </div>
+                <div v-else class="watchList"
+                        :class="{ selected: isOnWatchList, hovering: watchListHover, hasFriends: user.friendsCount > 0 }" 
+                        @mouseover="watchListHover = true"
+                        @mouseleave="watchListHover = false"
+                        @click="toggleIsOnWatchlist($event)">   
+                    <i class="fas fa-list-alt watchListIcon" :title="watchListTitle"></i>
+                    <i class="fas fa-check-circle watchListTick"></i>
+                    <i class="fas fa-plus-circle watchListAdd"></i>
+                </div>
                 <div v-if="user.friendsCount > 0" class="friends" 
                     :title="movie.friendsWatched + ' of your friends also watched this'"
                     @click="showFriendsPopup($event)">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-user friendsIcon"></i>
                     <span class="friendsCount"> x {{ movie.friendsWatched }}</span>
                 </div>
                 <div class="rating">
@@ -85,6 +94,21 @@
                     console.log(error);
                 });
             },
+            toggleIsOnWatchlist(e){
+                e.stopPropagation();
+                axios.post('/toggleMovieInWatchList',{
+                    movie_id:this.movie.id,
+                    onWatchList:!this.isOnWatchList                 
+                })
+                .then((response) => {
+                    this.isOnWatchList = !this.isOnWatchList;
+                    location.reload();
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
             showFriendsPopup(e) {
                 e.stopPropagation();
                 this.$emit('showFriendsPopup', this.movie);
@@ -107,15 +131,26 @@
                 } else {
                     return 'n/a';
                 }
-            }
+            },
+            watchListTitle: function (){
+                var title;
+                if (this.isOnWatchList){
+                    title = 'On Watch List';
+                } else {
+                    title = 'Add To Watch List';
+                }
+                return title;
+            },
         },
         data() {
             return {
                 hasWatched: (this.movie.watched == 1),
                 isFavourite: (this.movie.favourite == 1),
+                isOnWatchList: (this.movie.on_watch_list == 1),
                 isOnNetflix: (this.movie.on_netflix == 1),
                 isOnAmazon: (this.movie.on_amazon == 1),
-                favouriteHover: false
+                favouriteHover: false,
+                watchListHover: false
             }
         },
         watch: {
@@ -169,7 +204,7 @@
         opacity:0.5;
     }
     .tick{
-        color:green;
+        color:#009d00;
     }
     .tickContainer{
         position:relative;
@@ -250,7 +285,7 @@
         display:block;
     }
 
-    .movieCard .favourite.hasFriends{
+    .movieCard .favourite.hasFriends, .movieCard .watchList.hasFriends{
         top:94px!important;
     }
 
@@ -267,6 +302,37 @@
     }
 
     .movieCard .favourite:not(.hovering):not(.selected) .heart.filled{
+        display:none;
+    }
+
+    .movieCard .watchList{
+        position:absolute;
+        left:15px;
+        top:59px;
+        min-width:40px;
+    }
+
+    .movieCard .watchList.hovering .watchListAdd{
+        color:blue;
+    }
+
+    .movieCard .watchList.hovering .watchListTick{
+        color:#006200;
+    }
+
+    .movieCard .watchList.selected .watchListAdd{
+        display:none;
+    }
+
+    .movieCard .watchList.selected .watchListTick{
+        display:block;
+    }
+
+    .movieCard .watchList:not(.selected) .watchListAdd{
+        display:block;
+    }
+
+    .movieCard .watchList:not(.selected) .watchListTick{
         display:none;
     }
 
@@ -330,6 +396,31 @@
         position:absolute;
         color:red;
         font-size:31px;
+    }
+    .userIcon{
+        text-shadow: 0 0 3px #000;
+    }
+    .watchListIcon{
+        position:absolute;
+        color:white;
+        font-size:25px;
+        text-shadow: 0 0 3px #000;
+    }
+    .watchListAdd{
+        position:absolute;
+        color:#4c4cff;
+        font-size:14px;
+        text-shadow: 0 0 2px #FFF;
+        left:14px;
+        top:13px;
+    }
+    .watchListTick{
+        position:absolute;
+        color:#009d00;
+        font-size:14px;
+        text-shadow: 0 0 2px #FFF;
+        left:14px;
+        top:13px;
     }
     .externalLink{
         font-size:11px;

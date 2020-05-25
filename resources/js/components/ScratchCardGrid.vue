@@ -17,6 +17,12 @@
              <div class="col-sm-12">
                 <h4>Hi {{ user.name ? user.name:user.username }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ movies.length }}</b> movies.</h4>
             </div>
+             <div v-if="watch_list.length > 0" class="col-sm-12">
+                <h5 class="d-inline">You have <span class="watchListMovies">{{ watch_list.length }}</span> movie{{ watch_list.length > 1 ? 's':'' }} in your Watch List.</h5>
+                <div class="btn-group">
+                    <button class="btn btn-primary" @click="showWatchList">Watch List</button>
+                </div>
+            </div>
             <div class="btn-group col-12">
                 <button class="btn btn-success" @click="pickMovie">Pick me a random movie!</button>
             </div>
@@ -27,7 +33,8 @@
                 v-model="watchedMoviesCount" 
                 :key="movie.id" 
                 :movie="movie" 
-                :user="user"        
+                :user="user"  
+                :watch_list="watch_list"       
                 @movieStatusChanged="movieStatusChanged"
                 @editMovieDetailsClicked="editMovieDetailsClicked"
                 @openIMDBModal="openIMDBModal"
@@ -55,6 +62,11 @@
             @close="activeModal=0"
             :movie="randomMovie">
         </random-movie-modal>
+        <watch-list-modal 
+            v-if="activeModal==8" 
+            @close="activeModal=0"
+            :watch_list="watch_list">
+        </watch-list-modal>
         <div class="overlay" v-if="activeModal>0" >
             <div id="loading-img"></div>
         </div>
@@ -64,6 +76,7 @@
 <script>
     import scratchCard from './ScratchCard';
     import randomMovieModal from './RandomMovieModal';
+    import watchListModal from './WatchListModal';
     import editMovieDetailsModal from './EditMovieDetailsModal';
     import friendsWatchedModal from './FriendsWatchedModal';
     import imdbModal from './IMDBModal';
@@ -71,10 +84,12 @@
         props: {
             movies: Array,
             user: Object,
+            watch_list: Array
         },
         components : {
             scratchCard,
             randomMovieModal,
+            watchListModal,
             editMovieDetailsModal,
             imdbModal,
             friendsWatchedModal
@@ -175,6 +190,9 @@
                 this.randomMovie = movie;
                 this.activeModal = 1;
             },
+            showWatchList() {
+                this.activeModal = 8;
+            }
         },
         events: {
 
