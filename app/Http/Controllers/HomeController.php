@@ -74,19 +74,41 @@ class HomeController extends Controller
             ->when($favourites_only == 1, function ($q) {
                 return $q->where('movie_user.favourite', '=', '1');
             })
-            ->when(($netflix_only == 1 && $amazon_only == 1), function ($q) {
+            ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
                 return $q->where(function ($q) {
                     $q->where('netflix.on_netflix', '=', '1')
                         ->orWhere('amazon.on_amazon', '=', '1')
                         ->orWhere('nowtv.on_nowtv', '=', '1');
                 });
             })
-            ->when(($netflix_only == 1 && $amazon_only == 0), function ($q) {
+            ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
+                return $q->where(function ($q) {
+                    $q->where('netflix.on_netflix', '=', '1')
+                        ->orWhere('amazon.on_amazon', '=', '1');
+                });
+            })
+            ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
+                return $q->where(function ($q) {
+                    $q->where('netflix.on_netflix', '=', '1')
+                        ->orWhere('nowtv.on_nowtv', '=', '1');
+                });
+            })
+            ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
+                return $q->where(function ($q) {
+                    $q->where('amazon.on_amazon', '=', '1')
+                        ->orWhere('nowtv.on_nowtv', '=', '1');
+                });
+            })
+            ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 0), function ($q) {
                 return $q->where('netflix.on_netflix', '=', '1');
             })
-            ->when(($netflix_only == 0 && $amazon_only == 1), function ($q) {
+            ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
                 return $q->where('amazon.on_amazon', '=', '1');
             })
+            ->when(($netflix_only == 0 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
+                return $q->where('nowtv.on_nowtv', '=', '1');
+            })
+            
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user.user_id', '=', NULL);
             })
