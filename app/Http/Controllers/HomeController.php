@@ -30,7 +30,7 @@ class HomeController extends Controller
      */
     public function index(
         $genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, 
-        $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $search_text = "")
+        $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0, $search_text = "")
     {
 
         //Users
@@ -46,6 +46,9 @@ class HomeController extends Controller
             })
             ->leftJoin('amazon', function ($join) {
                 $join->on('amazon.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('nowtv', function ($join) {
+                $join->on('nowtv.movie_id', '=', 'movies.id');
             })
             ->leftJoin('watch_list', function ($join) {
                 $join->on('watch_list.movie_id', '=', 'movies.id');
@@ -95,6 +98,7 @@ class HomeController extends Controller
                 'movies.*',
                 DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                 DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
+                DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
                 DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
                 DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite'),
                 DB::raw('IF(ISNULL(watch_list.movie_id), \'0\', \'1\') as on_watch_list')
@@ -117,6 +121,7 @@ class HomeController extends Controller
         $selected_favourites_only = $favourites_only;
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
+        $selected_nowtv_only = $nowtv_only;
         $selected_search_text = $search_text;
 
 
@@ -153,11 +158,15 @@ class HomeController extends Controller
                 ->leftJoin('amazon', function ($join) {
                     $join->on('amazon.movie_id', '=', 'movies.id');
                 })
+                ->leftJoin('nowtv', function ($join) {
+                    $join->on('nowtv.movie_id', '=', 'movies.id');
+                })
                 ->orderBy('rank', 'ASC')
                 ->get([
                     'movies.*',
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
-                    DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon')
+                    DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
+                    DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv')
                 ]);
         
         return view(
@@ -175,6 +184,7 @@ class HomeController extends Controller
                 "selectedFavouritesOnly" => $selected_favourites_only,
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only,
+                "selectedNowtvOnly" => $selected_nowtv_only,
                 "selectedSearchText" => $selected_search_text
             ]
         );

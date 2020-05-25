@@ -38,10 +38,12 @@
                     <div v-if="user.role=='editor' || user.role=='admin'">
                         <div :class="{'dimmed': (isOnNetflix == 0) }" @click="editMovieDetailsClicked($event, 'netflix')" class="platform netflix" title="On netflix"></div>
                         <div :class="{'dimmed': (isOnAmazon == 0) }" @click="editMovieDetailsClicked($event, 'amazon')" class="platform amazon" title="On amazon video"></div>
+                        <div :class="{'dimmed': (isOnNowtv == 0) }" @click="editMovieDetailsClicked($event, 'nowtv')" class="platform nowtv" title="On Now TV"></div>
                     </div>
                     <div v-else>
                         <div v-if="isOnNetflix == 1" class="platform netflix" title="On netflix"></div>
                         <div v-if="isOnAmazon  == 1" class="platform amazon" title="On amazon video"></div>
+                        <div v-if="isOnNowtv  == 1" class="platform nowtv" title="On Now TV"></div>
                     </div>                 
                 </div>
                 <div class="tickContainer">
@@ -149,6 +151,7 @@
                 isOnWatchList: (this.movie.on_watch_list == 1),
                 isOnNetflix: (this.movie.on_netflix == 1),
                 isOnAmazon: (this.movie.on_amazon == 1),
+                isOnNowtv: (this.movie.on_nowtv == 1),
                 favouriteHover: false,
                 watchListHover: false
             }
@@ -208,8 +211,9 @@
     }
     .tickContainer{
         position:relative;
-        text-align:center;
-        width:100%;
+        width: 120px;
+        margin-left: auto;
+        margin-right: auto;
     }
     .movieCard .movieImage {
         background-position: center;
@@ -376,6 +380,10 @@
 
     .movieCard .platform.amazon {
         background-image: url('/images/amazon.jpeg');
+    }
+
+    .movieCard .platform.nowtv {
+        background-image: url('/images/nowtv.jpg');
     }
 
     .movieCard .rating span{

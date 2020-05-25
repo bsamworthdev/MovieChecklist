@@ -275,6 +275,15 @@ class MovieController extends Controller
                 DB::update("UPDATE amazon SET on_amazon=?, updated_at=?
                 WHERE movie_id=?", [$status, NOW(), $movie_id]);
             }
+        } elseif ($platform == 'nowtv'){
+            $movies =  DB::table('nowtv')->where('movie_id', '=', $movie_id)->get();
+            if (count($movies) == 0) {
+                DB::insert("INSERT INTO nowtv (movie_id, on_nowtv, created_at, updated_at) 
+                VALUES ($movie_id, $status, NOW(), NOW())");
+            } else {
+                DB::update("UPDATE nowtv SET on_nowtv=?, updated_at=?
+                WHERE movie_id=?", [$status, NOW(), $movie_id]);
+            }
         }
     }
 

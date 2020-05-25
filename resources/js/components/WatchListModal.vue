@@ -12,6 +12,7 @@
                         {{ movie.rank }} - {{ movie.name }}
                         <img v-if="movie.on_netflix == '1'" src="/images/netflix.jpg" class="netflix" >
                         <img v-if="movie.on_amazon == '1'" src="/images/amazon.png" class="amazon" >
+                        <img v-if="movie.on_nowtv == '1'" src="/images/nowtv.jpg" class="nowtv" >
                     </div>
                 </div>
             </div>
@@ -55,7 +56,7 @@
         background-size: contain;
         height:60vh;
     }
-    .netflix, .amazon{
+    .netflix, .amazon, .nowtv{
         width: 17px;
     }
 </style>

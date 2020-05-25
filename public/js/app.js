@@ -2228,6 +2228,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2856,6 +2879,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     movie: Object,
@@ -2951,6 +2976,7 @@ __webpack_require__.r(__webpack_exports__);
       isOnWatchList: this.movie.on_watch_list == 1,
       isOnNetflix: this.movie.on_netflix == 1,
       isOnAmazon: this.movie.on_amazon == 1,
+      isOnNowtv: this.movie.on_nowtv == 1,
       favouriteHover: false,
       watchListHover: false
     };
@@ -3423,6 +3449,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+//
 //
 //
 //
@@ -8226,7 +8253,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:20px;\n    padding-bottom:17px;\n    border: 4px solid #C0C0C0;\n    cursor:pointer;\n    box-shadow:7px 7px #343a40;\n}\n.edit_buttons button[data-v-1e6a29e2]{\n    padding:1px!important;\n}\n.movieImage h4[data-v-1e6a29e2]{\n    color:black!important;\n    margin-top:40px;\n    position:absolute;\n    color:transparent;\n    background-color:white;\n    opacity:0;\n    width:100%;\n    left:0;\n    bottom:9px;\n    padding:4px 8px 4px 8px;\n}\n.movieCard .footer[data-v-1e6a29e2]{\n    position:absolute;\n    background-color:#EEC748;\n    width:100%;\n    left:0;\n    bottom:0px;\n    height:17px;\n    padding:0px 8px 0px 8px;\n    line-height:17px;\n    font-weight:bold;\n    text-align:center;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-1e6a29e2] {\n    opacity:0.5;\n}\n.tick[data-v-1e6a29e2]{\n    color:#009d00;\n}\n.tickContainer[data-v-1e6a29e2]{\n    position:relative;\n    text-align:center;\n    width:100%;\n}\n.movieCard .movieImage[data-v-1e6a29e2] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.movieCard .movieImage[data-v-1e6a29e2]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-1e6a29e2]:before{\n    background: rgba(0,0,0,0.7);\n}\n.movieCard .rank[data-v-1e6a29e2]{\n    background-color:white;\n    position:absolute;\n    border-radius:8px;\n    text-align:center;\n    left:10px;\n    top:9px;\n    min-width:40px;\n    border:1px solid black;\n    padding-left:5px;\n    padding-right:5px;\n}\n.movieCard .rank.rounded[data-v-1e6a29e2]{\n    border-radius:22px!important;\n}\n.movieCard .rank .filtered_rank[data-v-1e6a29e2]{\n    color:black;\n    font-size:25px;\n}\n.movieCard .rank .actual_rank[data-v-1e6a29e2]{\n    font-size:12px;\n    color:grey;\n    display:block;\n    margin-top:-9px;\n    padding-bottom:3px;\n}\n.movieCard .rating[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:22px;\n    top:9px;\n    min-width:40px;\n}\n.movieCard .favourite[data-v-1e6a29e2]{\n    opacity:0.4;\n    position:absolute;\n    left:15px;\n    top:59px;\n    min-width:40px;\n}\n.movieCard .favourite.selected[data-v-1e6a29e2]{\n    opacity:1!important;\n}\n.movieCard .favourite.hovering .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.hovering .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite.hasFriends[data-v-1e6a29e2], .movieCard .watchList.hasFriends[data-v-1e6a29e2]{\n    top:94px!important;\n}\n.movieCard .favourite.selected .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.selected .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.outline[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.filled[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .watchList[data-v-1e6a29e2]{\n    position:absolute;\n    left:15px;\n    top:59px;\n    min-width:40px;\n}\n.movieCard .watchList.hovering .watchListAdd[data-v-1e6a29e2]{\n    color:blue;\n}\n.movieCard .watchList.hovering .watchListTick[data-v-1e6a29e2]{\n    color:#006200;\n}\n.movieCard .watchList.selected .watchListAdd[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .watchList.selected .watchListTick[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .watchList:not(.selected) .watchListAdd[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .watchList:not(.selected) .watchListTick[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .platforms[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:6px;\n    top:60px;\n    min-width:40px;\n}\n.movieCard .friends[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    left:10px;\n    top:60px;\n    min-width:40px;\n    font-size:16px;\n    color:#C0C0C0;\n}\n.movieCard .friends .friendsCount[data-v-1e6a29e2]{\n    font-size:18px;\n    color:#C0C0C0;\n}\n.movieCard .platform[data-v-1e6a29e2] {\n    width:30px;\n    height:30px;\n    background-size: cover;\n    margin-bottom:6px;\n}\n.movieCard .platform.dimmed[data-v-1e6a29e2] {\n    opacity:0.2;\n}\n.movieCard .platform.netflix[data-v-1e6a29e2] {\n    background-image: url('/images/netflix.jpg');\n}\n.movieCard .platform.amazon[data-v-1e6a29e2] {\n    background-image: url('/images/amazon.jpeg');\n}\n.movieCard .rating span[data-v-1e6a29e2]{\n    position:relative;\n    top:11px;\n    left:12px;\n    color:black;\n    font-size:15px;\n    width:40px;\n    text-align:center;\n}\n.star[data-v-1e6a29e2]{\n    position:absolute;\n    color:yellow;\n    font-size:41px;\n}\n.heart[data-v-1e6a29e2]{\n    position:absolute;\n    color:red;\n    font-size:31px;\n}\n.userIcon[data-v-1e6a29e2]{\n    text-shadow: 0 0 3px #000;\n}\n.watchListIcon[data-v-1e6a29e2]{\n    position:absolute;\n    color:white;\n    font-size:25px;\n    text-shadow: 0 0 3px #000;\n}\n.watchListAdd[data-v-1e6a29e2]{\n    position:absolute;\n    color:#4c4cff;\n    font-size:14px;\n    text-shadow: 0 0 2px #FFF;\n    left:14px;\n    top:13px;\n}\n.watchListTick[data-v-1e6a29e2]{\n    position:absolute;\n    color:#009d00;\n    font-size:14px;\n    text-shadow: 0 0 2px #FFF;\n    left:14px;\n    top:13px;\n}\n.externalLink[data-v-1e6a29e2]{\n    font-size:11px;\n    padding-left:8px;\n}\n@media only screen and (max-device-width: 800px){\n.movieImage h4[data-v-1e6a29e2]{\n        opacity:0.5!important;\n}\n}\n\n/*x-x-small*/\n@media (max-width: 320px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 320px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:80px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 321px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 390px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 400px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 549px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:120px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:300px;\n}\n}\n/*Extra-Small devices (portrait phones, 576px and up)*/\n@media (min-width: 576px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 242px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*Small devices (landscape phones, 576px and up)*/\n@media (min-width: 768px){\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 225px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/* Medium devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 233px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n/*Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 287px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:100px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:120px;\n}\n}\n\n", ""]);
+exports.push([module.i, "\n.movieCard[data-v-1e6a29e2]{\n    margin-bottom:20px;\n    padding-bottom:17px;\n    border: 4px solid #C0C0C0;\n    cursor:pointer;\n    box-shadow:7px 7px #343a40;\n}\n.edit_buttons button[data-v-1e6a29e2]{\n    padding:1px!important;\n}\n.movieImage h4[data-v-1e6a29e2]{\n    color:black!important;\n    margin-top:40px;\n    position:absolute;\n    color:transparent;\n    background-color:white;\n    opacity:0;\n    width:100%;\n    left:0;\n    bottom:9px;\n    padding:4px 8px 4px 8px;\n}\n.movieCard .footer[data-v-1e6a29e2]{\n    position:absolute;\n    background-color:#EEC748;\n    width:100%;\n    left:0;\n    bottom:0px;\n    height:17px;\n    padding:0px 8px 0px 8px;\n    line-height:17px;\n    font-weight:bold;\n    text-align:center;\n}\n.movieCard .card-header[data-v-1e6a29e2]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-1e6a29e2] {\n    opacity:0.5;\n}\n.tick[data-v-1e6a29e2]{\n    color:#009d00;\n}\n.tickContainer[data-v-1e6a29e2]{\n    position:relative;\n    width: 120px;\n    margin-left: auto;\n    margin-right: auto;\n}\n.movieCard .movieImage[data-v-1e6a29e2] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.movieCard .movieImage[data-v-1e6a29e2]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-1e6a29e2]:before{\n    background: rgba(0,0,0,0.7);\n}\n.movieCard .rank[data-v-1e6a29e2]{\n    background-color:white;\n    position:absolute;\n    border-radius:8px;\n    text-align:center;\n    left:10px;\n    top:9px;\n    min-width:40px;\n    border:1px solid black;\n    padding-left:5px;\n    padding-right:5px;\n}\n.movieCard .rank.rounded[data-v-1e6a29e2]{\n    border-radius:22px!important;\n}\n.movieCard .rank .filtered_rank[data-v-1e6a29e2]{\n    color:black;\n    font-size:25px;\n}\n.movieCard .rank .actual_rank[data-v-1e6a29e2]{\n    font-size:12px;\n    color:grey;\n    display:block;\n    margin-top:-9px;\n    padding-bottom:3px;\n}\n.movieCard .rating[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:22px;\n    top:9px;\n    min-width:40px;\n}\n.movieCard .favourite[data-v-1e6a29e2]{\n    opacity:0.4;\n    position:absolute;\n    left:15px;\n    top:59px;\n    min-width:40px;\n}\n.movieCard .favourite.selected[data-v-1e6a29e2]{\n    opacity:1!important;\n}\n.movieCard .favourite.hovering .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.hovering .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite.hasFriends[data-v-1e6a29e2], .movieCard .watchList.hasFriends[data-v-1e6a29e2]{\n    top:94px!important;\n}\n.movieCard .favourite.selected .heart.outline[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .favourite.selected .heart.filled[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.outline[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.filled[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .watchList[data-v-1e6a29e2]{\n    position:absolute;\n    left:15px;\n    top:59px;\n    min-width:40px;\n}\n.movieCard .watchList.hovering .watchListAdd[data-v-1e6a29e2]{\n    color:blue;\n}\n.movieCard .watchList.hovering .watchListTick[data-v-1e6a29e2]{\n    color:#006200;\n}\n.movieCard .watchList.selected .watchListAdd[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .watchList.selected .watchListTick[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .watchList:not(.selected) .watchListAdd[data-v-1e6a29e2]{\n    display:block;\n}\n.movieCard .watchList:not(.selected) .watchListTick[data-v-1e6a29e2]{\n    display:none;\n}\n.movieCard .platforms[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    right:6px;\n    top:60px;\n    min-width:40px;\n}\n.movieCard .friends[data-v-1e6a29e2]{\n    position:absolute;\n    text-align:center;\n    left:10px;\n    top:60px;\n    min-width:40px;\n    font-size:16px;\n    color:#C0C0C0;\n}\n.movieCard .friends .friendsCount[data-v-1e6a29e2]{\n    font-size:18px;\n    color:#C0C0C0;\n}\n.movieCard .platform[data-v-1e6a29e2] {\n    width:30px;\n    height:30px;\n    background-size: cover;\n    margin-bottom:6px;\n}\n.movieCard .platform.dimmed[data-v-1e6a29e2] {\n    opacity:0.2;\n}\n.movieCard .platform.netflix[data-v-1e6a29e2] {\n    background-image: url('/images/netflix.jpg');\n}\n.movieCard .platform.amazon[data-v-1e6a29e2] {\n    background-image: url('/images/amazon.jpeg');\n}\n.movieCard .platform.nowtv[data-v-1e6a29e2] {\n    background-image: url('/images/nowtv.jpg');\n}\n.movieCard .rating span[data-v-1e6a29e2]{\n    position:relative;\n    top:11px;\n    left:12px;\n    color:black;\n    font-size:15px;\n    width:40px;\n    text-align:center;\n}\n.star[data-v-1e6a29e2]{\n    position:absolute;\n    color:yellow;\n    font-size:41px;\n}\n.heart[data-v-1e6a29e2]{\n    position:absolute;\n    color:red;\n    font-size:31px;\n}\n.userIcon[data-v-1e6a29e2]{\n    text-shadow: 0 0 3px #000;\n}\n.watchListIcon[data-v-1e6a29e2]{\n    position:absolute;\n    color:white;\n    font-size:25px;\n    text-shadow: 0 0 3px #000;\n}\n.watchListAdd[data-v-1e6a29e2]{\n    position:absolute;\n    color:#4c4cff;\n    font-size:14px;\n    text-shadow: 0 0 2px #FFF;\n    left:14px;\n    top:13px;\n}\n.watchListTick[data-v-1e6a29e2]{\n    position:absolute;\n    color:#009d00;\n    font-size:14px;\n    text-shadow: 0 0 2px #FFF;\n    left:14px;\n    top:13px;\n}\n.externalLink[data-v-1e6a29e2]{\n    font-size:11px;\n    padding-left:8px;\n}\n@media only screen and (max-device-width: 800px){\n.movieImage h4[data-v-1e6a29e2]{\n        opacity:0.5!important;\n}\n}\n\n/*x-x-small*/\n@media (max-width: 320px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 320px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:80px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 321px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 390px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 400px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 549px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:120px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:300px;\n}\n}\n/*Extra-Small devices (portrait phones, 576px and up)*/\n@media (min-width: 576px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 242px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/*Small devices (landscape phones, 576px and up)*/\n@media (min-width: 768px){\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 225px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:60px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n\n/* Medium devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 233px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:80px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:100px;\n}\n}\n/*Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n.movieCard .movieImage[data-v-1e6a29e2]{\n        height: 287px;\n}\n.tick[data-v-1e6a29e2]{\n        font-size:100px;\n}\n.tickContainer[data-v-1e6a29e2]{\n        margin-top:120px;\n}\n}\n\n", ""]);
 
 // exports
 
@@ -8264,7 +8291,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#chosenMovieImage[data-v-52677bcb]{\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: contain;\n    height:60vh;\n}\n.netflix[data-v-52677bcb], .amazon[data-v-52677bcb]{\n    width: 17px;\n}\n", ""]);
+exports.push([module.i, "\n#chosenMovieImage[data-v-52677bcb]{\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: contain;\n    height:60vh;\n}\n.netflix[data-v-52677bcb], .amazon[data-v-52677bcb], .nowtv[data-v-52677bcb]{\n    width: 17px;\n}\n", ""]);
 
 // exports
 
@@ -40610,6 +40637,56 @@ var render = function() {
                   _vm._v(" On Amazon\n        ")
                 ]
               )
+            ]),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _vm.movie.on_nowtv == 0
+          ? _c("div", { staticClass: "col-sm-12" }, [
+              _c("span", { staticClass: "col-sm-12 badge badge-danger" }, [
+                _vm._v("NOT ON NOW TV")
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "col-sm-12 btn btn-link",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.setMovieStreamStatus($event, "nowtv", "1")
+                    }
+                  }
+                },
+                [
+                  _vm._v("\n          Wait! This movie\n          "),
+                  _c("u", [_vm._v("IS")]),
+                  _vm._v(" on Now TV\n        ")
+                ]
+              )
+            ])
+          : _c("div", { staticClass: "col-sm-12" }, [
+              _c("span", { staticClass: "col-sm-12 badge badge-success" }, [
+                _vm._v("ON NOW TV")
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "col-sm-12 btn btn-link",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.setMovieStreamStatus($event, "nowtv", "0")
+                    }
+                  }
+                },
+                [
+                  _vm._v("\n          Wait! This Movie\n          "),
+                  _c("u", [_vm._v("IS NOT")]),
+                  _vm._v(" On Now TV\n        ")
+                ]
+              )
             ])
       ])
     ]),
@@ -41647,6 +41724,17 @@ var render = function() {
                           return _vm.editMovieDetailsClicked($event, "amazon")
                         }
                       }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "platform nowtv",
+                      class: { dimmed: _vm.isOnNowtv == 0 },
+                      attrs: { title: "On Now TV" },
+                      on: {
+                        click: function($event) {
+                          return _vm.editMovieDetailsClicked($event, "nowtv")
+                        }
+                      }
                     })
                   ])
                 : _c("div", [
@@ -41661,6 +41749,13 @@ var render = function() {
                       ? _c("div", {
                           staticClass: "platform amazon",
                           attrs: { title: "On amazon video" }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.isOnNowtv == 1
+                      ? _c("div", {
+                          staticClass: "platform nowtv",
+                          attrs: { title: "On Now TV" }
                         })
                       : _vm._e()
                   ])
@@ -42307,6 +42402,13 @@ var render = function() {
                 ? _c("img", {
                     staticClass: "amazon",
                     attrs: { src: "/images/amazon.png" }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              movie.on_nowtv == "1"
+                ? _c("img", {
+                    staticClass: "nowtv",
+                    attrs: { src: "/images/nowtv.jpg" }
                   })
                 : _vm._e()
             ])

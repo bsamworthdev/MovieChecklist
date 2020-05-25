@@ -57,6 +57,29 @@
             <u>IS NOT</u> On Amazon
           </button>
         </div>
+        <br />
+        <div v-if="movie.on_nowtv == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON NOW TV</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'nowtv', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on Now TV
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON NOW TV</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'nowtv', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On Now TV
+          </button>
+        </div>
       </div>
     </div>
 

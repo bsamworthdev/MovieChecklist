@@ -12,10 +12,10 @@
                                 <form id="movie_form">
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-lg-2 col-12">
+                                            <div class="col-lg-3 col-12">
                                                 <div id="title">Movies</div> 
                                             </div>
-                                            <div class="col-lg-4 col-12">
+                                            <div class="col-lg-3 col-12">
                                                 <input id="search_input" type="text" class="form-control" placeholder="Search" 
                                                     onkeypress="return searchChanged(event);" value="{{ $selectedSearchText }}"/>
                                             </div>
@@ -41,7 +41,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-2 col-12">
+                                            <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
                                                     <label>
                                                         <span class="nowrap">
@@ -61,10 +61,19 @@
                                                                 {{( $selectedAmazonOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
+                                                        &nbsp;&nbsp;
+                                                        <span class="nowrap">
+                                                            <img class="nowtv_logo" src="/images/nowtv.jpg">
+                                                            <input type="checkbox" 
+                                                                class="form-input" 
+                                                                id="nowtv_only_checkbox" 
+                                                                {{( $selectedNowtvOnly ? "checked" : '')}} 
+                                                                onchange="return changeSelection();">
+                                                        </span>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-4 col-12"></div>
+                                            <div class="col-lg-3 col-12"></div>
                                             <div class="col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
@@ -145,6 +154,7 @@
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
         var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
         var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
+        var nowtvOnlyCheckbox = document.getElementById('nowtv_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         var searchInput = document.getElementById('search_input');
@@ -155,6 +165,7 @@
             '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + (nowtvOnlyCheckbox.checked ? '1' : '0') + 
             '/' + searchInput.value + 
             '/');
         form.submit();
@@ -208,7 +219,7 @@
         color:red;
         font-size:17px;
     }
-    .netflix_logo, .amazon_logo{
+    .netflix_logo, .amazon_logo, .nowtv_logo{
         width:20px;
         height:20px;
     }
