@@ -133,7 +133,7 @@ class HomeController extends Controller
             $count++;
         }
 
-        $movie_genres = MovieGenre::all();
+        $movie_genres = MovieGenre::orderBy('label')->get();
         $selected_genre = $genre;
 
         $time_periods = MovieTimePeriod::all();

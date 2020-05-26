@@ -80,7 +80,7 @@ class User extends Authenticatable
 
         $stats['overall'] = $this->getSpecificStats();
 
-        $movie_genres = MovieGenre::all();
+        $movie_genres = MovieGenre::orderBy('label')->get();
         foreach ($movie_genres as $movie_genre){
             $stats['genre'][$movie_genre->label] = $this->getSpecificStats('genre','%'.$movie_genre->genre.'%');
         }
