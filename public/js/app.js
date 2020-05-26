@@ -41587,7 +41587,11 @@ var render = function() {
             style: { backgroundImage: "url(" + _vm.movie.image_url_small + ")" }
           },
           [
-            _c("h4", [_vm._v(_vm._s(_vm.movie.name))]),
+            _c("h4", [
+              _vm._v(
+                _vm._s(_vm.movie.name) + " (" + _vm._s(_vm.movie.year) + ")"
+              )
+            ]),
             _vm._v(" "),
             _c(
               "div",

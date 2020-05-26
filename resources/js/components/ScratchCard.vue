@@ -2,7 +2,7 @@
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
         <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
             <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small})` }">
-                <h4>{{ movie.name }}</h4>
+                <h4>{{ movie.name }} ({{ movie.year }})</h4>
                 <div class="rank" :class="{ rounded: (movie.index==movie.rank) }">
                     <span class="filtered_rank">{{ movie.index }}</span>
                     <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
