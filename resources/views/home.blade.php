@@ -45,7 +45,9 @@
                                                 <div class="card" id="streamCard">
                                                     <label>
                                                         <span class="nowrap">
-                                                            <img class="netflix_logo" src="/images/netflix.jpg">
+                                                            <label for="netflix_only_checkbox"> 
+                                                                <img class="netflix_logo" title="Netflix" src="/images/netflix.jpg">
+                                                            </label>
                                                             <input type="checkbox" 
                                                                 class="form-input" 
                                                                 id="netflix_only_checkbox" 
@@ -54,7 +56,9 @@
                                                         </span>
                                                         &nbsp;&nbsp;
                                                         <span class="nowrap">
-                                                            <img class="amazon_logo" src="/images/amazon.jpeg">
+                                                            <label for="amazon_only_checkbox"> 
+                                                                <img class="amazon_logo" title="Amazon Prime" src="/images/amazon.jpeg">
+                                                            </label>
                                                             <input type="checkbox" 
                                                                 class="form-input" 
                                                                 id="amazon_only_checkbox" 
@@ -63,7 +67,9 @@
                                                         </span>
                                                         &nbsp;&nbsp;
                                                         <span class="nowrap">
-                                                            <img class="nowtv_logo" src="/images/nowtv.jpg">
+                                                            <label for="nowtv_only_checkbox"> 
+                                                                <img class="nowtv_logo" title="Now TV" src="/images/nowtv.jpg">
+                                                            </label>
                                                             <input type="checkbox" 
                                                                 class="form-input" 
                                                                 id="nowtv_only_checkbox" 
@@ -220,8 +226,8 @@
         font-size:17px;
     }
     .netflix_logo, .amazon_logo, .nowtv_logo{
-        width:20px;
-        height:20px;
+        width:30px;
+        height:30px;
     }
     #streamCard{
         text-align:center;

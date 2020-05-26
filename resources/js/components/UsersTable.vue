@@ -17,11 +17,13 @@
                     <table class="table">
                         <tr>
                             <th @click="sort('name')">Name</th>
+                            <th @click="sort('name')">Username</th>
                             <th @click="sort('email')">Email</th>
                             <th @click="sort('watchedCount')">Movies Watched</th>
                         </tr>
                         <tr v-for="user in sortedUsers" :key="user.id">
-                            <td>{{ user.name ? user.name : user.username}}</td>
+                            <td>{{ user.name}}</td>
+                            <td>{{ user.username}}</td>
                             <td>{{ user.email }}</td>
                             <td>{{ user.watchedCount}}</td>
                         </tr>
