@@ -212,6 +212,7 @@
     .tickContainer{
         position:relative;
         width: 120px;
+        text-align:center;
         margin-left: auto;
         margin-right: auto;
     }
