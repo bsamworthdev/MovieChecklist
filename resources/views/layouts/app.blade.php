@@ -18,6 +18,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        .trophy.gold{ color:gold; }
+        .trophy.silver{ color:silver; }
+        .trophy.bronze{ color:#cd7f32; }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -29,7 +34,7 @@
                 @guest
                 @else
                 @foreach (Auth::user()->trophies as $trophy)
-                    <i class="fas fa-trophy" style="color:{{ $trophy->color }}" title="{{ $trophy->details }}"></i>
+                    <i class="fas fa-trophy trophy {{ $trophy->color }}" title="{{ $trophy->details }}"></i>
                 @endforeach
                 @endguest
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
