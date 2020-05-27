@@ -42419,7 +42419,7 @@ var render = function() {
               movie.on_amazon == "1"
                 ? _c("img", {
                     staticClass: "amazon",
-                    attrs: { src: "/images/amazon.png" }
+                    attrs: { src: "/images/amazon.jpeg" }
                   })
                 : _vm._e(),
               _vm._v(" "),

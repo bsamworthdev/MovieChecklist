@@ -11,7 +11,7 @@
                     <div v-for="movie in watch_list" :key="movie.id">
                         {{ movie.rank }} - {{ movie.name }}
                         <img v-if="movie.on_netflix == '1'" src="/images/netflix.jpg" class="netflix" >
-                        <img v-if="movie.on_amazon == '1'" src="/images/amazon.png" class="amazon" >
+                        <img v-if="movie.on_amazon == '1'" src="/images/amazon.jpeg" class="amazon" >
                         <img v-if="movie.on_nowtv == '1'" src="/images/nowtv.jpg" class="nowtv" >
                     </div>
                 </div>

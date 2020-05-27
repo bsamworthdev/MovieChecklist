@@ -50,8 +50,9 @@ class HomeController extends Controller
             ->leftJoin('nowtv', function ($join) {
                 $join->on('nowtv.movie_id', '=', 'movies.id');
             })
-            ->leftJoin('watch_list', function ($join) {
+            ->leftJoin('watch_list', function ($join) use ($user_id) {
                 $join->on('watch_list.movie_id', '=', 'movies.id');
+                $join->on('watch_list.user_id', '=', DB::raw("$user_id"));
             })
             ->leftJoin('movie_user', function ($join) use ($user_id) {
                 $join->on('movie_user.movie_id', '=', 'movies.id');
