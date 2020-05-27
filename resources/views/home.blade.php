@@ -2,6 +2,15 @@
 
 @section('content')
 <div class="container">
+    @foreach ($infoMessages as $infoMessage)
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="alert alert-{{ $infoMessage->style }}">
+                    {{ $infoMessage->text }}
+                </div>
+            </div>
+        </div>
+    @endforeach
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">

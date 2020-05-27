@@ -7,6 +7,7 @@ use App\Movie;
 use App\User;
 use App\MovieGenre;
 use App\MovieTimePeriod;
+use App\InfoMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -193,6 +194,10 @@ class HomeController extends Controller
                     DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv')
                 ]);
         
+        $info_messages = InfoMessage::where('start_date', '<', DB::raw('now()'))
+            ->where('end_date', '>' , DB::raw('now()'))
+            ->get();
+
         return view(
             'home',
             [
@@ -209,7 +214,8 @@ class HomeController extends Controller
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
-                "selectedSearchText" => $selected_search_text
+                "selectedSearchText" => $selected_search_text,
+                "infoMessages" => $info_messages
             ]
         );
     }
