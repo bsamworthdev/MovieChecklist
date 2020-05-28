@@ -22,6 +22,7 @@
         .trophy.gold{ color:gold; }
         .trophy.silver{ color:silver; }
         .trophy.bronze{ color:#cd7f32; }
+        .fa-trophy {margin-right:2px!important;}
     </style>
 </head>
 <body>
@@ -33,9 +34,18 @@
                 </a>
                 @guest
                 @else
+                @php
+                $trophyByColor = [];
+                @endphp
                 @foreach (Auth::user()->trophies as $trophy)
-                    <i class="fas fa-trophy trophy {{ $trophy->color }}" title="{{ $trophy->details }}"></i>
+                    @php
+                    $trophyByColor[$trophy->color][] = $trophy;
+                    @endphp
                 @endforeach
+                
+                <i class="fas fa-trophy trophy gold"></i> {{ isset($trophyByColor['gold']) ? count($trophyByColor['gold']) : 0 }}
+                <i class="fas fa-trophy trophy silver"></i> {{ isset($trophyByColor['silver']) ? count($trophyByColor['silver']) : 0 }}
+                <i class="fas fa-trophy trophy bronze"></i> {{ isset($trophyByColor['bronze']) ? count($trophyByColor['bronze']) : 0 }}
                 @endguest
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
