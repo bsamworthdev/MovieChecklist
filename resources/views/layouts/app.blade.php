@@ -66,15 +66,15 @@
                 @endforeach
                 
                 <div data-toggle="tooltip" title="{{ isset($trophyByColor['gold']['details']) ? $trophyByColor['gold']['details'] : '' }}">
-                    <i class="fas fa-trophy trophy gold"></i>{{ isset($trophyByColor['gold']) ? count($trophyByColor['gold']-1) : 0 }}
+                    <i class="fas fa-trophy trophy gold"></i>{{ isset($trophyByColor['gold']) ? count($trophyByColor['gold'])-1 : 0 }}
                     &nbsp;
                 </div>
                 <div data-toggle="tooltip" title="{{ isset($trophyByColor['silver']['details']) ? $trophyByColor['silver']['details'] : '' }}">
-                    <i class="fas fa-trophy trophy silver"></i>{{ isset($trophyByColor['silver']) ? count($trophyByColor['silver']-1) : 0 }}
+                    <i class="fas fa-trophy trophy silver"></i>{{ isset($trophyByColor['silver']) ? count($trophyByColor['silver'])-1 : 0 }}
                     &nbsp;
                 </div>
                 <div data-toggle="tooltip" title="{{ isset($trophyByColor['bronze']['details']) ? $trophyByColor['bronze']['details'] : '' }}">
-                    <i class="fas fa-trophy trophy bronze"></i>{{ isset($trophyByColor['bronze']) ? count($trophyByColor['bronze']-1) : 0 }}
+                    <i class="fas fa-trophy trophy bronze"></i>{{ isset($trophyByColor['bronze']) ? count($trophyByColor['bronze'])-1 : 0 }}
                     &nbsp;
                 </div>
                 @endguest
