@@ -144,7 +144,6 @@
 @endsection
 
 <script>
-
     // When the user scrolls down 20px from the top of the document, show the button
     window.onscroll = function() {
         var topButton = document.getElementById("topButton");
@@ -161,7 +160,7 @@
             e.stopPropagation();
         }
     }
-    
+
     function changeSelection() {
         var form = document.getElementById('movie_form');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');

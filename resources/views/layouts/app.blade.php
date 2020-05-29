@@ -18,30 +18,6 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <style>
-        .trophy.gold{ color:gold; }
-        .trophy.silver{ color:silver; }
-        .trophy.bronze{ color:#cd7f32; }
-        .fa-trophy {margin-right:2px!important;}
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $('body :not(div[data-toggle="tooltip"])').on('click',function(){
-                $('[data-toggle="tooltip"]').tooltip("hide");
-            });
-            
-            $('div[data-toggle="tooltip"]')
-            .tooltip({
-                title: "No trophies yet", 
-                trigger: "click", 
-                html: true
-            })
-            .click(function(e){
-                e.stopPropagation();
-            }); 
-            })
-    </script>
 </head>
 <body>
     <div id="app">
@@ -52,31 +28,9 @@
                 </a>
                 @guest
                 @else
-                @php
-                $trophyByColor = [];
-                @endphp
-                @foreach (Auth::user()->trophies as $trophy)
-                    @php
-                    $trophyByColor[$trophy->color][] = $trophy;
-                    if (!isset($trophyByColor[$trophy->color]['details'])){
-                        $trophyByColor[$trophy->color]['details'] = '';
-                    }
-                    $trophyByColor[$trophy->color]['details'] .= $trophy->details.'<br/>';
-                    @endphp
-                @endforeach
-                
-                <div data-toggle="tooltip" title="{{ isset($trophyByColor['gold']['details']) ? $trophyByColor['gold']['details'] : '' }}">
-                    <i class="fas fa-trophy trophy gold"></i>{{ isset($trophyByColor['gold']) ? count($trophyByColor['gold'])-1 : 0 }}
-                    &nbsp;
-                </div>
-                <div data-toggle="tooltip" title="{{ isset($trophyByColor['silver']['details']) ? $trophyByColor['silver']['details'] : '' }}">
-                    <i class="fas fa-trophy trophy silver"></i>{{ isset($trophyByColor['silver']) ? count($trophyByColor['silver'])-1 : 0 }}
-                    &nbsp;
-                </div>
-                <div data-toggle="tooltip" title="{{ isset($trophyByColor['bronze']['details']) ? $trophyByColor['bronze']['details'] : '' }}">
-                    <i class="fas fa-trophy trophy bronze"></i>{{ isset($trophyByColor['bronze']) ? count($trophyByColor['bronze'])-1 : 0 }}
-                    &nbsp;
-                </div>
+                <trophies-header
+                    :trophies="{{ Auth::user()->trophies }}">
+                </trophies-header>
                 @endguest
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>

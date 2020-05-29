@@ -25,6 +25,7 @@ Vue.component('scratch-card', require('./components/ScratchCard.vue').default);
 Vue.component('friends-list', require('./components/FriendsList.vue').default);
 Vue.component('users-table', require('./components/UsersTable.vue').default);
 Vue.component('stats-table', require('./components/StatsTable.vue').default);
+Vue.component('trophies-header', require('./components/TrophiesHeader.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
