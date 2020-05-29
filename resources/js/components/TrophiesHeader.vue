@@ -85,6 +85,7 @@
     .fa-trophy {margin-right:2px!important;}
     .container{
         width: 155px;
+        margin-left:0px;
     }
     .trophyInfo{
         position:absolute;
