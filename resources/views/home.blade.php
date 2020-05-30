@@ -6,7 +6,7 @@
         <div class="row justify-content-center">
             <div class="col-12">
                 <div class="alert alert-{{ $infoMessage->style }}">
-                    {{ $infoMessage->text }}
+                    {!! $infoMessage->text !!}
                 </div>
             </div>
         </div>
