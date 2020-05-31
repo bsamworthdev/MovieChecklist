@@ -3207,6 +3207,289 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ScratchCardNonAuth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ScratchCardNonAuth */ "./resources/js/components/ScratchCardNonAuth.vue");
+/* harmony import */ var _RandomMovieModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RandomMovieModal */ "./resources/js/components/RandomMovieModal.vue");
+/* harmony import */ var _WatchListModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./WatchListModal */ "./resources/js/components/WatchListModal.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    movies: Array,
+    watch_list: Array
+  },
+  components: {
+    scratchCardNonAuth: _ScratchCardNonAuth__WEBPACK_IMPORTED_MODULE_0__["default"],
+    randomMovieModal: _RandomMovieModal__WEBPACK_IMPORTED_MODULE_1__["default"],
+    watchListModal: _WatchListModal__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  methods: {
+    setWatchedMoviesCount: function setWatchedMoviesCount() {
+      var arr = [];
+
+      for (var i = 0; i < this.movies.length; i++) {
+        if (this.movies[i].watched == 1) {
+          arr.push(this.movies[i]);
+        }
+      }
+
+      this.watchedMoviesCount = arr.length;
+    },
+    movieStatusChanged: function movieStatusChanged(hasWatched) {
+      console.log('movie status changed');
+
+      if (hasWatched) {
+        this.watchedMoviesCount++;
+      } else {
+        this.watchedMoviesCount--;
+      }
+    },
+    pickMovie: function pickMovie() {
+      var unwatchedMovies = this.movies.filter(function (el) {
+        return el.watched == false;
+      });
+      var movie = unwatchedMovies[Math.floor(Math.random() * unwatchedMovies.length)];
+      console.log('your random movie is ' + movie.name);
+      this.randomMovie = movie;
+      this.activeModal = 1;
+    },
+    showWatchList: function showWatchList() {
+      this.activeModal = 8;
+    },
+    registerAccount: function registerAccount() {
+      location.href = '/register';
+    }
+  },
+  events: {},
+  data: function data() {
+    return {
+      watchedMoviesCount: 0,
+      activeModal: 0,
+      clickedMovie: null,
+      randomMovie: null
+    };
+  },
+  mounted: function mounted() {
+    this.setWatchedMoviesCount();
+    console.log('Component mounted.');
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardNonAuth.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    movie: Object
+  },
+  methods: {
+    toggleWatched: function toggleWatched() {
+      var _this = this;
+
+      axios.post('/saveMovieUserNonAuth', {
+        movie_id: this.movie.id,
+        watched: !this.hasWatched
+      }).then(function (response) {
+        _this.hasWatched = !_this.hasWatched;
+
+        _this.movieStatusChanged();
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    movieStatusChanged: function movieStatusChanged() {
+      this.$emit('movieStatusChanged', this.hasWatched);
+    },
+    toggleIsFavourite: function toggleIsFavourite(e) {
+      var _this2 = this;
+
+      e.stopPropagation();
+      axios.post('/setMovieAsFavouriteNonAuth', {
+        movie_id: this.movie.id,
+        favourite: !this.isFavourite
+      }).then(function (response) {
+        _this2.isFavourite = !_this2.isFavourite;
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    toggleIsOnWatchlist: function toggleIsOnWatchlist(e) {
+      var _this3 = this;
+
+      e.stopPropagation();
+      axios.post('/toggleMovieInWatchListNonAuth', {
+        movie_id: this.movie.id,
+        onWatchList: !this.isOnWatchList
+      }).then(function (response) {
+        _this3.isOnWatchList = !_this3.isOnWatchList;
+        location.reload();
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    editMovieDetailsClicked: function editMovieDetailsClicked(e, platform) {
+      e.stopPropagation();
+      this.$emit('editMovieDetailsClicked', platform, this.movie);
+    },
+    openIMDBModal: function openIMDBModal(e) {
+      e.stopPropagation(); // window.location.href = 'https://imdb.com/title/' + this.movie.imdb_id;
+
+      window.open('https://imdb.com/title/' + this.movie.imdb_id, '_blank'); //this.$emit('openIMDBModal', this.movie);
+    }
+  },
+  computed: {
+    ratingShort: function ratingShort() {
+      if (this.movie.rating) {
+        return parseFloat(this.movie.rating).toFixed(1);
+      } else {
+        return 'n/a';
+      }
+    },
+    watchListTitle: function watchListTitle() {
+      var title;
+
+      if (this.isOnWatchList) {
+        title = 'On Watch List';
+      } else {
+        title = 'Add To Watch List';
+      }
+
+      return title;
+    }
+  },
+  data: function data() {
+    return {
+      hasWatched: this.movie.watched == 1,
+      isFavourite: this.movie.favourite == 1,
+      isOnWatchList: this.movie.on_watch_list == 1,
+      isOnNetflix: this.movie.on_netflix == 1,
+      isOnAmazon: this.movie.on_amazon == 1,
+      isOnNowtv: this.movie.on_nowtv == 1,
+      favouriteHover: false,
+      watchListHover: false
+    };
+  },
+  watch: {},
+  mounted: function mounted() {
+    console.log('Component mounted.');
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/StatsTable.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/StatsTable.vue?vue&type=script&lang=js& ***!
@@ -8412,6 +8695,44 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-adb89816] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.btn-group[data-v-74634210]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-74634210]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-74634210]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-74634210] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.movieCard[data-v-ff428c94]{\n    margin-bottom:20px;\n    padding-bottom:17px;\n    border: 4px solid #C0C0C0;\n    cursor:pointer;\n    box-shadow:7px 7px #343a40;\n}\n.edit_buttons button[data-v-ff428c94]{\n    padding:1px!important;\n}\n.movieImage h4[data-v-ff428c94]{\n    color:black!important;\n    margin-top:40px;\n    position:absolute;\n    color:transparent;\n    background-color:white;\n    opacity:0;\n    width:100%;\n    left:0;\n    bottom:9px;\n    padding:4px 8px 4px 8px;\n}\n.movieCard .footer[data-v-ff428c94]{\n    position:absolute;\n    background-color:#EEC748;\n    width:100%;\n    left:0;\n    bottom:0px;\n    height:17px;\n    padding:0px 8px 0px 8px;\n    line-height:17px;\n    font-weight:bold;\n    text-align:center;\n}\n.movieCard .card-header[data-v-ff428c94]{\n    min-height:50px;\n}\n.movieImage:hover h4[data-v-ff428c94] {\n    opacity:0.5;\n}\n.tick[data-v-ff428c94]{\n    color:#009d00;\n}\n.tickContainer[data-v-ff428c94]{\n    position:relative;\n    width: 120px;\n    text-align:center;\n    margin-left: auto;\n    margin-right: auto;\n}\n.movieCard .movieImage[data-v-ff428c94] {\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.movieCard .movieImage[data-v-ff428c94]:before{\n    content: '';\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.movieCard.watched .movieImage[data-v-ff428c94]:before{\n    background: rgba(0,0,0,0.7);\n}\n.movieCard .rank[data-v-ff428c94]{\n    background-color:white;\n    position:absolute;\n    border-radius:8px;\n    text-align:center;\n    left:10px;\n    top:9px;\n    min-width:40px;\n    border:1px solid black;\n    padding-left:5px;\n    padding-right:5px;\n}\n.movieCard .rank.rounded[data-v-ff428c94]{\n    border-radius:22px!important;\n}\n.movieCard .rank .filtered_rank[data-v-ff428c94]{\n    color:black;\n    font-size:25px;\n}\n.movieCard .rank .actual_rank[data-v-ff428c94]{\n    font-size:12px;\n    color:grey;\n    display:block;\n    margin-top:-9px;\n    padding-bottom:3px;\n}\n.movieCard .rating[data-v-ff428c94]{\n    position:absolute;\n    text-align:center;\n    right:22px;\n    top:9px;\n    min-width:40px;\n}\n.movieCard .favourite[data-v-ff428c94]{\n    opacity:0.4;\n    position:absolute;\n    left:15px;\n    top:70px;\n    min-width:40px;\n}\n.movieCard .favourite.selected[data-v-ff428c94]{\n    opacity:1!important;\n}\n.movieCard .favourite.hovering .heart.outline[data-v-ff428c94]{\n    display:none;\n}\n.movieCard .favourite.hovering .heart.filled[data-v-ff428c94]{\n    display:block;\n}\n.movieCard .favourite.selected .heart.outline[data-v-ff428c94]{\n    display:none;\n}\n.movieCard .favourite.selected .heart.filled[data-v-ff428c94]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.outline[data-v-ff428c94]{\n    display:block;\n}\n.movieCard .favourite:not(.hovering):not(.selected) .heart.filled[data-v-ff428c94]{\n    display:none;\n}\n.movieCard .watchList[data-v-ff428c94]{\n    position:absolute;\n    left:15px;\n    top:70px;\n    min-width:40px;\n}\n.movieCard .watchList.hovering .watchListAdd[data-v-ff428c94]{\n    color:blue;\n}\n.movieCard .watchList.hovering .watchListTick[data-v-ff428c94]{\n    color:#006200;\n}\n.movieCard .watchList.selected .watchListAdd[data-v-ff428c94]{\n    display:none;\n}\n.movieCard .watchList.selected .watchListTick[data-v-ff428c94]{\n    display:block;\n}\n.movieCard .watchList:not(.selected) .watchListAdd[data-v-ff428c94]{\n    display:block;\n}\n.movieCard .watchList:not(.selected) .watchListTick[data-v-ff428c94]{\n    display:none;\n}\n.movieCard .platforms[data-v-ff428c94]{\n    position:absolute;\n    text-align:center;\n    right:6px;\n    top:60px;\n    min-width:40px;\n}\n.movieCard .platform[data-v-ff428c94] {\n    width:30px;\n    height:30px;\n    background-size: cover;\n    margin-bottom:6px;\n}\n.movieCard .platform.dimmed[data-v-ff428c94] {\n    opacity:0.2;\n}\n.movieCard .platform.netflix[data-v-ff428c94] {\n    background-image: url('/images/netflix.jpg');\n}\n.movieCard .platform.amazon[data-v-ff428c94] {\n    background-image: url('/images/amazon.jpeg');\n}\n.movieCard .platform.nowtv[data-v-ff428c94] {\n    background-image: url('/images/nowtv.jpg');\n}\n.movieCard .rating span[data-v-ff428c94]{\n    position:relative;\n    top:11px;\n    left:12px;\n    color:black;\n    font-size:15px;\n    width:40px;\n    text-align:center;\n}\n.star[data-v-ff428c94]{\n    position:absolute;\n    color:yellow;\n    font-size:41px;\n}\n.heart[data-v-ff428c94]{\n    position:absolute;\n    color:red;\n    font-size:31px;\n}\n.userIcon[data-v-ff428c94]{\n    text-shadow: 0 0 3px #000;\n}\n.watchListIcon[data-v-ff428c94]{\n    position:absolute;\n    color:white;\n    font-size:25px;\n    text-shadow: 0 0 3px #000;\n}\n.watchListAdd[data-v-ff428c94]{\n    position:absolute;\n    color:#4c4cff;\n    font-size:14px;\n    text-shadow: 0 0 2px #FFF;\n    left:14px;\n    top:13px;\n}\n.watchListTick[data-v-ff428c94]{\n    position:absolute;\n    color:#009d00;\n    font-size:14px;\n    text-shadow: 0 0 2px #FFF;\n    left:14px;\n    top:13px;\n}\n.externalLink[data-v-ff428c94]{\n    font-size:11px;\n    padding-left:8px;\n}\n@media only screen and (max-device-width: 800px){\n.movieImage h4[data-v-ff428c94]{\n        opacity:0.5!important;\n}\n}\n\n/*x-x-small*/\n@media (max-width: 320px) {\n.movieCard .movieImage[data-v-ff428c94]{\n        height: 320px;\n}\n.tick[data-v-ff428c94]{\n        font-size:80px;\n}\n.tickContainer[data-v-ff428c94]{\n        margin-top:80px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 321px) {\n.movieCard .movieImage[data-v-ff428c94]{\n        height: 390px;\n}\n.tick[data-v-ff428c94]{\n        font-size:80px;\n}\n.tickContainer[data-v-ff428c94]{\n        margin-top:100px;\n}\n}\n\n/*x-x-small*/\n@media (min-width: 400px) {\n.movieCard .movieImage[data-v-ff428c94]{\n        height: 549px;\n}\n.tick[data-v-ff428c94]{\n        font-size:120px;\n}\n.tickContainer[data-v-ff428c94]{\n        margin-top:300px;\n}\n}\n/*Extra-Small devices (portrait phones, 576px and up)*/\n@media (min-width: 576px) {\n.movieCard .movieImage[data-v-ff428c94]{\n        height: 242px;\n}\n.tick[data-v-ff428c94]{\n        font-size:60px;\n}\n.tickContainer[data-v-ff428c94]{\n        margin-top:100px;\n}\n}\n\n/*Small devices (landscape phones, 576px and up)*/\n@media (min-width: 768px){\n.movieCard .movieImage[data-v-ff428c94]{\n        height: 225px;\n}\n.tick[data-v-ff428c94]{\n        font-size:60px;\n}\n.tickContainer[data-v-ff428c94]{\n        margin-top:100px;\n}\n}\n\n/* Medium devices (desktops, 992px and up)*/\n@media (min-width: 992px) {\n.movieCard .movieImage[data-v-ff428c94]{\n        height: 233px;\n}\n.tick[data-v-ff428c94]{\n        font-size:80px;\n}\n.tickContainer[data-v-ff428c94]{\n        margin-top:100px;\n}\n}\n/*Extra large devices (large desktops, 1200px and up)*/\n@media (min-width: 1200px) {\n.movieCard .movieImage[data-v-ff428c94]{\n        height: 287px;\n}\n.tick[data-v-ff428c94]{\n        font-size:100px;\n}\n.tickContainer[data-v-ff428c94]{\n        margin-top:120px;\n}\n}\n\n", ""]);
 
 // exports
 
@@ -39701,6 +40022,66 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TrophiesHeader.vue?vue&type=style&index=0&id=9e0f86b4&scoped=true&lang=css&":
 /*!************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TrophiesHeader.vue?vue&type=style&index=0&id=9e0f86b4&scoped=true&lang=css& ***!
@@ -42257,6 +42638,323 @@ var render = function() {
     ],
     1
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c("div", { staticClass: "row justify-content-left" }, [
+        _c("div", { staticClass: "col-sm-12" }, [
+          _c("h4", { staticClass: "d-inline" }, [
+            _vm._v("You have watched "),
+            _c("span", { staticClass: "watchedMovies" }, [
+              _vm._v(_vm._s(_vm.watchedMoviesCount))
+            ]),
+            _vm._v(" of "),
+            _c("b", [_vm._v(_vm._s(_vm.movies.length))]),
+            _vm._v(" movies.")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "btn-group" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success btn-lg",
+                on: { click: _vm.registerAccount }
+              },
+              [_vm._v("Save my score!")]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.watch_list.length > 0
+          ? _c("div", { staticClass: "col-sm-12" }, [
+              _c("h5", { staticClass: "d-inline" }, [
+                _vm._v("You have "),
+                _c("span", { staticClass: "watchListMovies" }, [
+                  _vm._v(_vm._s(_vm.watch_list.length))
+                ]),
+                _vm._v(
+                  " movie" +
+                    _vm._s(_vm.watch_list.length > 1 ? "s" : "") +
+                    " in your Watch List."
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "btn-group" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    on: { click: _vm.showWatchList }
+                  },
+                  [_vm._v("Watch List")]
+                )
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "btn-group col-12" }, [
+          _c(
+            "button",
+            { staticClass: "btn btn-success", on: { click: _vm.pickMovie } },
+            [_vm._v("Pick me a random movie!")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "row justify-content-center" },
+        _vm._l(_vm.movies, function(movie) {
+          return _c("scratch-card-non-auth", {
+            key: movie.id,
+            attrs: { movie: movie, watch_list: _vm.watch_list },
+            on: { movieStatusChanged: _vm.movieStatusChanged },
+            model: {
+              value: _vm.watchedMoviesCount,
+              callback: function($$v) {
+                _vm.watchedMoviesCount = $$v
+              },
+              expression: "watchedMoviesCount"
+            }
+          })
+        }),
+        1
+      ),
+      _vm._v(" "),
+      _vm.activeModal == 1
+        ? _c("random-movie-modal", {
+            attrs: { movie: _vm.randomMovie },
+            on: {
+              close: function($event) {
+                _vm.activeModal = 0
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.activeModal == 8
+        ? _c("watch-list-modal", {
+            attrs: { watch_list: _vm.watch_list },
+            on: {
+              close: function($event) {
+                _vm.activeModal = 0
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.activeModal > 0
+        ? _c("div", { staticClass: "overlay" }, [
+            _c("div", { attrs: { id: "loading-img" } })
+          ])
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "col-lg-3 col-md-4 col-sm-6 col-xs-12" }, [
+    _c(
+      "div",
+      {
+        staticClass: "card movieCard",
+        class: { watched: _vm.hasWatched },
+        on: { click: _vm.toggleWatched }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "card-body movieImage",
+            style: { backgroundImage: "url(" + _vm.movie.image_url_small + ")" }
+          },
+          [
+            _c("h4", [
+              _vm._v(
+                _vm._s(_vm.movie.name) + " (" + _vm._s(_vm.movie.year) + ")"
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "rank",
+                class: { rounded: _vm.movie.index == _vm.movie.rank }
+              },
+              [
+                _c("span", { staticClass: "filtered_rank" }, [
+                  _vm._v(_vm._s(_vm.movie.index))
+                ]),
+                _vm._v(" "),
+                _vm.movie.index != _vm.movie.rank
+                  ? _c("span", { staticClass: "actual_rank" }, [
+                      _vm._v("(" + _vm._s(_vm.movie.rank) + ")")
+                    ])
+                  : _vm._e()
+              ]
+            ),
+            _vm._v(" "),
+            _vm.hasWatched
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "favourite",
+                    class: {
+                      selected: _vm.isFavourite,
+                      hovering: _vm.favouriteHover
+                    },
+                    on: {
+                      mouseover: function($event) {
+                        _vm.favouriteHover = true
+                      },
+                      mouseleave: function($event) {
+                        _vm.favouriteHover = false
+                      },
+                      click: function($event) {
+                        return _vm.toggleIsFavourite($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-heart heart filled" }),
+                    _vm._v(" "),
+                    _c("i", { staticClass: "far fa-heart heart outline" })
+                  ]
+                )
+              : _c(
+                  "div",
+                  {
+                    staticClass: "watchList",
+                    class: {
+                      selected: _vm.isOnWatchList,
+                      hovering: _vm.watchListHover
+                    },
+                    on: {
+                      mouseover: function($event) {
+                        _vm.watchListHover = true
+                      },
+                      mouseleave: function($event) {
+                        _vm.watchListHover = false
+                      },
+                      click: function($event) {
+                        return _vm.toggleIsOnWatchlist($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("i", {
+                      staticClass: "fas fa-list-alt watchListIcon",
+                      attrs: { title: _vm.watchListTitle }
+                    }),
+                    _vm._v(" "),
+                    _c("i", {
+                      staticClass: "fas fa-check-circle watchListTick"
+                    }),
+                    _vm._v(" "),
+                    _c("i", { staticClass: "fas fa-plus-circle watchListAdd" })
+                  ]
+                ),
+            _vm._v(" "),
+            _c("div", { staticClass: "rating" }, [
+              _c("i", { staticClass: "fa fa-star star" }),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.ratingShort))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "platforms" }, [
+              _vm.isOnNetflix == 1
+                ? _c("div", {
+                    staticClass: "platform netflix",
+                    attrs: { title: "On netflix" }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.isOnAmazon == 1
+                ? _c("div", {
+                    staticClass: "platform amazon",
+                    attrs: { title: "On amazon video" }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.isOnNowtv == 1
+                ? _c("div", {
+                    staticClass: "platform nowtv",
+                    attrs: { title: "On Now TV" }
+                  })
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "tickContainer" }, [
+              _vm.hasWatched
+                ? _c("i", { staticClass: "fa fa-check tick" })
+                : _vm._e()
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "footer",
+            on: {
+              click: function($event) {
+                return _vm.openIMDBModal($event)
+              }
+            }
+          },
+          [
+            _vm._v("\n            View on IMDb\n            "),
+            _c("i", { staticClass: "externalLink fas fa-external-link-alt" })
+          ]
+        )
+      ]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -55020,6 +55718,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('scratch-card-grid', __webpack_require__(/*! ./components/ScratchCardGrid.vue */ "./resources/js/components/ScratchCardGrid.vue")["default"]);
+Vue.component('scratch-card-grid-non-auth', __webpack_require__(/*! ./components/ScratchCardGridNonAuth.vue */ "./resources/js/components/ScratchCardGridNonAuth.vue")["default"]);
 Vue.component('scratch-card', __webpack_require__(/*! ./components/ScratchCard.vue */ "./resources/js/components/ScratchCard.vue")["default"]);
 Vue.component('friends-list', __webpack_require__(/*! ./components/FriendsList.vue */ "./resources/js/components/FriendsList.vue")["default"]);
 Vue.component('users-table', __webpack_require__(/*! ./components/UsersTable.vue */ "./resources/js/components/UsersTable.vue")["default"]);
@@ -56103,6 +56802,180 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGrid_vue_vue_type_template_id_adb89816_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGrid_vue_vue_type_template_id_adb89816_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardGridNonAuth.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/components/ScratchCardGridNonAuth.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ScratchCardGridNonAuth_vue_vue_type_template_id_74634210_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true& */ "./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true&");
+/* harmony import */ var _ScratchCardGridNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ScratchCardGridNonAuth.vue?vue&type=script&lang=js& */ "./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ScratchCardGridNonAuth_vue_vue_type_style_index_0_id_74634210_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css& */ "./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ScratchCardGridNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ScratchCardGridNonAuth_vue_vue_type_template_id_74634210_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ScratchCardGridNonAuth_vue_vue_type_template_id_74634210_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "74634210",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ScratchCardGridNonAuth.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardGridNonAuth.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css&":
+/*!*********************************************************************************************************************!*\
+  !*** ./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_style_index_0_id_74634210_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=style&index=0&id=74634210&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_style_index_0_id_74634210_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_style_index_0_id_74634210_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_style_index_0_id_74634210_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_style_index_0_id_74634210_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_style_index_0_id_74634210_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true&":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true& ***!
+  \*******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_template_id_74634210_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardGridNonAuth.vue?vue&type=template&id=74634210&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_template_id_74634210_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardGridNonAuth_vue_vue_type_template_id_74634210_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardNonAuth.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/ScratchCardNonAuth.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ScratchCardNonAuth_vue_vue_type_template_id_ff428c94_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true& */ "./resources/js/components/ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true&");
+/* harmony import */ var _ScratchCardNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ScratchCardNonAuth.vue?vue&type=script&lang=js& */ "./resources/js/components/ScratchCardNonAuth.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ScratchCardNonAuth_vue_vue_type_style_index_0_id_ff428c94_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css& */ "./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ScratchCardNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ScratchCardNonAuth_vue_vue_type_template_id_ff428c94_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ScratchCardNonAuth_vue_vue_type_template_id_ff428c94_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "ff428c94",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ScratchCardNonAuth.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardNonAuth.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/ScratchCardNonAuth.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardNonAuth.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css&":
+/*!*****************************************************************************************************************!*\
+  !*** ./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css& ***!
+  \*****************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_style_index_0_id_ff428c94_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=style&index=0&id=ff428c94&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_style_index_0_id_ff428c94_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_style_index_0_id_ff428c94_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_style_index_0_id_ff428c94_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_style_index_0_id_ff428c94_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_style_index_0_id_ff428c94_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_template_id_ff428c94_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ScratchCardNonAuth.vue?vue&type=template&id=ff428c94&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_template_id_ff428c94_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ScratchCardNonAuth_vue_vue_type_template_id_ff428c94_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
