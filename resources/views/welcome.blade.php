@@ -149,6 +149,8 @@
                         <button class="registerButton btn btn-success" onclick="location.href='{{ route('register') }}'">Sign Up (It's free)</button>
                         <br>
                         <a href="{{ route('login') }}">I already have an account</a>
+                        <br><br>
+                        <button class="browseButton btn btn-info" onclick="location.href='/home_nonauth'">Browse Without Account</button>
                     @endif
                 @endguest
                
