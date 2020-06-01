@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Session;
+use App\WatchList;
+use App\WatchListNonAuth;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -36,9 +41,10 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->middleware('guest');
+        $this->request = $request;
     }
 
     /**
@@ -50,7 +56,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'username' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users'],
             //'name' => ['required', 'string', 'max:255'],
             //'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -65,11 +71,28 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $session_id = $this->request->session()->getId();
+
+        //Create user
+        $user = User::create([
             'username' => $data['username'],
             'name' => isset($data['name']) ? $data['name']:'',
             'email' => isset($data['email']) ? $data['email']:'',
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make($data['password'])
         ]);
+
+        //Update WatchList
+        $select = WatchListNonAuth::where('session_id', '=', $session_id)
+            ->select(DB::raw("$user->id"), 'movie_id','created_at','updated_at');
+        WatchList::insertUsing(['user_id', 'movie_id','created_at','updated_at'], $select);
+
+        //Update MovieUser
+        $select = DB::table('movie_user_non_auth')
+            ->where('session_id', '=', $session_id)
+            ->select(DB::raw("$user->id"), 'movie_id', 'favourite', 'created_at','updated_at');
+        DB::table("movie_user")
+            ->insertUsing(['user_id', 'movie_id', 'favourite', 'created_at','updated_at'], $select);
+
+        return $user;
     }
 }

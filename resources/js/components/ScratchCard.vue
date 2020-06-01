@@ -274,7 +274,7 @@
         opacity:0.4;
         position:absolute;
         left:15px;
-        top:59px;
+        top:70px;
         min-width:40px;
     }
 
@@ -313,7 +313,7 @@
     .movieCard .watchList{
         position:absolute;
         left:15px;
-        top:59px;
+        top:70px;
         min-width:40px;
     }
 
