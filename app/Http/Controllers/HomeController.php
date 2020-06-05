@@ -63,7 +63,7 @@ class HomeController extends Controller
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
         $selected_nowtv_only = $nowtv_only;
-        $selected_search_text = $search_text;
+        $selected_search_text = ($search_text ? : ' ');
 
 
         $friendsA = $UserObj->friendshipsA()->get();
