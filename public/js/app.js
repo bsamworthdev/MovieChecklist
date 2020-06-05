@@ -3222,8 +3222,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         arr.push(value);
       }
 
-      filterString = arr.join('/');
-      axios.post('/getMoreMovies/' + this.all_movies.length + '/' + filterString).then(function (response) {
+      filterString = this.all_movies.length + '/' + arr.join('/');
+      axios.post('/getMoreMovies/' + filterString).then(function (response) {
         _this2.all_movies = _this2.all_movies.concat(response.data);
 
         _this2.setWatchedMoviesCount();

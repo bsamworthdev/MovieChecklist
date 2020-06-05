@@ -208,9 +208,9 @@
                 for (const [key, value] of Object.entries(this.filters)) { 
                     arr.push(value);
                 }
-                filterString = arr.join('/');
+                filterString = this.all_movies.length + '/' + arr.join('/');
 
-                axios.post('/getMoreMovies/' + this.all_movies.length + '/' + filterString)
+                axios.post('/getMoreMovies/' + filterString)
                 .then((response) => {
                     this.all_movies = this.all_movies.concat(response.data);
                     this.setWatchedMoviesCount();
