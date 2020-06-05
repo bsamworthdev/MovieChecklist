@@ -206,6 +206,7 @@
                 var filterString = '';
                 var arr = [];
                 for (const [key, value] of Object.entries(this.filters)) { 
+                    if (value == '') value = " ";
                     arr.push(value);
                 }
                 filterString = arr.join('/');

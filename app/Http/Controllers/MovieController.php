@@ -369,7 +369,7 @@ class MovieController extends Controller
             return $q->where('movie_user.user_id', '=', NULL);
         })
         ->when($search_text != '', function ($q) use ($search_text) {
-            return $q->where('movies.name', 'LIKE', '%'.$search_text.'%');
+            return $q->where('movies.name', 'LIKE', '%'.trim($search_text).'%');
         })
         ->orderBy('rank', 'ASC')
         ->skip($skip_count)
