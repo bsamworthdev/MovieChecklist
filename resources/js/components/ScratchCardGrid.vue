@@ -15,7 +15,7 @@
                 <button class="btn btn-success" @click="updateAmazonStatuses">Get latest Amazon statuses</button>
             </div>
              <div class="col-sm-12">
-                <h4>Hi {{ user.name ? user.name:user.username }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ movies.length }}</b> movies.</h4>
+                <h4>Hi {{ user.name ? user.name:user.username }}, you have watched <span class="watchedMovies">{{ watchedMoviesCount }}</span> of <b>{{ all_movies.length }}</b> movies.</h4>
             </div>
              <div v-if="watch_list.length > 0" class="col-sm-12">
                 <h5 class="d-inline">You have <span class="watchListMovies">{{ watch_list.length }}</span> movie{{ watch_list.length > 1 ? 's':'' }} in your Watch List.</h5>
@@ -29,8 +29,7 @@
         </div>
         <div class="row justify-content-center">
             <scratch-card 
-                v-for="movie in movies" 
-                v-model="watchedMoviesCount" 
+                v-for="movie in all_movies" 
                 :key="movie.id" 
                 :movie="movie" 
                 :user="user"  
@@ -40,6 +39,12 @@
                 @openIMDBModal="openIMDBModal"
                 @showFriendsPopup="showFriendsPopup">
             </scratch-card>
+            <div v-if="all_movies.length % 100 == 0" class="btn-group col-12">
+                <button class="btn btn-success" @click="showMoreMovies">
+                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                    Show more movies
+                </button>
+            </div>
         </div>
         <friends-watched-modal 
             v-if="activeModal==7" 
@@ -84,7 +89,8 @@
         props: {
             movies: Array,
             user: Object,
-            watch_list: Array
+            watch_list: Array,
+            filters: Object
         },
         components : {
             scratchCard,
@@ -97,12 +103,15 @@
         methods: {
             setWatchedMoviesCount: function(){
                 var arr = [];
-                for (var i = 0; i < this.movies.length; i++) {
-                    if (this.movies[i].watched == 1){
-                        arr.push(this.movies[i]);
+                for (var i = 0; i < this.all_movies.length; i++) {
+                    if (this.all_movies[i].watched == 1){
+                        arr.push(this.all_movies[i]);
                     }
                 }
                 this.watchedMoviesCount = arr.length;
+            },
+            initialiseAllMovies: function() {
+                this.all_movies = this.movies;
             },
             updateMovies(){
                 axios.post('/updatemovies')
@@ -192,7 +201,25 @@
             },
             showWatchList() {
                 this.activeModal = 8;
-            }
+            },
+            showMoreMovies() {
+                var filterString = '';
+                var arr = [];
+                for (const [key, value] of Object.entries(this.filters)) { 
+                    arr.push(value);
+                }
+                filterString = arr.join('/');
+
+                axios.post('/getMoreMovies/' + this.all_movies.length + '/' + filterString)
+                .then((response) => {
+                    this.all_movies = this.all_movies.concat(response.data);
+                    this.setWatchedMoviesCount();
+                    console.log('Movies fetched successfully');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
         },
         events: {
 
@@ -204,11 +231,13 @@
                 clickedMovie: null,
                 randomMovie: null,
                 editedMovie: null,
-                friendsStats: null
+                friendsStats: null,
+                all_movies: []
             }
         },
         mounted() {
             this.setWatchedMoviesCount();
+            this.initialiseAllMovies();
             console.log('Component mounted.')
         }
     }

@@ -3004,6 +3004,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EditMovieDetailsModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./EditMovieDetailsModal */ "./resources/js/components/EditMovieDetailsModal.vue");
 /* harmony import */ var _FriendsWatchedModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FriendsWatchedModal */ "./resources/js/components/FriendsWatchedModal.vue");
 /* harmony import */ var _IMDBModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./IMDBModal */ "./resources/js/components/IMDBModal.vue");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3089,7 +3106,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     movies: Array,
     user: Object,
-    watch_list: Array
+    watch_list: Array,
+    filters: Object
   },
   components: {
     scratchCard: _ScratchCard__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -3103,13 +3121,16 @@ __webpack_require__.r(__webpack_exports__);
     setWatchedMoviesCount: function setWatchedMoviesCount() {
       var arr = [];
 
-      for (var i = 0; i < this.movies.length; i++) {
-        if (this.movies[i].watched == 1) {
-          arr.push(this.movies[i]);
+      for (var i = 0; i < this.all_movies.length; i++) {
+        if (this.all_movies[i].watched == 1) {
+          arr.push(this.all_movies[i]);
         }
       }
 
       this.watchedMoviesCount = arr.length;
+    },
+    initialiseAllMovies: function initialiseAllMovies() {
+      this.all_movies = this.movies;
     },
     updateMovies: function updateMovies() {
       axios.post('/updatemovies').then(function (response) {
@@ -3186,6 +3207,31 @@ __webpack_require__.r(__webpack_exports__);
     },
     showWatchList: function showWatchList() {
       this.activeModal = 8;
+    },
+    showMoreMovies: function showMoreMovies() {
+      var _this2 = this;
+
+      var filterString = '';
+      var arr = [];
+
+      for (var _i = 0, _Object$entries = Object.entries(this.filters); _i < _Object$entries.length; _i++) {
+        var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+            key = _Object$entries$_i[0],
+            value = _Object$entries$_i[1];
+
+        arr.push(value);
+      }
+
+      filterString = arr.join('/');
+      axios.post('/getMoreMovies/' + this.all_movies.length + '/' + filterString).then(function (response) {
+        _this2.all_movies = _this2.all_movies.concat(response.data);
+
+        _this2.setWatchedMoviesCount();
+
+        console.log('Movies fetched successfully');
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   events: {},
@@ -3196,11 +3242,13 @@ __webpack_require__.r(__webpack_exports__);
       clickedMovie: null,
       randomMovie: null,
       editedMovie: null,
-      friendsStats: null
+      friendsStats: null,
+      all_movies: []
     };
   },
   mounted: function mounted() {
     this.setWatchedMoviesCount();
+    this.initialiseAllMovies();
     console.log('Component mounted.');
   }
 });
@@ -3219,6 +3267,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ScratchCardNonAuth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ScratchCardNonAuth */ "./resources/js/components/ScratchCardNonAuth.vue");
 /* harmony import */ var _RandomMovieModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RandomMovieModal */ "./resources/js/components/RandomMovieModal.vue");
 /* harmony import */ var _WatchListModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./WatchListModal */ "./resources/js/components/WatchListModal.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -8713,7 +8767,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-group[data-v-74634210]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-74634210]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-74634210]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-74634210] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.btn-group[data-v-74634210]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-74634210]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-74634210]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-74634210] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n.btn.disabled[data-v-74634210]{\n    opacity: 0.4;\n}\n", ""]);
 
 // exports
 
@@ -8751,7 +8805,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.trophy.gold[data-v-9e0f86b4]{ color:gold;\n}\n.trophy.silver[data-v-9e0f86b4]{ color:silver;\n}\n.trophy.bronze[data-v-9e0f86b4]{ color:#cd7f32;\n}\n.fa-trophy[data-v-9e0f86b4] {margin-right:2px!important;}\n.container[data-v-9e0f86b4]{\n    width: 155px;\n    margin-left:0px;\n}\n.trophyInfo[data-v-9e0f86b4]{\n    position:absolute;\n    top:39px;\n    background-color:#FFF;\n    border: 1px solid rgba(0, 0, 0, 0.125);\n    border-radius: 0.25rem;\n    z-index:999;\n    width:250px;\n    min-height:100px;\n}\n.trophyInfo.silver[data-v-9e0f86b4]{\n    margin-left:42px;\n}\n.trophyInfo.bronze[data-v-9e0f86b4]{\n    margin-left:84px;\n}\n.trophyContainer.selected[data-v-9e0f86b4]{\n    background-color:rgba(0, 0, 0, 0.1);\n}\n", ""]);
+exports.push([module.i, "\n.trophy.gold[data-v-9e0f86b4]{ color:gold;\n}\n.trophy.silver[data-v-9e0f86b4]{ color:silver;\n}\n.trophy.bronze[data-v-9e0f86b4]{ color:#cd7f32;\n}\n.fa-trophy[data-v-9e0f86b4] {margin-right:2px!important;}\n.container[data-v-9e0f86b4]{\n    width: 147px;\n    margin-left:0px;\n}\n.trophyInfo[data-v-9e0f86b4]{\n    position:absolute;\n    top:39px;\n    background-color:#FFF;\n    border: 1px solid rgba(0, 0, 0, 0.125);\n    border-radius: 0.25rem;\n    z-index:999;\n    width:250px;\n    min-height:100px;\n}\n.trophyInfo.silver[data-v-9e0f86b4]{\n    margin-left:42px;\n}\n.trophyInfo.bronze[data-v-9e0f86b4]{\n    margin-left:84px;\n}\n.trophyContainer.selected[data-v-9e0f86b4]{\n    background-color:rgba(0, 0, 0, 0.1);\n}\n", ""]);
 
 // exports
 
@@ -42509,7 +42563,7 @@ var render = function() {
               _vm._v(_vm._s(_vm.watchedMoviesCount))
             ]),
             _vm._v(" of "),
-            _c("b", [_vm._v(_vm._s(_vm.movies.length))]),
+            _c("b", [_vm._v(_vm._s(_vm.all_movies.length))]),
             _vm._v(" movies.")
           ])
         ]),
@@ -42553,26 +42607,44 @@ var render = function() {
       _c(
         "div",
         { staticClass: "row justify-content-center" },
-        _vm._l(_vm.movies, function(movie) {
-          return _c("scratch-card", {
-            key: movie.id,
-            attrs: { movie: movie, user: _vm.user, watch_list: _vm.watch_list },
-            on: {
-              movieStatusChanged: _vm.movieStatusChanged,
-              editMovieDetailsClicked: _vm.editMovieDetailsClicked,
-              openIMDBModal: _vm.openIMDBModal,
-              showFriendsPopup: _vm.showFriendsPopup
-            },
-            model: {
-              value: _vm.watchedMoviesCount,
-              callback: function($$v) {
-                _vm.watchedMoviesCount = $$v
+        [
+          _vm._l(_vm.all_movies, function(movie) {
+            return _c("scratch-card", {
+              key: movie.id,
+              attrs: {
+                movie: movie,
+                user: _vm.user,
+                watch_list: _vm.watch_list
               },
-              expression: "watchedMoviesCount"
-            }
-          })
-        }),
-        1
+              on: {
+                movieStatusChanged: _vm.movieStatusChanged,
+                editMovieDetailsClicked: _vm.editMovieDetailsClicked,
+                openIMDBModal: _vm.openIMDBModal,
+                showFriendsPopup: _vm.showFriendsPopup
+              }
+            })
+          }),
+          _vm._v(" "),
+          _vm.all_movies.length % 100 == 0
+            ? _c("div", { staticClass: "btn-group col-12" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    on: { click: _vm.showMoreMovies }
+                  },
+                  [
+                    _c("i", {
+                      staticClass: "fa fa-caret-down",
+                      attrs: { "aria-hidden": "true" }
+                    }),
+                    _vm._v("\n                Show more movies\n            ")
+                  ]
+                )
+              ])
+            : _vm._e()
+        ],
+        2
       ),
       _vm._v(" "),
       _vm.activeModal == 7
@@ -42745,6 +42817,10 @@ var render = function() {
         1
       ),
       _vm._v(" "),
+      _vm.movies.length % 100 == 0
+        ? _c("div", { staticClass: "btn-group col-12" }, [_vm._m(0)])
+        : _vm._e(),
+      _vm._v(" "),
       _vm.activeModal == 1
         ? _c("random-movie-modal", {
             attrs: { movie: _vm.randomMovie },
@@ -42776,7 +42852,27 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-success disabled",
+        attrs: { title: "Create an account to use this feature" }
+      },
+      [
+        _c("i", {
+          staticClass: "fa fa-caret-down",
+          attrs: { "aria-hidden": "true" }
+        }),
+        _vm._v("\n            Show more movies\n        ")
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 

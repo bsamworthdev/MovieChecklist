@@ -27,6 +27,12 @@
                 @movieStatusChanged="movieStatusChanged">
             </scratch-card-non-auth>
         </div>
+        <div v-if="movies.length % 100 == 0" class="btn-group col-12">
+            <button class="btn btn-success disabled" title="Create an account to use this feature">
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                Show more movies
+            </button>
+        </div>
         <random-movie-modal
             v-if="activeModal==1" 
             @close="activeModal=0"
@@ -136,5 +142,8 @@
         opacity: 0.7;
         width: 100%;
         height: 100%;
+    }
+    .btn.disabled{
+        opacity: 0.4;
     }
 </style>

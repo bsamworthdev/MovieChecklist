@@ -8,6 +8,7 @@ use App\User;
 use App\MovieGenre;
 use App\MovieTimePeriod;
 use App\InfoMessage;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -40,94 +41,9 @@ class HomeController extends Controller
         $UserObj = User::find($user_id);
         $user->friendsCount = $UserObj->friendsCount();
 
-        //Movies
-        $movies = DB::table('movies')
-            ->leftJoin('netflix', function ($join) {
-                $join->on('netflix.movie_id', '=', 'movies.id');
-            })
-            ->leftJoin('amazon', function ($join) {
-                $join->on('amazon.movie_id', '=', 'movies.id');
-            })
-            ->leftJoin('nowtv', function ($join) {
-                $join->on('nowtv.movie_id', '=', 'movies.id');
-            })
-            ->leftJoin('watch_list', function ($join) use ($user_id) {
-                $join->on('watch_list.movie_id', '=', 'movies.id');
-                $join->on('watch_list.user_id', '=', DB::raw("$user_id"));
-            })
-            ->leftJoin('movie_user', function ($join) use ($user_id) {
-                $join->on('movie_user.movie_id', '=', 'movies.id');
-                $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
-            })
-            ->where(function ($q) use ($user_id) {
-                return $q->where('movie_user.user_id', '=', $user_id)
-                    ->orWhere('movie_user.user_id', '=', NULL);
-            })
-            ->when($genre <> 'all', function ($q) use ($genre) {
-                return $q->where('movies.genre', 'LIKE', '%' . $genre . '%');
-            })
-            ->when($time_period <> 'all', function ($q) use ($time_period) {
-                $dates = Movie::parseTimePeriod($time_period);
-                return $q->whereBetween('movies.year', [$dates['from'], $dates['to']]);
-            })
-            ->when($english_only == 1, function ($q) {
-                return $q->where('movies.language', '=', 'english');
-            })
-            ->when($favourites_only == 1, function ($q) {
-                return $q->where('movie_user.favourite', '=', '1');
-            })
-            ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('netflix.on_netflix', '=', '1')
-                        ->orWhere('amazon.on_amazon', '=', '1')
-                        ->orWhere('nowtv.on_nowtv', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('netflix.on_netflix', '=', '1')
-                        ->orWhere('amazon.on_amazon', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('netflix.on_netflix', '=', '1')
-                        ->orWhere('nowtv.on_nowtv', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('amazon.on_amazon', '=', '1')
-                        ->orWhere('nowtv.on_nowtv', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 0), function ($q) {
-                return $q->where('netflix.on_netflix', '=', '1');
-            })
-            ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
-                return $q->where('amazon.on_amazon', '=', '1');
-            })
-            ->when(($netflix_only == 0 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
-                return $q->where('nowtv.on_nowtv', '=', '1');
-            })
-            
-            ->when($unwatched_only == 1, function ($q) {
-                return $q->where('movie_user.user_id', '=', NULL);
-            })
-            ->when($search_text != '', function ($q) use ($search_text) {
-                return $q->where('movies.name', 'LIKE', '%'.$search_text.'%');
-            })
-            ->orderBy('rank', 'ASC')
-            ->take(100)
-            ->get([
-                'movies.*',
-                DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
-                DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
-                DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
-                DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
-                DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite'),
-                DB::raw('IF(ISNULL(watch_list.movie_id), \'0\', \'1\') as on_watch_list')
-            ]);
+        $movieController = new MovieController;
+        $movies = $movieController->getMovies($genre, $time_period, $english_only, $unwatched_only, 
+        $favourites_only, $netflix_only, $amazon_only, $nowtv_only, $search_text);
 
         $count = 1;
         foreach ($movies as $movie) {
@@ -198,6 +114,18 @@ class HomeController extends Controller
             ->where('end_date', '>' , DB::raw('now()'))
             ->get();
 
+        $filters = collect([
+            "genre" => $selected_genre,
+            "time_period" => $selected_time_period,
+            "english_only" => $selected_english_only,
+            "unwatched_only" => $selected_unwatched_only,
+            "favourites_only" => $selected_favourites_only,
+            "netflix_only" => $selected_netflix_only,
+            "amazon_only" => $selected_amazon_only,
+            "nowtv_only" => $selected_nowtv_only,
+            "search_text" => $selected_search_text,
+        ]);
+
         return view(
             'home',
             [
@@ -207,6 +135,7 @@ class HomeController extends Controller
                 "genres" => $movie_genres,
                 "selectedGenre" => $selected_genre,
                 "timePeriods" => $time_periods,
+                "filters" => $filters,
                 "selectedTimePeriod" => $selected_time_period,
                 "selectedEnglishOnly" => $selected_english_only,
                 "selectedUnwatchedOnly" => $selected_unwatched_only,

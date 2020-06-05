@@ -34,13 +34,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
     Route::post('/getFriendsStats/{movie_id?}/', 'UserController@getFriendsStats'); 
     Route::post('/toggleMovieInWatchList', 'UserController@toggleMovieInWatchList');
+    Route::post('/getMoreMovies/{skip_count?}/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/{search_text?}', 'MovieController@getMoreMovies');
 
     Route::post('/editfriend', 'FriendshipController@edit');
     Route::post('/deletefriend', 'FriendshipController@delete');
 
     Route::post('/createFriendRequest', 'FriendRequestController@create');  
     Route::post('/findUserByEmail', 'UserController@findUserByEmail'); 
-    
 });
 
 Route::group(['middleware' => 'admin'], function () {

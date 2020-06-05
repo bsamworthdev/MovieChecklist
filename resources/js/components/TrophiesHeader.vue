@@ -84,7 +84,7 @@
     .trophy.bronze{ color:#cd7f32; }
     .fa-trophy {margin-right:2px!important;}
     .container{
-        width: 155px;
+        width: 147px;
         margin-left:0px;
     }
     .trophyInfo{

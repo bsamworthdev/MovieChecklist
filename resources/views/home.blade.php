@@ -133,7 +133,8 @@
                     <scratch-card-grid 
                         :user="{{ $user }}" 
                         :watch_list="{{ $watchList }}" 
-                        :movies="{{ $movies }}" >
+                        :movies="{{ $movies }}" 
+                        :filters="{{ $filters }}">
                     </scratch-card-grid>
                 </div>
             </div>
