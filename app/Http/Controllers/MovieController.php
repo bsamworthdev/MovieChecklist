@@ -386,9 +386,21 @@ class MovieController extends Controller
         return $movies;
     }
 
-    function getMoreMovies($skip_count = 0, $genre = 'all', $time_period = 'all', $english_only = 0, 
-        $unwatched_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0, 
-        $search_text = '') {
+    // function getMoreMovies($skip_count = 0, $genre = 'all', $time_period = 'all', $english_only = 0, 
+    //     $unwatched_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0, 
+    //     $search_text = '') {
+    function getMoreMovies(Request $request) {
+            
+        $genre = $request->genre;
+        $time_period = $request->time_period; 
+        $english_only = $request->english_only;
+        $unwatched_only = $request->unwatched_only;
+        $favourites_only = $request->favourites_only;
+        $netflix_only = $request->netflix_only;
+        $amazon_only = $request->amazon_only;
+        $nowtv_only = $request->nowtv_only;
+        $search_text = $request->search_text;
+        $skip_count = $request->skip_count;
 
         $movies = $this->getMovies($genre, $time_period, $english_only, $unwatched_only, 
         $favourites_only, $netflix_only, $amazon_only, $nowtv_only, $search_text, $skip_count);
