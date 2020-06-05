@@ -31,7 +31,7 @@ class NonAuthHomeController extends Controller
      */
     public function show(Request $request,
         $genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, 
-        $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0, $search_text = "")
+        $favourites_only = 0, $search_text = "", $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0)
     {
 
         //Users
@@ -77,6 +77,9 @@ class NonAuthHomeController extends Controller
             ->when($favourites_only == 1, function ($q) {
                 return $q->where('movie_user_non_auth.favourite', '=', '1');
             })
+            ->when($search_text != '', function ($q) use ($search_text) {
+                return $q->where('movies.name', 'LIKE', '%'.$search_text.'%');
+            })
             ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
                 return $q->where(function ($q) {
                     $q->where('netflix.on_netflix', '=', '1')
@@ -115,9 +118,6 @@ class NonAuthHomeController extends Controller
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user_non_auth.session_id', '=', NULL);
             })
-            ->when($search_text != '', function ($q) use ($search_text) {
-                return $q->where('movies.name', 'LIKE', '%'.$search_text.'%');
-            })
             ->orderBy('rank', 'ASC')
             ->take(100)
             ->get([
@@ -145,10 +145,10 @@ class NonAuthHomeController extends Controller
         $selected_english_only = $english_only;
         $selected_unwatched_only = $unwatched_only;
         $selected_favourites_only = $favourites_only;
+        $selected_search_text = $search_text;
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
         $selected_nowtv_only = $nowtv_only;
-        $selected_search_text = $search_text;
 
 
         // $friendsA = $UserObj->friendshipsA()->get();
@@ -211,10 +211,10 @@ class NonAuthHomeController extends Controller
                 "selectedEnglishOnly" => $selected_english_only,
                 "selectedUnwatchedOnly" => $selected_unwatched_only,
                 "selectedFavouritesOnly" => $selected_favourites_only,
+                "selectedSearchText" => $selected_search_text,
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
-                "selectedSearchText" => $selected_search_text,
                 "infoMessages" => $info_messages
             ]
         );

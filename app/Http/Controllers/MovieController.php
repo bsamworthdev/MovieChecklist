@@ -289,7 +289,7 @@ class MovieController extends Controller
     }
 
     function getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $netflix_only, $amazon_only, $nowtv_only, $search_text, $skip_count = 0){
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $skip_count = 0){
 
         $user = Auth::user();
         $user_id = $user->id;
@@ -330,6 +330,9 @@ class MovieController extends Controller
         ->when($favourites_only == 1, function ($q) {
             return $q->where('movie_user.favourite', '=', '1');
         })
+        ->when($search_text != '', function ($q) use ($search_text) {
+            return $q->where('movies.name', 'LIKE', '%'.trim($search_text).'%');
+        })
         ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
             return $q->where(function ($q) {
                 $q->where('netflix.on_netflix', '=', '1')
@@ -368,9 +371,6 @@ class MovieController extends Controller
         ->when($unwatched_only == 1, function ($q) {
             return $q->where('movie_user.user_id', '=', NULL);
         })
-        ->when($search_text != '', function ($q) use ($search_text) {
-            return $q->where('movies.name', 'LIKE', '%'.trim($search_text).'%');
-        })
         ->orderBy('rank', 'ASC')
         ->skip($skip_count)
         ->take(100)
@@ -396,14 +396,16 @@ class MovieController extends Controller
         $english_only = $request->english_only;
         $unwatched_only = $request->unwatched_only;
         $favourites_only = $request->favourites_only;
+        $search_text = $request->search_text;
         $netflix_only = $request->netflix_only;
         $amazon_only = $request->amazon_only;
         $nowtv_only = $request->nowtv_only;
-        $search_text = $request->search_text;
         $skip_count = $request->skip_count;
 
+        if ($search_text == "null") $search_text = '';
+
         $movies = $this->getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $netflix_only, $amazon_only, $nowtv_only, $search_text, $skip_count);
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $skip_count);
 
         //Set movie index
         $count = $skip_count + 1;

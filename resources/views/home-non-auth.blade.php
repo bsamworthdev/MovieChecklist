@@ -176,10 +176,10 @@
             '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (unwatchedOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + (searchInput.value ? : 'null') + 
             '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (nowtvOnlyCheckbox.checked ? '1' : '0') + 
-            '/' + searchInput.value + 
             '/');
         form.submit();
     }

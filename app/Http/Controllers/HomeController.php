@@ -32,7 +32,7 @@ class HomeController extends Controller
      */
     public function index(
         $genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, 
-        $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0, $search_text = "")
+        $favourites_only = 0, $search_text = "", $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0)
     {
 
         //Users
@@ -41,9 +41,11 @@ class HomeController extends Controller
         $UserObj = User::find($user_id);
         $user->friendsCount = $UserObj->friendsCount();
 
+        if ($search_text == "null") $search_text = '';
+
         $movieController = new MovieController;
         $movies = $movieController->getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $netflix_only, $amazon_only, $nowtv_only, $search_text);
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only);
 
         $count = 1;
         foreach ($movies as $movie) {
@@ -60,10 +62,10 @@ class HomeController extends Controller
         $selected_english_only = $english_only;
         $selected_unwatched_only = $unwatched_only;
         $selected_favourites_only = $favourites_only;
+        $selected_search_text = $search_text;
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
         $selected_nowtv_only = $nowtv_only;
-        $selected_search_text = $search_text;
 
 
         $friendsA = $UserObj->friendshipsA()->get();
@@ -120,10 +122,10 @@ class HomeController extends Controller
             "english_only" => $selected_english_only,
             "unwatched_only" => $selected_unwatched_only,
             "favourites_only" => $selected_favourites_only,
+            "search_text" => $selected_search_text,
             "netflix_only" => $selected_netflix_only,
             "amazon_only" => $selected_amazon_only,
             "nowtv_only" => $selected_nowtv_only,
-            "search_text" => $selected_search_text,
         ]);
 
         return view(
@@ -140,10 +142,10 @@ class HomeController extends Controller
                 "selectedEnglishOnly" => $selected_english_only,
                 "selectedUnwatchedOnly" => $selected_unwatched_only,
                 "selectedFavouritesOnly" => $selected_favourites_only,
+                "selectedSearchText" => $selected_search_text,
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
-                "selectedSearchText" => $selected_search_text,
                 "infoMessages" => $info_messages
             ]
         );
