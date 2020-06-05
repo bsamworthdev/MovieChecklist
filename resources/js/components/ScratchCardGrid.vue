@@ -210,7 +210,7 @@
                 }
                 filterString = arr.join('/');
 
-                axios.post('/getMoreMovies/' + this.all_movies.length + '/' + filterString + '/')
+                axios.post('/getMoreMovies/' + this.all_movies.length + '/' + filterString)
                 .then((response) => {
                     this.all_movies = this.all_movies.concat(response.data);
                     this.setWatchedMoviesCount();
