@@ -17,15 +17,17 @@
                     <table class="table">
                         <tr>
                             <th @click="sort('name')">Name</th>
-                            <th @click="sort('name')">Username</th>
+                            <th @click="sort('username')">Username</th>
                             <th @click="sort('email')">Email</th>
                             <th @click="sort('watchedCount')">Movies Watched</th>
+                            <th @click="sort('created_at_tidy')">Date Added</th>
                         </tr>
                         <tr v-for="user in sortedUsers" :key="user.id">
                             <td>{{ user.name}}</td>
                             <td>{{ user.username}}</td>
                             <td>{{ user.email }}</td>
                             <td>{{ user.watchedCount}}</td>
+                            <td>{{ user.created_at_tidy}}</td>
                         </tr>
                     </table>
                 </div>   
@@ -117,10 +119,14 @@
 </script>
 <style lang="scss" scoped>
     .table {
+        min-width:800px;
         overflow:auto; 
         table-layout:fixed;
     }
     .table tr:first-of-type{
         background-color:#C0C0C0;
+    }
+    .container-sm, .container{
+        overflow: auto;
     }
 </style>

@@ -3833,6 +3833,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'usersTable',
   props: {
@@ -8559,7 +8561,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".table[data-v-009ba75e] {\n  overflow: auto;\n  table-layout: fixed;\n}\n.table tr[data-v-009ba75e]:first-of-type {\n  background-color: #C0C0C0;\n}", ""]);
+exports.push([module.i, ".table[data-v-009ba75e] {\n  min-width: 800px;\n  overflow: auto;\n  table-layout: fixed;\n}\n.table tr[data-v-009ba75e]:first-of-type {\n  background-color: #C0C0C0;\n}\n.container-sm[data-v-009ba75e], .container[data-v-009ba75e] {\n  overflow: auto;\n}", ""]);
 
 // exports
 
@@ -43474,7 +43476,7 @@ var render = function() {
                   {
                     on: {
                       click: function($event) {
-                        return _vm.sort("name")
+                        return _vm.sort("username")
                       }
                     }
                   },
@@ -43503,6 +43505,18 @@ var render = function() {
                     }
                   },
                   [_vm._v("Movies Watched")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "th",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.sort("created_at_tidy")
+                      }
+                    }
+                  },
+                  [_vm._v("Date Added")]
                 )
               ]),
               _vm._v(" "),
@@ -43514,7 +43528,9 @@ var render = function() {
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(user.email))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(user.watchedCount))])
+                  _c("td", [_vm._v(_vm._s(user.watchedCount))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.created_at_tidy))])
                 ])
               })
             ],

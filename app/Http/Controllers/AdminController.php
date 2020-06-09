@@ -18,6 +18,7 @@ class AdminController extends Controller
         foreach ($users as &$user){           
             $user->stats = $user->getSpecificStats();
             $user->watchedCount = $user->stats['watched'];
+            $user->created_at_tidy = date('Y-m-d H:i', strtotime($user->created_at));
         }
 
         return view(

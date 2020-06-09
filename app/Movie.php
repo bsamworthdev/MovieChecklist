@@ -11,7 +11,7 @@ class Movie extends Model
     //
     public function users()
     {
-        return $this->hasMany('App\User');
+        return $this->belongsToMany('App\User');
     }
 
     static function parseTimePeriod($time_period)

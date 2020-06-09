@@ -15,7 +15,7 @@ class CreateMovieUserNonAuthTable extends Migration
     {
         Schema::create('movie_user_non_auth', function (Blueprint $table) {
             $table->id();
-            $table->integer('movie_id');
+            $table->bigInteger('movie_id')->unsigned();
             $table->string('session_id',255);
             $table->tinyInteger('favourite')->default(0);
             $table->timestamps();

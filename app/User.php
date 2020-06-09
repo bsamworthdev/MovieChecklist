@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function movies()
     {
-        return $this->hasMany('App\Movie');
+        return $this->belongsToMany('App\Movie');
     }
 
     public function friendshipsA()
