@@ -50,7 +50,6 @@ class FriendshipController extends Controller
             $friend->stats = $friendUser->getStats();
             //Get friends' tags
             $friend->tags = $friendUser->getTags($user_id);
-
             //Filter by selected tag
             if ($friendTagNameId <> 0){
                 $matchFound = false;
