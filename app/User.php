@@ -98,6 +98,19 @@ class User extends Authenticatable
             $stats['time_period'][$movie_time_period->label] = $this->getSpecificStats('time_period', $movie_time_period->time_period);
         }
 
+        $favouriteMovies =  Movie::select(
+            'movies.name', 
+            'movies.rank', 
+            'movies.imdb_id',
+        )
+        ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
+        ->where('movie_user.user_id', $user_id)
+        ->where('movie_user.favourite', 1)
+        ->orderBy('movies.id')
+        ->limit('100')
+        ->get();
+        $stats['favourites']=$favouriteMovies;
+
         return $stats;
     }
 
@@ -204,7 +217,6 @@ class User extends Authenticatable
 
         $stats['watched'] = $watched_count;
         $stats['unwatched'] = $total_count - $watched_count;
-        $stats['favourites'] = [];
 
         // Log::debug('after getSpecificStats-'.\Carbon\Carbon::now());
         return $stats;

@@ -41713,13 +41713,12 @@ var render = function() {
                             staticClass:
                               "btn btn-primary showFavourites col-12",
                             class: {
-                              disabled:
-                                friend.stats.overall.favourites.length == 0
+                              disabled: friend.stats.favourites.length == 0
                             },
                             attrs: {
                               type: "button",
                               "data-toggle":
-                                friend.stats.overall.favourites.length > 0
+                                friend.stats.favourites.length > 0
                                   ? "collapse"
                                   : "",
                               "data-target": "#favouritesContainer" + friend.id,
@@ -41731,7 +41730,7 @@ var render = function() {
                             _c("i", { staticClass: "fa fa-heart heart" }),
                             _vm._v(
                               "\n                            Favourites (" +
-                                _vm._s(friend.stats.overall.favourites.length) +
+                                _vm._s(friend.stats.favourites.length) +
                                 ")\n                        "
                             )
                           ]
@@ -41747,7 +41746,7 @@ var render = function() {
                             _c(
                               "div",
                               { staticClass: "card card-body" },
-                              _vm._l(friend.stats.overall.favourites, function(
+                              _vm._l(friend.stats.favourites, function(
                                 favourite
                               ) {
                                 return _c(

@@ -74,18 +74,18 @@
                                 </div>
                             </div>
 
-                            <button :class="{'disabled':friend.stats.overall.favourites.length == 0}" class="btn btn-primary showFavourites col-12" 
+                            <button :class="{'disabled':friend.stats.favourites.length == 0}" class="btn btn-primary showFavourites col-12" 
                             type="button" 
-                            :data-toggle="friend.stats.overall.favourites.length > 0 ? 'collapse' :''" 
+                            :data-toggle="friend.stats.favourites.length > 0 ? 'collapse' :''" 
                             :data-target="'#favouritesContainer' + friend.id" 
                             aria-expanded="false" 
                             :aria-controls="'favouritesContainer' + friend.id">
                                 <i class="fa fa-heart heart"></i>
-                                Favourites ({{ friend.stats.overall.favourites.length }})
+                                Favourites ({{ friend.stats.favourites.length }})
                             </button>
                             <div class="collapse" :id="'favouritesContainer' + friend.id">
                                 <div class="card card-body">
-                                    <div class="row" v-for="favourite in friend.stats.overall.favourites" :key="favourite.id">
+                                    <div class="row" v-for="favourite in friend.stats.favourites" :key="favourite.id">
                                         <div class="col-12">
                                             <span class="favourite">({{ favourite.rank }}) {{favourite.name}}</span>
                                         </div>
