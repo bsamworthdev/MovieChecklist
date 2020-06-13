@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Auth\CanResetPassword; 
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -87,28 +88,28 @@ class User extends Authenticatable
 
     public function getStats(){
         $user_id = $this->id;
-
+        // Log::debug('before getSpecificStats-'.\Carbon\Carbon::now());
         $stats['overall'] = $this->getSpecificStats();
 
         foreach ($this->movie_genres as $movie_genre){
-            $stats['genre'][$movie_genre->label] = $this->getSpecificStats('genre','%'.$movie_genre->genre.'%');
+            $stats['genre'][$movie_genre->label] = $this->getSpecificStats('genre',$movie_genre->genre);
         }
 
         foreach ($this->movie_time_periods as $movie_time_period){
             $stats['time_period'][$movie_time_period->label] = $this->getSpecificStats('time_period', $movie_time_period->time_period);
         }
-
+        // Log::debug('after getSpecificStats-'.\Carbon\Carbon::now());
         $favouriteMovies =  Movie::select(
-            'movies.name', 
-            'movies.rank', 
-            'movies.imdb_id',
-        )
-        ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
-        ->where('movie_user.user_id', $user_id)
-        ->where('movie_user.favourite', 1)
-        ->orderBy('movies.id')
-        ->limit('100')
-        ->get();
+                'movies.name', 
+                'movies.rank', 
+                'movies.imdb_id',
+            )
+            ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
+            ->where('movie_user.user_id', $user_id)
+            ->where('movie_user.favourite', 1)
+            ->orderBy('movies.id')
+            ->limit('100')
+            ->get();
         $stats['favourites']=$favouriteMovies;
 
         return $stats;
@@ -129,49 +130,7 @@ class User extends Authenticatable
     }
 
     public function getSpecificStats($filterType = NULL, $filterValue  = NULL){
-        // Log::debug('before getSpecificStats-'.\Carbon\Carbon::now());
         $user_id = $this->id;
-
-        // if ($filterType && $filterValue) {
-        //     $filterSQL = " AND $filterType LIKE '%$filterValue%'";
-        // }
-
-        // if ($filterType == 'time_period'){
-        //     $dates = Movie::parseTimePeriod($filterValue);
-        //     $filterSQL = "AND movies.year BETWEEN ".$dates['from']." AND ".$dates['to']." ";
-        // }
-        
-        // $userMovies = DB::select("select movies.name,
-        //         movies.rank,
-        //         movies.imdb_id,
-        //         movie_user.favourite, 
-        //         IFNULL(movie_user.user_id,0)>0 as watched 
-        //     from movies 
-        //     left join movie_user on 
-        //         (movies.id=movie_user.movie_id 
-        //         and movie_user.user_id=?) 
-        //     where 
-        //         (movie_user.user_id=? 
-        //         or movie_user.user_id IS NULL) ".
-        //         (isset($filterSQL) ? $filterSQL : '').
-        //     "order by movies.id",[$user_id, $user_id]);
-
-        // //$stats_categorised = [];
-        // foreach ($userMovies as $key=>$userMovie){
-        //     dd($userMovie);
-        //     if (($stats['watched'] + $stats['unwatched']) < 100){
-        //         if ($userMovie->watched == 1) {
-        //             $stats['watched'] += 1;
-        //         } else {
-        //             $stats['unwatched'] += 1;
-        //         }
-        //     }
-        //     if (!$filterType && !$filterValue) {
-        //         if ($userMovie->favourite == 1){ 
-        //             $stats['favourites'][] = $userMovie;
-        //         }
-        //     }
-        // }
 
         $filterSQL = '';
         if (isset($filterType)) {
@@ -179,22 +138,28 @@ class User extends Authenticatable
                 $dates = Movie::parseTimePeriod($filterValue);
                 $filterSQL = "movies.year BETWEEN ".$dates['from']." AND ".$dates['to']." ";
             } else {
-                $filterSQL = "$filterType LIKE '$filterValue'";
+                $filterSQL = "$filterType LIKE '%$filterValue%'";
             }     
         }
 
-        $movies =  Movie:: select('movies.id',
-                'movies.name', 
-                'movies.rank', 
-                'movies.imdb_id',
-            )
-            ->when($filterType, function($query) use ($filterSQL) {   
-                return $query->whereRaw($filterSQL);
-            })
-            ->orderBy('movies.id')
-            ->limit('100')
-            ->get();
-
+        $movies = Cache::get("movies_$filterType"."_$filterValue");
+        if (empty($movies)) {
+        
+            $movies =  Movie:: select('movies.id',
+                    'movies.name', 
+                    'movies.rank', 
+                    'movies.imdb_id',
+                )
+                ->when($filterType, function($query) use ($filterSQL) {   
+                    return $query->whereRaw($filterSQL);
+                })
+                ->orderBy('movies.id')
+                ->limit('100')
+                ->get();
+            Cache::set("movies_$filterType"."_$filterValue", $movies);
+            dd('no');
+        }
+        
         $max_movie_id = (int)$movies->last()['id'];
 
         $userMovies =  Movie::select('movies.name', 
@@ -218,7 +183,6 @@ class User extends Authenticatable
         $stats['watched'] = $watched_count;
         $stats['unwatched'] = $total_count - $watched_count;
 
-        // Log::debug('after getSpecificStats-'.\Carbon\Carbon::now());
         return $stats;
     }
 }
