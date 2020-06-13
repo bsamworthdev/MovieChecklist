@@ -157,7 +157,6 @@ class User extends Authenticatable
                 ->limit('100')
                 ->get();
             Cache::set("movies_$filterType"."_$filterValue", $movies);
-            dd('no');
         }
         
         $max_movie_id = (int)$movies->last()['id'];
