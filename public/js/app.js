@@ -2928,8 +2928,14 @@ __webpack_require__.r(__webpack_exports__);
         movie_id: this.movie.id,
         onWatchList: !this.isOnWatchList
       }).then(function (response) {
-        _this3.isOnWatchList = !_this3.isOnWatchList;
-        location.reload();
+        _this3.isOnWatchList = !_this3.isOnWatchList; // location.reload();
+
+        if (_this3.isOnWatchList) {
+          _this3.$emit('addMovieToWatchList', _this3.movie);
+        } else {
+          _this3.$emit('removeMovieFromWatchList', _this3.movie);
+        }
+
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
@@ -3016,6 +3022,8 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+//
+//
 //
 //
 //
@@ -3233,6 +3241,26 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    addMovieToWatchList: function addMovieToWatchList(movie) {
+      this.watchList.push(movie);
+      this.watchList.sort(function (a, b) {
+        if (a.rank < b.rank) {
+          return -1;
+        }
+
+        if (a.rank > b.rank) {
+          return 1;
+        }
+
+        return 0;
+      });
+    },
+    removeMovieFromWatchList: function removeMovieFromWatchList(movie) {
+      var index = this.watchList.map(function (x) {
+        return x.id;
+      }).indexOf(movie.id);
+      this.watchList.splice(index, 1);
     }
   },
   events: {},
@@ -3244,6 +3272,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       randomMovie: null,
       editedMovie: null,
       friendsStats: null,
+      watchList: this.watch_list,
       all_movies: []
     };
   },
@@ -42622,7 +42651,9 @@ var render = function() {
                 movieStatusChanged: _vm.movieStatusChanged,
                 editMovieDetailsClicked: _vm.editMovieDetailsClicked,
                 openIMDBModal: _vm.openIMDBModal,
-                showFriendsPopup: _vm.showFriendsPopup
+                showFriendsPopup: _vm.showFriendsPopup,
+                addMovieToWatchList: _vm.addMovieToWatchList,
+                removeMovieFromWatchList: _vm.removeMovieFromWatchList
               }
             })
           }),
@@ -42695,7 +42726,7 @@ var render = function() {
       _vm._v(" "),
       _vm.activeModal == 8
         ? _c("watch-list-modal", {
-            attrs: { watch_list: _vm.watch_list },
+            attrs: { watch_list: _vm.watchList },
             on: {
               close: function($event) {
                 _vm.activeModal = 0

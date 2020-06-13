@@ -104,7 +104,12 @@
                 })
                 .then((response) => {
                     this.isOnWatchList = !this.isOnWatchList;
-                    location.reload();
+                    // location.reload();
+                    if (this.isOnWatchList){
+                        this.$emit('addMovieToWatchList', this.movie);
+                    } else {
+                        this.$emit('removeMovieFromWatchList', this.movie);
+                    }
                     console.log(response);
                 })
                 .catch((error) => {

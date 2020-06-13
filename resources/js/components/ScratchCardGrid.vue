@@ -37,7 +37,9 @@
                 @movieStatusChanged="movieStatusChanged"
                 @editMovieDetailsClicked="editMovieDetailsClicked"
                 @openIMDBModal="openIMDBModal"
-                @showFriendsPopup="showFriendsPopup">
+                @showFriendsPopup="showFriendsPopup"
+                @addMovieToWatchList="addMovieToWatchList"
+                @removeMovieFromWatchList="removeMovieFromWatchList">
             </scratch-card>
             <div v-if="all_movies.length % 100 == 0" class="btn-group col-12">
                 <button class="btn btn-success" @click="showMoreMovies">
@@ -70,7 +72,7 @@
         <watch-list-modal 
             v-if="activeModal==8" 
             @close="activeModal=0"
-            :watch_list="watch_list">
+            :watch_list="watchList">
         </watch-list-modal>
         <div class="overlay" v-if="activeModal>0" >
             <div id="loading-img"></div>
@@ -221,6 +223,21 @@
                     console.log(error);
                 });
             },
+            addMovieToWatchList(movie) {
+                this.watchList.push(movie);
+
+                this.watchList.sort(function(a, b){
+                    if(a.rank < b.rank) { return -1; }
+                    if(a.rank > b.rank) { return 1; }
+                    return 0;
+                })
+            },
+            removeMovieFromWatchList(movie) {
+                var index = this.watchList.map(x => {
+                    return x.id;
+                }).indexOf(movie.id);
+                this.watchList.splice(index, 1);
+            },
         },
         events: {
 
@@ -233,6 +250,7 @@
                 randomMovie: null,
                 editedMovie: null,
                 friendsStats: null,
+                watchList: this.watch_list,
                 all_movies: []
             }
         },
