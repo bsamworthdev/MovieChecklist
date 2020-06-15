@@ -177,7 +177,7 @@
                 @foreach($user->friends as $key=>$friend)
                     <div class="row friend" friend_id="{{ $friend->id }}">
                         <div class="col-8">
-                            <label for="friendCheckbox{{ $key }}">{{ $friend->name }}</label>
+                            <label for="friendCheckbox{{ $key }}">{{ $friend->name ? : $friend->username }}</label>
                         </div>
                         <div class="col-4">
                             <input id="friendCheckbox{{ $key }}" type="checkbox" class="friendCheckbox" {{ in_array($friend->id, explode('|', $selectedUnwatchedByFriends)) ? 'checked' : '' }}>
