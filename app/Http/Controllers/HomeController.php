@@ -89,6 +89,7 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get('*');
         
+        $friend_ids = [];
         foreach ($friends as $friend) {
             $friend_ids[]=$friend->id;
         }
