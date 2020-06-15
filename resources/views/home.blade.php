@@ -279,7 +279,6 @@
             '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (nowtvOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (selectedFriends && selectedFriends.value ? selectedFriends.value : '') +
-            '/' + searchInput.value + 
             '/');
         form.submit();
     }
