@@ -32,7 +32,8 @@ class HomeController extends Controller
      */
     public function index(
         $genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, 
-        $favourites_only = 0, $search_text = "", $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0)
+        $favourites_only = 0, $search_text = "", $netflix_only = 0, $amazon_only = 0, 
+        $nowtv_only = 0, $unwatched_by_friends = '')
     {
 
         //Users
@@ -45,7 +46,7 @@ class HomeController extends Controller
 
         $movieController = new MovieController;
         $movies = $movieController->getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only);
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $unwatched_by_friends);
 
         $count = 1;
         foreach ($movies as $movie) {
@@ -66,24 +67,44 @@ class HomeController extends Controller
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
         $selected_nowtv_only = $nowtv_only;
+        $selected_unwatched_by_friends = $unwatched_by_friends;
 
 
-        $friendsA = $UserObj->friendshipsA()->get();
-        $friendsB = $UserObj->friendshipsB()->get();
-        $friends =[];
-        foreach ($friendsA as $friend) {
-            $friends[]=$friend->person_B_user_id;
+        // $friendsA = $UserObj->friendshipsA()->get();
+        // $friendsB = $UserObj->friendshipsB()->get();
+        // $friend_ids =[];
+        // foreach ($friendsA as $friend) {
+        //     $friend_ids[]=$friend->person_B_user_id;
+        // }
+        // foreach ($friendsB as $friend) {
+        //     $friend_ids[]=$friend->person_A_user_id;
+        // }
+
+        $friendsA = $UserObj->friendshipsA()
+            ->join('users', 'users.id', '=', 'friendships.person_B_user_id');
+
+        $friends = $UserObj->friendshipsB()
+            ->join('users', 'users.id', '=', 'friendships.person_A_user_id')
+            ->union($friendsA)
+            ->orderBy('name')
+            ->get('*');
+        
+        foreach ($friends as $friend) {
+            $friend_ids[]=$friend->id;
         }
-        foreach ($friendsB as $friend) {
-            $friends[]=$friend->person_A_user_id;
+
+        $friends = [];
+        foreach ($friend_ids as $friend_id) {
+            $friends[] = User::find($friend_id);
         }
+        $user->friends = $friends;
         
         foreach ($movies as &$movie) {
             $count = 0;
 
             $count += DB::table('movie_user')
                 ->where ('movie_id', '=', $movie->id)
-                ->whereIn('user_id', $friends)
+                ->whereIn('user_id', $friend_ids)
                 ->get()
                 ->count();
 
@@ -126,6 +147,7 @@ class HomeController extends Controller
             "netflix_only" => $selected_netflix_only,
             "amazon_only" => $selected_amazon_only,
             "nowtv_only" => $selected_nowtv_only,
+            "unwatched_by_friends" => $selected_unwatched_by_friends
         ]);
 
         return view(
@@ -146,6 +168,7 @@ class HomeController extends Controller
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
+                "selectedUnwatchedByFriends" => $selected_unwatched_by_friends,
                 "infoMessages" => $info_messages
             ]
         );

@@ -49,7 +49,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mt-3">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
                                                     <label>
@@ -88,7 +88,6 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-12"></div>
                                             <div class="col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
@@ -115,6 +114,21 @@
                                                     </span>
                                                 </label>
                                             </div>
+                                            @if(count($user->friends) > 0)
+                                                <div class="col-lg-3 col-12">
+                                                    <label class="vertAlign" >
+                                                        <span id="selectedFriendsLabel">Unwatched By Friends 
+                                                            (<b>{{ $selectedUnwatchedByFriends == '' ? 0 : (substr_count($selectedUnwatchedByFriends, '|') + 1) }}</b>)
+                                                        </span> &nbsp;    
+                                                        <input id="selectedFriends" name="selectedFriends" type="hidden" value="{{ $selectedUnwatchedByFriends }}">                                             
+                                                        <a id="editFriendsLink" href="#" onclick="toggleFriendsContainer()">
+                                                            edit
+                                                        </a>
+                                                    </label>
+                                                </div>
+                                            @else 
+                                                <input id="selectedFriends" name="selectedFriends" type="hidden" value="">
+                                            @endif
                                         </div>
                                     </div>
                                 </form>
@@ -137,14 +151,56 @@
                         :filters="{{ $filters }}">
                     </scratch-card-grid>
                 </div>
+
+
+            </div>
+        </div>
+    </div>  
+
+    <div id="friendsContainer">
+        <div class="container">
+            <div class="row friendsHeader">
+                <div class="col-7 friendsHeaderTitle">
+                    <b>Select Friends</b>
+                </div>
+                <div class="col-3 friendsHeaderButtons">
+                    <a href='#' class="selectAll" onclick="selectAllFriends()">all</a>
+                    |
+                    <a href='#' class="clearAll" onclick="clearAllFriends()">clear</a>
+                </div>
+                <div class="col-2 friendsHeaderClose">
+                    <i class="fa fa-times" onclick="hideFriendsContainer()"></i>
+                </div>
+            </div>
+            <div class="friendsList">
+                @foreach($user->friends as $key=>$friend)
+                    <div class="row friend" friend_id="{{ $friend->id }}">
+                        <div class="col-8">
+                            <label for="friendCheckbox{{ $key }}">{{ $friend->name }}</label>
+                        </div>
+                        <div class="col-4">
+                            <input id="friendCheckbox{{ $key }}" type="checkbox" class="friendCheckbox" {{ in_array($friend->id, explode('|', $selectedUnwatchedByFriends)) ? 'checked' : '' }}>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="row buttonRow">
+                <div class="col-6">
+                    <button class="btn btn-info" onclick="hideFriendsContainer()">Close</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-success"  onclick="saveFriendSelection()">Apply</button>
+                </div>
             </div>
         </div>
     </div>
+
     <button onclick="returnToTop()" id="topButton" title="Go to top">Back To Top</button>
 </div>
 @endsection
 
 <script>
+
     // When the user scrolls down 20px from the top of the document, show the button
     window.onscroll = function() {
         var topButton = document.getElementById("topButton");
@@ -155,6 +211,35 @@
         }
     }
 
+    function showFriendsContainer(){
+        // var editFriendsLink = document.getElementById('editFriendsLink');
+        // var friendsContainer = document.getElementById('friendsContainer');
+        // friendsContainer.style.left = editFriendsLink.offsetLeft;
+        // friendsContainer.style.top = (editFriendsLink.offsetTop+30);
+        // friendsContainer.style.display="block";
+
+        var editFriendsLink = document.querySelector("#editFriendsLink").getBoundingClientRect();
+        var offset = { 
+                top: editFriendsLink.top + window.scrollY, 
+                left: editFriendsLink.left + window.scrollX, 
+            };
+        var friendsContainer = document.getElementById('friendsContainer');
+        friendsContainer.style.left = offset.left - 230;
+        friendsContainer.style.top = offset.top + 30;
+        friendsContainer.style.display="block";
+    }
+    function hideFriendsContainer(){
+        document.getElementById('friendsContainer').style.display="none";
+    }
+
+    function toggleFriendsContainer(){
+        if (document.getElementById('friendsContainer').style.display == 'block'){
+            hideFriendsContainer();
+        } else {
+            showFriendsContainer();
+        }
+    }
+
     function searchChanged(e){
         if(e.charCode == 13){
             changeSelection();
@@ -162,10 +247,19 @@
         }
     }
 
+    function friendMultiSelectChanged(){
+        changeSelection();
+
+        var friendMultiSelect = document.getElementById('friendMultiSelect');
+        
+    }
+    
     function changeSelection() {
         var form = document.getElementById('movie_form');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
         var unwatchedOnlyCheckbox = document.getElementById('unwatched_only_checkbox');
+        var selectedFriends = document.getElementById('selectedFriends');
+        var friendMultiSelect = document.getElementById('friendMultiSelect');
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
         var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
         var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
@@ -173,17 +267,48 @@
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         var searchInput = document.getElementById('search_input');
+
         form.setAttribute('action', '/home/' + genreSelect.value + 
             '/' + timePeriodSelect.value + 
             '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
-            '/' + (unwatchedOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + ((unwatchedOnlyCheckbox && unwatchedOnlyCheckbox.checked) ? '1' : '0') + 
             '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (searchInput.value !=='' ? searchInput.value : 'null') + 
             '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
             '/' + (nowtvOnlyCheckbox.checked ? '1' : '0') + 
+            '/' + (selectedFriends && selectedFriends.value ? selectedFriends.value : '') +
+            '/' + searchInput.value + 
             '/');
         form.submit();
+    }
+
+    function saveFriendSelection(){
+        var friendsSelected = [];
+        friends = document.getElementsByClassName("friend");
+        for(var i = 0; i < friends.length; i ++){
+            if (friends[i].getElementsByClassName("friendCheckbox")[0].checked) {
+                friendsSelected.push(friends[i].getAttribute('friend_id'));
+            }
+        }
+        document.getElementById('selectedFriends').value = friendsSelected.join('|');
+
+        hideFriendsContainer();
+        changeSelection();
+    }
+
+    function selectAllFriends(){
+        friends = document.getElementsByClassName("friend");
+        for(var i = 0; i < friends.length; i ++){
+            friends[i].getElementsByClassName("friendCheckbox")[0].checked = true;
+        }
+    }
+    
+    function clearAllFriends(){
+        friends = document.getElementsByClassName("friend");
+        for(var i = 0; i < friends.length; i ++){
+            friends[i].getElementsByClassName("friendCheckbox")[0].checked = false;
+        }
     }
 
     // When the user clicks on the button, scroll to the top of the document
@@ -253,4 +378,71 @@
         align-items: center;
         margin-bottom:0px;
     }
+
+
+    #friendsContainer {
+        position:absolute;
+        right:0;
+        top:0;
+        background-color:white;
+        width:80%;
+        max-width:270px;
+        display:none;
+        border:1px solid #C0C0C0;
+        z-index:99;
+    }
+
+    #friendsContainer > .container{
+        padding-left:0px;
+        padding-right:0px;
+    }
+
+    #friendsContainer .friendsList{
+        max-height:40vh;
+        min-height:80px;
+        overflow:auto;
+    }
+
+    #friendsContainer .friendsList {
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+
+    #friendsContainer .friend{
+        margin-left:0px;
+        margin-right: 0px;
+    }
+
+    #friendsContainer .buttonRow{
+        padding:10px;
+        border-top:1px solid #C0C0C0
+    }
+
+    #friendsContainer .buttonRow div{
+        text-align: center;
+    }
+
+    #friendsContainer .friendsHeader {
+        margin-left: 0px;
+        margin-right: 0px;
+        border-bottom: 1px solid #C0C0C0;
+    }
+
+    #friendsContainer .friendsHeaderTitle {
+        font-size: 18px;
+    }
+
+    #friendsContainer .friendsHeaderClose {
+        text-align: right;
+    }
+
+    #friendsContainer .friendsHeaderClose .fa {
+        padding-top:7px;
+        cursor:pointer;
+    }
+
+    #friendsContainer .friendsHeaderButtons{
+        white-space:nowrap;
+    }
+
 </style>

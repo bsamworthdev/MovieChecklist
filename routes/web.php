@@ -20,7 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/home/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}', 'HomeController@index')->name('home');
+    Route::get('/home/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/{unwatched_by_friends?}/', 'HomeController@index')->name('home');
     Route::get('/friends/{tag?}', 'FriendshipController@index')->name('friend');
 
     Route::post('/updatemovies', 'MovieController@updateMovies');
@@ -34,7 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
     Route::post('/getFriendsStats/{movie_id?}/', 'UserController@getFriendsStats'); 
     Route::post('/toggleMovieInWatchList', 'UserController@toggleMovieInWatchList');
-    Route::post('/getMoreMovies/{skip_count?}/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/', 'MovieController@getMoreMovies');
+    Route::post('/getMoreMovies/{skip_count?}/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/{unwatched_by_friends?}/', 'MovieController@getMoreMovies');
 
     Route::post('/editfriend', 'FriendshipController@edit');
     Route::post('/deletefriend', 'FriendshipController@delete');

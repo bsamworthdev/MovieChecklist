@@ -29,6 +29,7 @@ class FriendshipController extends Controller
         }
 
         //Get friend IDs
+        $user = User::find($user_id);
         $friendsA = $user->friendshipsA()
             ->join('users', 'users.id', '=', 'friendships.person_B_user_id');
 

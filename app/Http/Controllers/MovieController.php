@@ -289,7 +289,8 @@ class MovieController extends Controller
     }
 
     function getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $skip_count = 0){
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, 
+        $unwatched_by_friends, $skip_count = 0) {
 
         $user = Auth::user();
         $user_id = $user->id;
@@ -309,13 +310,13 @@ class MovieController extends Controller
             $join->on('watch_list.movie_id', '=', 'movies.id');
             $join->on('watch_list.user_id', '=', DB::raw("$user_id"));
         })
-        ->leftJoin('movie_user', function ($join) use ($user_id) {
-            $join->on('movie_user.movie_id', '=', 'movies.id');
-            $join->on('movie_user.user_id', '=', DB::raw("$user_id"));
+        ->leftJoin('movie_user as mu', function ($join) use ($user_id) {
+            $join->on('mu.movie_id', '=', 'movies.id');
+            $join->on('mu.user_id', '=', DB::raw("$user_id"));
         })
         ->where(function ($q) use ($user_id) {
-            return $q->where('movie_user.user_id', '=', $user_id)
-                ->orWhere('movie_user.user_id', '=', NULL);
+            return $q->where('mu.user_id', '=', $user_id)
+                ->orWhere('mu.user_id', '=', NULL);
         })
         ->when($genre <> 'all', function ($q) use ($genre) {
             return $q->where('movies.genre', 'LIKE', '%' . $genre . '%');
@@ -328,7 +329,7 @@ class MovieController extends Controller
             return $q->where('movies.language', '=', 'english');
         })
         ->when($favourites_only == 1, function ($q) {
-            return $q->where('movie_user.favourite', '=', '1');
+            return $q->where('mu.favourite', '=', '1');
         })
         ->when($search_text != '', function ($q) use ($search_text) {
             return $q->where('movies.name', 'LIKE', '%'.trim($search_text).'%');
@@ -367,9 +368,17 @@ class MovieController extends Controller
         ->when(($netflix_only == 0 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
             return $q->where('nowtv.on_nowtv', '=', '1');
         })
-
         ->when($unwatched_only == 1, function ($q) {
-            return $q->where('movie_user.user_id', '=', NULL);
+            return $q->where('mu.user_id', '=', NULL);
+        })
+        ->when($unwatched_by_friends !== '', function ($q) use ($unwatched_by_friends, $user_id) {
+            $arr = explode('|', $unwatched_by_friends);
+            return $q->whereNotIn('movies.id', function($q) use ($arr)
+            {
+                $q->from('movie_user as mu2')
+                    ->selectRaw('distinct mu2.movie_id')
+                    ->whereIn('mu2.user_id', $arr);
+            });
         })
         ->orderBy('rank', 'ASC')
         ->skip($skip_count)
@@ -379,10 +388,12 @@ class MovieController extends Controller
             DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
             DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
             DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
-            DB::raw('IF(ISNULL(movie_user.user_id), \'0\', \'1\') as watched'),
-            DB::raw('IF(ISNULL(movie_user.favourite), \'0\', movie_user.favourite) as favourite'),
+            DB::raw('IF(ISNULL(mu.user_id), \'0\', \'1\') as watched'),
+            DB::raw('IF(ISNULL(mu.favourite), \'0\', mu.favourite) as favourite'),
             DB::raw('IF(ISNULL(watch_list.movie_id), \'0\', \'1\') as on_watch_list')
         ]);
+
+        
         return $movies;
     }
 
@@ -401,11 +412,14 @@ class MovieController extends Controller
         $amazon_only = $request->amazon_only;
         $nowtv_only = $request->nowtv_only;
         $skip_count = $request->skip_count;
+        $unwatched_by_friends = $request->unwatched_by_friends;
+
 
         if ($search_text == "null") $search_text = '';
 
         $movies = $this->getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $skip_count);
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, 
+        $unwatched_by_friends, $skip_count);
 
         //Set movie index
         $count = $skip_count + 1;

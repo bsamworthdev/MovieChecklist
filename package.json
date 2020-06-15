@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.13.0",
-        "@johmun/vue-tags-input": "^2.1.0"
+        "@johmun/vue-tags-input": "^2.1.0",
+        "vue-multiselect": "^2.1.6"
     }
 }
