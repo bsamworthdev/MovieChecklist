@@ -114,9 +114,10 @@
                                                     </span>
                                                 </label>
                                             </div>
-                                            @if(count($user->friends) > 0)
-                                                <div class="col-lg-3 col-12">
-                                                    <label class="vertAlign" >
+                                            <div class="col-lg-3 col-12">
+                                                <label class="vertAlign" >
+                                                    @if(count($user->friends) > 0)
+                     
                                                         <span id="selectedFriendsLabel">Unwatched By Friends 
                                                             (<b>{{ $selectedUnwatchedByFriends == '' ? 0 : (substr_count($selectedUnwatchedByFriends, '|') + 1) }}</b>)
                                                         </span> &nbsp;    
@@ -124,9 +125,11 @@
                                                         <a id="editFriendsLink" href="#" onclick="toggleFriendsContainer()">
                                                             edit
                                                         </a>
-                                                    </label>
-                                                </div>
-                                            @endif
+                                                    @else 
+                                                        <span id="inactiveSelectedFriendsLabel" title="Add friends to use this feature">Unwatched By Friends (0)</span> &nbsp;    
+                                                    @endif
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -444,4 +447,7 @@
         white-space:nowrap;
     }
 
+    #inactiveSelectedFriendsLabel{
+        opacity:0.4;
+    }
 </style>
