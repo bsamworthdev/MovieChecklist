@@ -120,14 +120,12 @@
                                                         <span id="selectedFriendsLabel">Unwatched By Friends 
                                                             (<b>{{ $selectedUnwatchedByFriends == '' ? 0 : (substr_count($selectedUnwatchedByFriends, '|') + 1) }}</b>)
                                                         </span> &nbsp;    
-                                                        <input id="selectedFriends" name="selectedFriends" type="hidden" value="{{ $selectedUnwatchedByFriends }}">                                             
+                                                        <input id="selectedFriends" disabled name="selectedFriends" type="hidden" value="{{ $selectedUnwatchedByFriends }}">                                             
                                                         <a id="editFriendsLink" href="#" onclick="toggleFriendsContainer()">
                                                             edit
                                                         </a>
                                                     </label>
                                                 </div>
-                                            @else 
-                                                <input id="selectedFriends" name="selectedFriends" type="hidden" value="">
                                             @endif
                                         </div>
                                     </div>
@@ -293,6 +291,7 @@
         }
         document.getElementById('selectedFriends').value = friendsSelected.join('|');
 
+        event.stopPropagation();
         hideFriendsContainer();
         changeSelection();
     }
