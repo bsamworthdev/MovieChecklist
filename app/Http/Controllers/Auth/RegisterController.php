@@ -57,8 +57,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'username' => ['required', 'string', 'max:255', 'unique:users'],
-            //'name' => ['required', 'string', 'max:255'],
-            //'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['max:255'],
+            'email' => ['max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -74,12 +74,19 @@ class RegisterController extends Controller
         $session_id = $this->request->session()->getId();
 
         //Create user
-        $user = User::create([
-            'username' => $data['username'],
-            'name' => isset($data['name']) ? $data['name']:'',
-            'email' => isset($data['email']) ? $data['email']:'',
-            'password' => Hash::make($data['password'])
-        ]);
+        // $user = User::create([
+        //     'username' => $data['username'],
+        //     'name' => isset($data['name']) ? $data['name']:'',
+        //     'email' => isset($data['email']) ? $data['email']:'',
+        //     'password' => Hash::make($data['password'])
+        // ]);
+
+        $user = new User();
+        $user->username = $data['username'];
+        $user->name = isset($data['name']) ? $data['name']:'';
+        $user->email = isset($data['email']) ? $data['email']:'';
+        $user->password = Hash::make('userpassword');
+        $user->save();
 
         //Update WatchList
         $select = WatchListNonAuth::where('session_id', '=', $session_id)
