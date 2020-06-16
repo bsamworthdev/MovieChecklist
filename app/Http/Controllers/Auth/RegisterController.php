@@ -85,7 +85,7 @@ class RegisterController extends Controller
         $user->username = $data['username'];
         $user->name = isset($data['name']) ? $data['name']:'';
         $user->email = isset($data['email']) ? $data['email']:'';
-        $user->password = Hash::make('userpassword');
+        $user->password = Hash::make($data['password']);
         $user->save();
 
         //Update WatchList
