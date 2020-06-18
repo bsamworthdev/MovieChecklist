@@ -2865,6 +2865,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2885,12 +2917,44 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Component mounted.');
   },
   methods: {
+    addToList: function addToList() {
+      this.$emit('addToList');
+    },
+    retry: function retry() {
+      this.$emit('retry');
+    },
     close: function close() {
       this.$emit('close');
+    },
+    toggleIsOnWatchlist: function toggleIsOnWatchlist(e) {
+      var _this = this;
+
+      e.stopPropagation();
+      axios.post('/toggleMovieInWatchList', {
+        movie_id: this.movie.id,
+        onWatchList: !this.isOnWatchList
+      }).then(function (response) {
+        _this.isOnWatchList = !_this.isOnWatchList; // location.reload();
+
+        if (_this.isOnWatchList) {
+          _this.movie.on_watch_list = '1';
+
+          _this.$emit('addMovieToWatchList', _this.movie);
+        } else {
+          _this.movie.on_watch_list = '0';
+
+          _this.$emit('removeMovieFromWatchList', _this.movie);
+        }
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   data: function data() {
     return {
+      isOnWatchList: this.movie.on_watch_list == 1,
       modalId: 'randomMovieModal'
     };
   }
@@ -2907,8 +2971,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
 //
 //
 //
@@ -3017,8 +3079,12 @@ __webpack_require__.r(__webpack_exports__);
         _this3.isOnWatchList = !_this3.isOnWatchList; // location.reload();
 
         if (_this3.isOnWatchList) {
+          _this3.movie.on_watch_list = '1';
+
           _this3.$emit('addMovieToWatchList', _this3.movie);
         } else {
+          _this3.movie.on_watch_list = '0';
+
           _this3.$emit('removeMovieFromWatchList', _this3.movie);
         }
 
@@ -3073,7 +3139,12 @@ __webpack_require__.r(__webpack_exports__);
       watchListHover: false
     };
   },
-  watch: {},
+  watch: {
+    all_movies: {
+      handler: function handler(someData) {},
+      immediate: true
+    }
+  },
   mounted: function mounted() {
     console.log('Component mounted.');
   }
@@ -3190,6 +3261,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3222,9 +3299,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
 
       this.watchedMoviesCount = arr.length;
-    },
-    initialiseAllMovies: function initialiseAllMovies() {
-      this.all_movies = this.movies;
     },
     updateMovies: function updateMovies() {
       axios.post('/updatemovies').then(function (response) {
@@ -3341,12 +3415,35 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
         return 0;
       });
+      var index = this.all_movies.map(function (x) {
+        return x.id;
+      }).indexOf(movie.id); // this.all_movies[index].on_watch_list = '1';
+      // movie = this.all_movies[index];
+      // movie.on_watch_list = '1'
+      // this.all_movies.splice(index, 1);
+      // this.all_movies.splice(index, 0, movie);
+      // this.all_movies.push(movie);
+
+      this.forceRerender();
     },
     removeMovieFromWatchList: function removeMovieFromWatchList(movie) {
       var index = this.watchList.map(function (x) {
         return x.id;
       }).indexOf(movie.id);
       this.watchList.splice(index, 1);
+      var index2 = this.all_movies.map(function (x) {
+        return x.id;
+      }).indexOf(movie.id); //this.all_movies[index2].on_watch_list = '0';
+      // movie = this.all_movies[index2];
+      // movie.on_watch_list = '0';
+      // this.all_movies.splice(index2, 1);
+      // this.all_movies.splice(index2, 0, movie);
+      // this.all_movies.push(movie);
+
+      this.forceRerender();
+    },
+    forceRerender: function forceRerender() {
+      this.componentKey += 1;
     }
   },
   events: {},
@@ -3359,11 +3456,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       editedMovie: null,
       friendsStats: null,
       watchList: this.watch_list,
-      all_movies: []
+      all_movies: this.movies,
+      componentKey: 0
     };
   },
   mounted: function mounted() {
-    this.initialiseAllMovies();
+    // this.initialiseAllMovies();
     this.setWatchedMoviesCount();
     console.log('Component mounted.');
   }
@@ -3383,6 +3481,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ScratchCardNonAuth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ScratchCardNonAuth */ "./resources/js/components/ScratchCardNonAuth.vue");
 /* harmony import */ var _RandomMovieModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RandomMovieModal */ "./resources/js/components/RandomMovieModal.vue");
 /* harmony import */ var _WatchListModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./WatchListModal */ "./resources/js/components/WatchListModal.vue");
+//
+//
+//
 //
 //
 //
@@ -4069,6 +4170,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -4082,13 +4192,36 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Component mounted.');
   },
   methods: {
+    remove: function remove(movie) {
+      var _this = this;
+
+      axios.post('/toggleMovieInWatchList', {
+        movie_id: movie.id,
+        onWatchList: false
+      }).then(function (response) {
+        var index = _this.watchList.map(function (x) {
+          return x.id;
+        }).indexOf(movie.id);
+
+        _this.watchList.splice(index, 1);
+
+        movie.on_watch_list = '0';
+
+        _this.$emit('removeMovieFromWatchList', movie);
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     close: function close() {
       this.$emit('close');
     }
   },
   data: function data() {
     return {
-      modalId: 'randomMovieModal'
+      modalId: 'randomMovieModal',
+      watchList: this.watch_list
     };
   }
 });
@@ -8847,7 +8980,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#chosenMovieImage[data-v-9f3ff62a]{\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: contain;\n    height:60vh;\n}\n", ""]);
+exports.push([module.i, "\n#chosenMovieImage[data-v-9f3ff62a]{\n    background-position: top;\n    background-repeat: no-repeat;\n    background-size: contain;\n    height:46vh;\n    min-height:200px;\n}\n.platform[data-v-9f3ff62a] {\n    width:40px;\n    height:40px;\n    background-size: cover;\n    margin-bottom:6px;\n    margin-left:auto;\n    margin-right:auto;\n}\n.platform.netflix[data-v-9f3ff62a] {\n    background-image: url('/images/netflix.jpg');\n}\n.platform.amazon[data-v-9f3ff62a] {\n    background-image: url('/images/amazon.jpeg');\n}\n.platform.nowtv[data-v-9f3ff62a] {\n    background-image: url('/images/nowtv.jpg');\n}\n", ""]);
 
 // exports
 
@@ -8885,7 +9018,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-adb89816] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-adb89816] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n.scratchCardContainer[data-v-adb89816]{\n    width:auto;\n}\n", ""]);
 
 // exports
 
@@ -42495,15 +42628,121 @@ var render = function() {
     _vm._v(" "),
     _c("div", { attrs: { slot: "body" }, slot: "body" }, [
       _c("div", { staticClass: "container" }, [
-        _c("div", { staticClass: "col-sm-12" }, [
-          _c("h3", [_vm._v(_vm._s(_vm.movie.name))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-12" }, [
-          _c("div", {
-            style: { backgroundImage: "url(" + _vm.movie.image_url + ")" },
-            attrs: { id: "chosenMovieImage" }
-          })
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-6 col-xs-12" }, [
+            _c("div", {
+              style: {
+                backgroundImage: "url(" + _vm.movie.image_url_small + ")"
+              },
+              attrs: { id: "chosenMovieImage" }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6 col-xs-12" }, [
+            _c("div", { staticClass: "container" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12 text-center" }, [
+                  _c("h3", [_vm._v(_vm._s(_vm.movie.name))]),
+                  _vm._v(" "),
+                  _c("h5", [_vm._v(_vm._s(_vm.movie.year))])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12 text-center" }, [
+                  _vm._v(
+                    "\n                                " +
+                      _vm._s(_vm.movie.genre) +
+                      "\n                            "
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12 text-center mt-3" }, [
+                  _vm.movie.on_netflix == 1
+                    ? _c("div", {
+                        staticClass: "platform netflix",
+                        attrs: { title: "On netflix" }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.movie.on_amazon == 1
+                    ? _c("div", {
+                        staticClass: "platform amazon",
+                        attrs: { title: "On amazon video" }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.movie.on_nowtv == 1
+                    ? _c("div", {
+                        staticClass: "platform nowtv",
+                        attrs: { title: "On Now TV" }
+                      })
+                    : _vm._e()
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mt-3" }, [
+                _c("div", { staticClass: "col-sm-12 text-center" }, [
+                  _vm.isOnWatchList
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.toggleIsOnWatchlist($event)
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-thumbsup" }),
+                          _vm._v(" Remove From List")
+                        ]
+                      )
+                    : _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.toggleIsOnWatchlist($event)
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-thumbsup" }),
+                          _vm._v(" Add it to my list!")
+                        ]
+                      )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-sm-12 text-center mt-2" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.$emit("retry")
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fa fa-thumbsup" }),
+                      _vm._v("Pick me another")
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ])
         ])
       ])
     ]),
@@ -42547,228 +42786,222 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-lg-3 col-md-4 col-sm-6 col-xs-12" }, [
-    _c(
-      "div",
-      {
-        staticClass: "card movieCard",
-        class: { watched: _vm.hasWatched },
-        on: { click: _vm.toggleWatched }
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "card-body movieImage",
-            style: { backgroundImage: "url(" + _vm.movie.image_url_small + ")" }
-          },
-          [
-            _c("h4", [
-              _vm._v(
-                _vm._s(_vm.movie.name) + " (" + _vm._s(_vm.movie.year) + ")"
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "rank",
-                class: { rounded: _vm.movie.index == _vm.movie.rank }
-              },
-              [
-                _c("span", { staticClass: "filtered_rank" }, [
-                  _vm._v(_vm._s(_vm.movie.index))
-                ]),
-                _vm._v(" "),
-                _vm.movie.index != _vm.movie.rank
-                  ? _c("span", { staticClass: "actual_rank" }, [
-                      _vm._v("(" + _vm._s(_vm.movie.rank) + ")")
-                    ])
-                  : _vm._e()
-              ]
-            ),
-            _vm._v(" "),
-            _vm.hasWatched
-              ? _c(
-                  "div",
-                  {
-                    staticClass: "favourite",
-                    class: {
-                      selected: _vm.isFavourite,
-                      hovering: _vm.favouriteHover,
-                      hasFriends: _vm.user.friendsCount > 0
-                    },
-                    on: {
-                      mouseover: function($event) {
-                        _vm.favouriteHover = true
-                      },
-                      mouseleave: function($event) {
-                        _vm.favouriteHover = false
-                      },
-                      click: function($event) {
-                        return _vm.toggleIsFavourite($event)
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-heart heart filled" }),
-                    _vm._v(" "),
-                    _c("i", { staticClass: "far fa-heart heart outline" })
-                  ]
-                )
-              : _c(
-                  "div",
-                  {
-                    staticClass: "watchList",
-                    class: {
-                      selected: _vm.isOnWatchList,
-                      hovering: _vm.watchListHover,
-                      hasFriends: _vm.user.friendsCount > 0
-                    },
-                    on: {
-                      mouseover: function($event) {
-                        _vm.watchListHover = true
-                      },
-                      mouseleave: function($event) {
-                        _vm.watchListHover = false
-                      },
-                      click: function($event) {
-                        return _vm.toggleIsOnWatchlist($event)
-                      }
-                    }
-                  },
-                  [
-                    _c("i", {
-                      staticClass: "fas fa-list-alt watchListIcon",
-                      attrs: { title: _vm.watchListTitle }
-                    }),
-                    _vm._v(" "),
-                    _c("i", {
-                      staticClass: "fas fa-check-circle watchListTick"
-                    }),
-                    _vm._v(" "),
-                    _c("i", { staticClass: "fas fa-plus-circle watchListAdd" })
-                  ]
-                ),
-            _vm._v(" "),
-            _vm.user.friendsCount > 0
-              ? _c(
-                  "div",
-                  {
-                    staticClass: "friends",
-                    attrs: {
-                      title:
-                        _vm.movie.friendsWatched +
-                        " of your friends also watched this"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.showFriendsPopup($event)
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fas fa-user friendsIcon" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "friendsCount" }, [
-                      _vm._v(" x " + _vm._s(_vm.movie.friendsWatched))
-                    ])
-                  ]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "rating" }, [
-              _c("i", { staticClass: "fa fa-star star" }),
+  return _c(
+    "div",
+    {
+      staticClass: "card movieCard",
+      class: { watched: _vm.hasWatched },
+      on: { click: _vm.toggleWatched }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "card-body movieImage",
+          style: { backgroundImage: "url(" + _vm.movie.image_url_small + ")" }
+        },
+        [
+          _c("h4", [
+            _vm._v(_vm._s(_vm.movie.name) + " (" + _vm._s(_vm.movie.year) + ")")
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "rank",
+              class: { rounded: _vm.movie.index == _vm.movie.rank }
+            },
+            [
+              _c("span", { staticClass: "filtered_rank" }, [
+                _vm._v(_vm._s(_vm.movie.index))
+              ]),
               _vm._v(" "),
-              _c("span", [_vm._v(_vm._s(_vm.ratingShort))])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "platforms" }, [
-              _vm.user.role == "editor" || _vm.user.role == "admin"
-                ? _c("div", [
-                    _c("div", {
-                      staticClass: "platform netflix",
-                      class: { dimmed: _vm.isOnNetflix == 0 },
-                      attrs: { title: "On netflix" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editMovieDetailsClicked($event, "netflix")
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", {
-                      staticClass: "platform amazon",
-                      class: { dimmed: _vm.isOnAmazon == 0 },
-                      attrs: { title: "On amazon video" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editMovieDetailsClicked($event, "amazon")
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", {
-                      staticClass: "platform nowtv",
-                      class: { dimmed: _vm.isOnNowtv == 0 },
-                      attrs: { title: "On Now TV" },
-                      on: {
-                        click: function($event) {
-                          return _vm.editMovieDetailsClicked($event, "nowtv")
-                        }
-                      }
-                    })
+              _vm.movie.index != _vm.movie.rank
+                ? _c("span", { staticClass: "actual_rank" }, [
+                    _vm._v("(" + _vm._s(_vm.movie.rank) + ")")
                   ])
-                : _c("div", [
-                    _vm.isOnNetflix == 1
-                      ? _c("div", {
-                          staticClass: "platform netflix",
-                          attrs: { title: "On netflix" }
-                        })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.isOnAmazon == 1
-                      ? _c("div", {
-                          staticClass: "platform amazon",
-                          attrs: { title: "On amazon video" }
-                        })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.isOnNowtv == 1
-                      ? _c("div", {
-                          staticClass: "platform nowtv",
-                          attrs: { title: "On Now TV" }
-                        })
-                      : _vm._e()
-                  ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "tickContainer" }, [
-              _vm.hasWatched
-                ? _c("i", { staticClass: "fa fa-check tick" })
                 : _vm._e()
-            ])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "footer",
-            on: {
-              click: function($event) {
-                return _vm.openIMDBModal($event)
-              }
+            ]
+          ),
+          _vm._v(" "),
+          _vm.hasWatched
+            ? _c(
+                "div",
+                {
+                  staticClass: "favourite",
+                  class: {
+                    selected: _vm.isFavourite,
+                    hovering: _vm.favouriteHover,
+                    hasFriends: _vm.user.friendsCount > 0
+                  },
+                  on: {
+                    mouseover: function($event) {
+                      _vm.favouriteHover = true
+                    },
+                    mouseleave: function($event) {
+                      _vm.favouriteHover = false
+                    },
+                    click: function($event) {
+                      return _vm.toggleIsFavourite($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-heart heart filled" }),
+                  _vm._v(" "),
+                  _c("i", { staticClass: "far fa-heart heart outline" })
+                ]
+              )
+            : _c(
+                "div",
+                {
+                  staticClass: "watchList",
+                  class: {
+                    selected: _vm.isOnWatchList,
+                    hovering: _vm.watchListHover,
+                    hasFriends: _vm.user.friendsCount > 0
+                  },
+                  on: {
+                    mouseover: function($event) {
+                      _vm.watchListHover = true
+                    },
+                    mouseleave: function($event) {
+                      _vm.watchListHover = false
+                    },
+                    click: function($event) {
+                      return _vm.toggleIsOnWatchlist($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", {
+                    staticClass: "fas fa-list-alt watchListIcon",
+                    attrs: { title: _vm.watchListTitle }
+                  }),
+                  _vm._v(" "),
+                  _c("i", { staticClass: "fas fa-check-circle watchListTick" }),
+                  _vm._v(" "),
+                  _c("i", { staticClass: "fas fa-plus-circle watchListAdd" })
+                ]
+              ),
+          _vm._v(" "),
+          _vm.user.friendsCount > 0
+            ? _c(
+                "div",
+                {
+                  staticClass: "friends",
+                  attrs: {
+                    title:
+                      _vm.movie.friendsWatched +
+                      " of your friends also watched this"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.showFriendsPopup($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-user friendsIcon" }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "friendsCount" }, [
+                    _vm._v(" x " + _vm._s(_vm.movie.friendsWatched))
+                  ])
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "rating" }, [
+            _c("i", { staticClass: "fa fa-star star" }),
+            _vm._v(" "),
+            _c("span", [_vm._v(_vm._s(_vm.ratingShort))])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "platforms" }, [
+            _vm.user.role == "editor" || _vm.user.role == "admin"
+              ? _c("div", [
+                  _c("div", {
+                    staticClass: "platform netflix",
+                    class: { dimmed: _vm.isOnNetflix == 0 },
+                    attrs: { title: "On netflix" },
+                    on: {
+                      click: function($event) {
+                        return _vm.editMovieDetailsClicked($event, "netflix")
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", {
+                    staticClass: "platform amazon",
+                    class: { dimmed: _vm.isOnAmazon == 0 },
+                    attrs: { title: "On amazon video" },
+                    on: {
+                      click: function($event) {
+                        return _vm.editMovieDetailsClicked($event, "amazon")
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", {
+                    staticClass: "platform nowtv",
+                    class: { dimmed: _vm.isOnNowtv == 0 },
+                    attrs: { title: "On Now TV" },
+                    on: {
+                      click: function($event) {
+                        return _vm.editMovieDetailsClicked($event, "nowtv")
+                      }
+                    }
+                  })
+                ])
+              : _c("div", [
+                  _vm.isOnNetflix == 1
+                    ? _c("div", {
+                        staticClass: "platform netflix",
+                        attrs: { title: "On netflix" }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.isOnAmazon == 1
+                    ? _c("div", {
+                        staticClass: "platform amazon",
+                        attrs: { title: "On amazon video" }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.isOnNowtv == 1
+                    ? _c("div", {
+                        staticClass: "platform nowtv",
+                        attrs: { title: "On Now TV" }
+                      })
+                    : _vm._e()
+                ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "tickContainer" }, [
+            _vm.hasWatched
+              ? _c("i", { staticClass: "fa fa-check tick" })
+              : _vm._e()
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "footer",
+          on: {
+            click: function($event) {
+              return _vm.openIMDBModal($event)
             }
-          },
-          [
-            _vm._v("\n            View on IMDb\n            "),
-            _c("i", { staticClass: "externalLink fas fa-external-link-alt" })
-          ]
-        )
-      ]
-    )
-  ])
+          }
+        },
+        [
+          _vm._v("\n        View on IMDb\n        "),
+          _c("i", { staticClass: "externalLink fas fa-external-link-alt" })
+        ]
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -42915,22 +43148,29 @@ var render = function() {
         { staticClass: "row justify-content-center" },
         [
           _vm._l(_vm.all_movies, function(movie) {
-            return _c("scratch-card", {
-              key: movie.id,
-              attrs: {
-                movie: movie,
-                user: _vm.user,
-                watch_list: _vm.watch_list
+            return _c(
+              "div",
+              {
+                key: movie.id,
+                staticClass:
+                  "scratchCardContainer col-lg-3 col-md-4 col-sm-6 col-xs-12"
               },
-              on: {
-                movieStatusChanged: _vm.movieStatusChanged,
-                editMovieDetailsClicked: _vm.editMovieDetailsClicked,
-                openIMDBModal: _vm.openIMDBModal,
-                showFriendsPopup: _vm.showFriendsPopup,
-                addMovieToWatchList: _vm.addMovieToWatchList,
-                removeMovieFromWatchList: _vm.removeMovieFromWatchList
-              }
-            })
+              [
+                _c("scratch-card", {
+                  key: _vm.componentKey,
+                  attrs: { movie: movie, user: _vm.user },
+                  on: {
+                    movieStatusChanged: _vm.movieStatusChanged,
+                    editMovieDetailsClicked: _vm.editMovieDetailsClicked,
+                    openIMDBModal: _vm.openIMDBModal,
+                    showFriendsPopup: _vm.showFriendsPopup,
+                    addMovieToWatchList: _vm.addMovieToWatchList,
+                    removeMovieFromWatchList: _vm.removeMovieFromWatchList
+                  }
+                })
+              ],
+              1
+            )
           }),
           _vm._v(" "),
           _vm.all_movies.length % 100 == 0
@@ -42994,7 +43234,10 @@ var render = function() {
             on: {
               close: function($event) {
                 _vm.activeModal = 0
-              }
+              },
+              retry: _vm.pickMovie,
+              addMovieToWatchList: _vm.addMovieToWatchList,
+              removeMovieFromWatchList: _vm.removeMovieFromWatchList
             }
           })
         : _vm._e(),
@@ -43005,7 +43248,8 @@ var render = function() {
             on: {
               close: function($event) {
                 _vm.activeModal = 0
-              }
+              },
+              removeMovieFromWatchList: _vm.removeMovieFromWatchList
             }
           })
         : _vm._e(),
@@ -43135,7 +43379,9 @@ var render = function() {
             on: {
               close: function($event) {
                 _vm.activeModal = 0
-              }
+              },
+              addMovieToWatchList: _vm.addMovieToWatchList,
+              removeMovieFromWatchList: _vm.removeMovieFromWatchList
             }
           })
         : _vm._e(),
@@ -43146,7 +43392,8 @@ var render = function() {
             on: {
               close: function($event) {
                 _vm.activeModal = 0
-              }
+              },
+              removeMovieFromWatchList: _vm.removeMovieFromWatchList
             }
           })
         : _vm._e(),
@@ -43892,35 +44139,53 @@ var render = function() {
         _c(
           "div",
           { staticClass: "col-sm-12" },
-          _vm._l(_vm.watch_list, function(movie) {
+          _vm._l(_vm.watchList, function(movie) {
             return _c("div", { key: movie.id }, [
-              _vm._v(
-                "\n                    " +
-                  _vm._s(movie.rank) +
-                  " - " +
-                  _vm._s(movie.name) +
-                  "\n                    "
-              ),
-              movie.on_netflix == "1"
-                ? _c("img", {
-                    staticClass: "netflix",
-                    attrs: { src: "/images/netflix.jpg" }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              movie.on_amazon == "1"
-                ? _c("img", {
-                    staticClass: "amazon",
-                    attrs: { src: "/images/amazon.jpeg" }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              movie.on_nowtv == "1"
-                ? _c("img", {
-                    staticClass: "nowtv",
-                    attrs: { src: "/images/nowtv.jpg" }
-                  })
-                : _vm._e()
+              _c("div", { staticClass: "container" }, [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-sm-9" }, [
+                    _vm._v(
+                      "\n                                " +
+                        _vm._s(movie.rank) +
+                        " - " +
+                        _vm._s(movie.name) +
+                        "\n                                "
+                    ),
+                    movie.on_netflix == "1"
+                      ? _c("img", {
+                          staticClass: "netflix",
+                          attrs: { src: "/images/netflix.jpg" }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    movie.on_amazon == "1"
+                      ? _c("img", {
+                          staticClass: "amazon",
+                          attrs: { src: "/images/amazon.jpeg" }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    movie.on_nowtv == "1"
+                      ? _c("img", {
+                          staticClass: "nowtv",
+                          attrs: { src: "/images/nowtv.jpg" }
+                        })
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-3" }, [
+                    _c("i", {
+                      staticClass: "fa fa-trash text-danger",
+                      attrs: { title: "Remove from list" },
+                      on: {
+                        click: function($event) {
+                          return _vm.remove(movie)
+                        }
+                      }
+                    })
+                  ])
+                ])
+              ])
             ])
           }),
           0
@@ -43934,11 +44199,7 @@ var render = function() {
         {
           staticClass: "btn btn-default",
           attrs: { type: "button" },
-          on: {
-            click: function($event) {
-              return _vm.$emit("close")
-            }
-          }
+          on: { click: _vm.close }
         },
         [_vm._v("Close")]
       )

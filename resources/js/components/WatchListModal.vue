@@ -8,18 +8,27 @@
         <div slot="body">
             <div class="container">
                 <div class="col-sm-12">
-                    <div v-for="movie in watch_list" :key="movie.id">
-                        {{ movie.rank }} - {{ movie.name }}
-                        <img v-if="movie.on_netflix == '1'" src="/images/netflix.jpg" class="netflix" >
-                        <img v-if="movie.on_amazon == '1'" src="/images/amazon.jpeg" class="amazon" >
-                        <img v-if="movie.on_nowtv == '1'" src="/images/nowtv.jpg" class="nowtv" >
+                    <div v-for="movie in watchList" :key="movie.id">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    {{ movie.rank }} - {{ movie.name }}
+                                    <img v-if="movie.on_netflix == '1'" src="/images/netflix.jpg" class="netflix" >
+                                    <img v-if="movie.on_amazon == '1'" src="/images/amazon.jpeg" class="amazon" >
+                                    <img v-if="movie.on_nowtv == '1'" src="/images/nowtv.jpg" class="nowtv" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <i class="fa fa-trash text-danger" @click="remove(movie)" title="Remove from list"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div slot="footer">
-            <button type="button" class="btn btn-default" @click="$emit('close')">Close</button>
+            <button type="button" class="btn btn-default" @click="close">Close</button>
         </div>
     </modal>
 </template>
@@ -38,13 +47,33 @@
             console.log('Component mounted.')
         },
         methods: {
+            remove: function (movie) {
+                axios.post('/toggleMovieInWatchList',{
+                    movie_id:movie.id,
+                    onWatchList:false                 
+                })
+                .then((response) => {
+                    var index = this.watchList.map(x => {
+                        return x.id;
+                    }).indexOf(movie.id);
+                    this.watchList.splice(index, 1);
+                    
+                    movie.on_watch_list = '0';
+                    this.$emit('removeMovieFromWatchList', movie);
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
             close: function() {
                 this.$emit('close')
             }
         },
         data() {
             return {
-                modalId:'randomMovieModal'
+                modalId:'randomMovieModal',
+                watchList: this.watch_list
             }
         },
     }

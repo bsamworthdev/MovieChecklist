@@ -78,6 +78,24 @@ class MovieController extends Controller
         }
     }
 
+    function updateMovieSynopsises(){
+        $movies = Movie::whereNull('image_url')->get();
+        foreach($movies as $movie) {
+            if (!$movie->image_url){
+                $url = 'https://v2.sg.media-imdb.com/suggests/'.Str::lower($movie->name[0]).'/'.urlencode($movie->name).'.json';
+
+                $api_response = file_get_contents($url);
+
+                if ($api_response){
+                    $image_url = explode('"i":["', $api_response)[1];
+                    $image_url = explode('"', $image_url)[0];
+                    $movie->image_url = $image_url;
+                    $movie->save();
+                }
+            }
+        }
+    }
+
     function updateSavedMovieImages() {
         $movies = Movie::whereNull('image_url_small')->get();;
         foreach($movies as $movie){

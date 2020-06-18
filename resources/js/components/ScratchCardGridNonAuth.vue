@@ -36,12 +36,15 @@
         <random-movie-modal
             v-if="activeModal==1" 
             @close="activeModal=0"
-            :movie="randomMovie">
+            :movie="randomMovie"
+            @addMovieToWatchList="addMovieToWatchList"
+            @removeMovieFromWatchList="removeMovieFromWatchList">
         </random-movie-modal>
         <watch-list-modal 
             v-if="activeModal==8" 
             @close="activeModal=0"
-            :watch_list="watch_list">
+            :watch_list="watch_list"
+            @removeMovieFromWatchList="removeMovieFromWatchList">
         </watch-list-modal>
         <div class="overlay" v-if="activeModal>0" >
             <div id="loading-img"></div>

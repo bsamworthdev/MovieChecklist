@@ -28,19 +28,21 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <scratch-card 
+            <div class="scratchCardContainer col-lg-3 col-md-4 col-sm-6 col-xs-12"
                 v-for="movie in all_movies" 
-                :key="movie.id" 
-                :movie="movie" 
-                :user="user"  
-                :watch_list="watch_list"       
-                @movieStatusChanged="movieStatusChanged"
-                @editMovieDetailsClicked="editMovieDetailsClicked"
-                @openIMDBModal="openIMDBModal"
-                @showFriendsPopup="showFriendsPopup"
-                @addMovieToWatchList="addMovieToWatchList"
-                @removeMovieFromWatchList="removeMovieFromWatchList">
-            </scratch-card>
+                :key="movie.id" >
+                <scratch-card 
+                    :movie="movie" 
+                    :user="user"   
+                    :key="componentKey" 
+                    @movieStatusChanged="movieStatusChanged"
+                    @editMovieDetailsClicked="editMovieDetailsClicked"
+                    @openIMDBModal="openIMDBModal"
+                    @showFriendsPopup="showFriendsPopup"
+                    @addMovieToWatchList="addMovieToWatchList"
+                    @removeMovieFromWatchList="removeMovieFromWatchList">
+                </scratch-card>
+            </div>
             <div v-if="all_movies.length % 100 == 0" class="btn-group col-12">
                 <button class="btn btn-success" @click="showMoreMovies">
                     <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -67,12 +69,16 @@
         <random-movie-modal 
             v-if="activeModal==1" 
             @close="activeModal=0"
+            @retry="pickMovie"
+            @addMovieToWatchList="addMovieToWatchList"
+            @removeMovieFromWatchList="removeMovieFromWatchList"
             :movie="randomMovie">
         </random-movie-modal>
         <watch-list-modal 
             v-if="activeModal==8" 
             @close="activeModal=0"
-            :watch_list="watchList">
+            :watch_list="watchList"
+            @removeMovieFromWatchList="removeMovieFromWatchList">
         </watch-list-modal>
         <div class="overlay" v-if="activeModal>0" >
             <div id="loading-img"></div>
@@ -111,9 +117,6 @@
                     }
                 }
                 this.watchedMoviesCount = arr.length;
-            },
-            initialiseAllMovies: function() {
-                this.all_movies = this.movies;
             },
             updateMovies(){
                 axios.post('/updatemovies')
@@ -224,6 +227,7 @@
                 });
             },
             addMovieToWatchList(movie) {
+                
                 this.watchList.push(movie);
 
                 this.watchList.sort(function(a, b){
@@ -231,13 +235,40 @@
                     if(a.rank > b.rank) { return 1; }
                     return 0;
                 })
+
+                var index = this.all_movies.map(x => {
+                    return x.id;
+                }).indexOf(movie.id);
+                // this.all_movies[index].on_watch_list = '1';
+                // movie = this.all_movies[index];
+                // movie.on_watch_list = '1'
+                // this.all_movies.splice(index, 1);
+                // this.all_movies.splice(index, 0, movie);
+                // this.all_movies.push(movie);
+
+                this.forceRerender();
             },
             removeMovieFromWatchList(movie) {
                 var index = this.watchList.map(x => {
                     return x.id;
                 }).indexOf(movie.id);
                 this.watchList.splice(index, 1);
+
+                var index2 = this.all_movies.map(x => {
+                    return x.id;
+                }).indexOf(movie.id);
+                //this.all_movies[index2].on_watch_list = '0';
+                // movie = this.all_movies[index2];
+                // movie.on_watch_list = '0';
+                // this.all_movies.splice(index2, 1);
+                // this.all_movies.splice(index2, 0, movie);
+                // this.all_movies.push(movie);
+
+                this.forceRerender();
             },
+            forceRerender () {
+                this.componentKey += 1;  
+            }
         },
         events: {
 
@@ -251,11 +282,12 @@
                 editedMovie: null,
                 friendsStats: null,
                 watchList: this.watch_list,
-                all_movies: []
+                all_movies: this.movies,
+                componentKey: 0
             }
         },
         mounted() {
-            this.initialiseAllMovies();
+            // this.initialiseAllMovies();
             this.setWatchedMoviesCount();
             console.log('Component mounted.')
         }
@@ -287,5 +319,8 @@
         opacity: 0.7;
         width: 100%;
         height: 100%;
+    }
+    .scratchCardContainer{
+        width:auto;
     }
 </style>

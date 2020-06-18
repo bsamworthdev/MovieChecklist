@@ -1,59 +1,57 @@
 <template>
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-        <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
-            <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small})` }">
-                <h4>{{ movie.name }} ({{ movie.year }})</h4>
-                <div class="rank" :class="{ rounded: (movie.index==movie.rank) }">
-                    <span class="filtered_rank">{{ movie.index }}</span>
-                    <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
-                </div>
-                <div v-if="hasWatched" class="favourite"
-                        :class="{ selected: isFavourite, hovering: favouriteHover, hasFriends: user.friendsCount > 0 }" 
-                        @mouseover="favouriteHover = true"
-                        @mouseleave="favouriteHover = false"
-                        @click="toggleIsFavourite($event)">
-                    <i class="fa fa-heart heart filled"></i>
-                    <i class="far fa-heart heart outline"></i>
-                </div>
-                <div v-else class="watchList"
-                        :class="{ selected: isOnWatchList, hovering: watchListHover, hasFriends: user.friendsCount > 0 }" 
-                        @mouseover="watchListHover = true"
-                        @mouseleave="watchListHover = false"
-                        @click="toggleIsOnWatchlist($event)">   
-                    <i class="fas fa-list-alt watchListIcon" :title="watchListTitle"></i>
-                    <i class="fas fa-check-circle watchListTick"></i>
-                    <i class="fas fa-plus-circle watchListAdd"></i>
-                </div>
-                <div v-if="user.friendsCount > 0" class="friends" 
-                    :title="movie.friendsWatched + ' of your friends also watched this'"
-                    @click="showFriendsPopup($event)">
-                    <i class="fas fa-user friendsIcon"></i>
-                    <span class="friendsCount"> x {{ movie.friendsWatched }}</span>
-                </div>
-                <div class="rating">
-                    <i class="fa fa-star star"></i>
-                    <span>{{ ratingShort }}</span>
-                </div>
-                 <div class="platforms">
-                    <div v-if="user.role=='editor' || user.role=='admin'">
-                        <div :class="{'dimmed': (isOnNetflix == 0) }" @click="editMovieDetailsClicked($event, 'netflix')" class="platform netflix" title="On netflix"></div>
-                        <div :class="{'dimmed': (isOnAmazon == 0) }" @click="editMovieDetailsClicked($event, 'amazon')" class="platform amazon" title="On amazon video"></div>
-                        <div :class="{'dimmed': (isOnNowtv == 0) }" @click="editMovieDetailsClicked($event, 'nowtv')" class="platform nowtv" title="On Now TV"></div>
-                    </div>
-                    <div v-else>
-                        <div v-if="isOnNetflix == 1" class="platform netflix" title="On netflix"></div>
-                        <div v-if="isOnAmazon  == 1" class="platform amazon" title="On amazon video"></div>
-                        <div v-if="isOnNowtv  == 1" class="platform nowtv" title="On Now TV"></div>
-                    </div>                 
-                </div>
-                <div class="tickContainer">
-                    <i v-if="hasWatched" class="fa fa-check tick"></i>
-                </div>
+    <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
+        <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small})` }">
+            <h4>{{ movie.name }} ({{ movie.year }})</h4>
+            <div class="rank" :class="{ rounded: (movie.index==movie.rank) }">
+                <span class="filtered_rank">{{ movie.index }}</span>
+                <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
             </div>
-            <div class="footer" @click="openIMDBModal($event)">
-                View on IMDb
-                <i class="externalLink fas fa-external-link-alt"></i>
+            <div v-if="hasWatched" class="favourite"
+                    :class="{ selected: isFavourite, hovering: favouriteHover, hasFriends: user.friendsCount > 0 }" 
+                    @mouseover="favouriteHover = true"
+                    @mouseleave="favouriteHover = false"
+                    @click="toggleIsFavourite($event)">
+                <i class="fa fa-heart heart filled"></i>
+                <i class="far fa-heart heart outline"></i>
             </div>
+            <div v-else class="watchList"
+                    :class="{ selected: isOnWatchList, hovering: watchListHover, hasFriends: user.friendsCount > 0 }" 
+                    @mouseover="watchListHover = true"
+                    @mouseleave="watchListHover = false"
+                    @click="toggleIsOnWatchlist($event)">   
+                <i class="fas fa-list-alt watchListIcon" :title="watchListTitle"></i>
+                <i class="fas fa-check-circle watchListTick"></i>
+                <i class="fas fa-plus-circle watchListAdd"></i>
+            </div>
+            <div v-if="user.friendsCount > 0" class="friends" 
+                :title="movie.friendsWatched + ' of your friends also watched this'"
+                @click="showFriendsPopup($event)">
+                <i class="fas fa-user friendsIcon"></i>
+                <span class="friendsCount"> x {{ movie.friendsWatched }}</span>
+            </div>
+            <div class="rating">
+                <i class="fa fa-star star"></i>
+                <span>{{ ratingShort }}</span>
+            </div>
+                <div class="platforms">
+                <div v-if="user.role=='editor' || user.role=='admin'">
+                    <div :class="{'dimmed': (isOnNetflix == 0) }" @click="editMovieDetailsClicked($event, 'netflix')" class="platform netflix" title="On netflix"></div>
+                    <div :class="{'dimmed': (isOnAmazon == 0) }" @click="editMovieDetailsClicked($event, 'amazon')" class="platform amazon" title="On amazon video"></div>
+                    <div :class="{'dimmed': (isOnNowtv == 0) }" @click="editMovieDetailsClicked($event, 'nowtv')" class="platform nowtv" title="On Now TV"></div>
+                </div>
+                <div v-else>
+                    <div v-if="isOnNetflix == 1" class="platform netflix" title="On netflix"></div>
+                    <div v-if="isOnAmazon  == 1" class="platform amazon" title="On amazon video"></div>
+                    <div v-if="isOnNowtv  == 1" class="platform nowtv" title="On Now TV"></div>
+                </div>                 
+            </div>
+            <div class="tickContainer">
+                <i v-if="hasWatched" class="fa fa-check tick"></i>
+            </div>
+        </div>
+        <div class="footer" @click="openIMDBModal($event)">
+            View on IMDb
+            <i class="externalLink fas fa-external-link-alt"></i>
         </div>
     </div>
 </template>
@@ -106,8 +104,10 @@
                     this.isOnWatchList = !this.isOnWatchList;
                     // location.reload();
                     if (this.isOnWatchList){
+                        this.movie.on_watch_list = '1';
                         this.$emit('addMovieToWatchList', this.movie);
                     } else {
+                        this.movie.on_watch_list = '0';
                         this.$emit('removeMovieFromWatchList', this.movie);
                     }
                     console.log(response);
@@ -162,6 +162,12 @@
             }
         },
         watch: {
+            all_movies: {
+                handler: function (someData) {
+
+                },
+                immediate: true
+            }
         },
         mounted() {
             console.log('Component mounted.')

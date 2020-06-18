@@ -110,7 +110,7 @@
                                             <div class="col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
-                                                        Unwatched Only <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                        Unwatched By Me <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
                                                     </span>
                                                 </label>
                                             </div>
