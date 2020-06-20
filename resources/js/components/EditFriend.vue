@@ -38,7 +38,6 @@
 
 <script>
     import modal from './Modal' ;
-    import VueTagsInput from '@johmun/vue-tags-input';
 
     export default {
         name:'edit-friend',

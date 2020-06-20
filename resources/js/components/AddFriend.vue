@@ -27,6 +27,7 @@
 
 <script>
     import modal from './Modal' ;
+
     export default {
         name:'add-friend',
         props: {

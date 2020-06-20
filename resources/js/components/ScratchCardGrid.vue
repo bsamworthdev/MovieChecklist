@@ -95,6 +95,11 @@
     import editMovieDetailsModal from './EditMovieDetailsModal';
     import friendsWatchedModal from './FriendsWatchedModal';
     import imdbModal from './IMDBModal';
+    import Toasted from 'vue-toasted';
+
+    Vue.use(Toasted, {
+        iconPack: 'custom-class'
+    });
     export default {
         props: {
             movies: Array,
@@ -108,7 +113,8 @@
             watchListModal,
             editMovieDetailsModal,
             imdbModal,
-            friendsWatchedModal
+            friendsWatchedModal,
+            Toasted
         },
         methods: {
             setWatchedMoviesCount: function(){
@@ -242,6 +248,16 @@
                     return x.id;
                 }).indexOf(movie.id);
                 this.forceRerender();
+                this.$toasted.success('Added: ' + movie.name, {
+                    action : {
+                        text : 'close',
+                        onClick : (e, toastObject) => {
+                            toastObject.goAway(0);
+                        },
+                    }, 
+                    icon: 'fa fa-check',
+                    duration : 4000
+                });
             },
             removeMovieFromWatchList(movie) {
                 var index = this.watchList.map(x => {
@@ -253,6 +269,16 @@
                     return x.id;
                 }).indexOf(movie.id);
                 this.forceRerender();
+                this.$toasted.error('Removed: ' + movie.name, {
+                    action : {
+                        text : 'close',
+                        onClick : (e, toastObject) => {
+                            toastObject.goAway(0);
+                        }
+                    },
+                    icon: 'fa fa-times',
+                    duration : 4000
+                });
             },
             forceRerender () {
                 this.componentKey += 1;  

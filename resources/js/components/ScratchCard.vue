@@ -57,10 +57,18 @@
 </template>
 
 <script>
+    import Toasted from 'vue-toasted';
+
+    Vue.use(Toasted, {
+        iconPack: 'custom-class'
+    });
     export default {
         props: {
             movie: Object,
             user: Object
+        },
+        components: {
+            Toasted
         },
         methods: {
             toggleWatched(){
@@ -88,6 +96,29 @@
                 })
                 .then((response) => {
                     this.isFavourite = !this.isFavourite;
+                    if (this.isFavourite) {
+                        this.$toasted.success('Added Favourite: ' + this.movie.name, {
+                            action : {
+                                text : 'close',
+                                onClick : (e, toastObject) => {
+                                    toastObject.goAway(0);
+                                }
+                            },
+                            icon: 'fa fa-check',
+                            duration : 4000
+                        });
+                    } else {
+                        this.$toasted.error('Removed Favourite: ' + this.movie.name, {
+                            action : {
+                                text : 'close',
+                                onClick : (e, toastObject) => {
+                                    toastObject.goAway(0);
+                                }
+                            },
+                            icon: 'fa fa-times',
+                            duration : 4000
+                        });
+                    }
                     console.log(response);
                 })
                 .catch((error) => {

@@ -23,6 +23,7 @@
 
 <script>
     import modal from './Modal';
+
     export default {
         name:'delete-friend',
         props: {
