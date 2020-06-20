@@ -70,6 +70,7 @@
             v-if="activeModal==1" 
             @close="activeModal=0"
             @retry="pickMovie"
+            :key="randomMovieComponentKey"
             @addMovieToWatchList="addMovieToWatchList"
             @removeMovieFromWatchList="removeMovieFromWatchList"
             :movie="randomMovie">
@@ -77,6 +78,7 @@
         <watch-list-modal 
             v-if="activeModal==8" 
             @close="activeModal=0"
+            :key="watchListComponentKey" 
             :watch_list="watchList"
             @removeMovieFromWatchList="removeMovieFromWatchList">
         </watch-list-modal>
@@ -239,13 +241,6 @@
                 var index = this.all_movies.map(x => {
                     return x.id;
                 }).indexOf(movie.id);
-                // this.all_movies[index].on_watch_list = '1';
-                // movie = this.all_movies[index];
-                // movie.on_watch_list = '1'
-                // this.all_movies.splice(index, 1);
-                // this.all_movies.splice(index, 0, movie);
-                // this.all_movies.push(movie);
-
                 this.forceRerender();
             },
             removeMovieFromWatchList(movie) {
@@ -257,17 +252,13 @@
                 var index2 = this.all_movies.map(x => {
                     return x.id;
                 }).indexOf(movie.id);
-                //this.all_movies[index2].on_watch_list = '0';
-                // movie = this.all_movies[index2];
-                // movie.on_watch_list = '0';
-                // this.all_movies.splice(index2, 1);
-                // this.all_movies.splice(index2, 0, movie);
-                // this.all_movies.push(movie);
-
                 this.forceRerender();
             },
             forceRerender () {
                 this.componentKey += 1;  
+                this.randomMovieComponentKey += 1;
+                this.watchListComponentKey += 1;
+
             }
         },
         events: {
@@ -283,7 +274,9 @@
                 friendsStats: null,
                 watchList: this.watch_list,
                 all_movies: this.movies,
-                componentKey: 0
+                componentKey: 0,
+                watchListComponentKey: 0,
+                randomMovieComponentKey: 0
             }
         },
         mounted() {

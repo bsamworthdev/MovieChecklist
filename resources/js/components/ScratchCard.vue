@@ -161,14 +161,6 @@
                 watchListHover: false
             }
         },
-        watch: {
-            all_movies: {
-                handler: function (someData) {
-
-                },
-                immediate: true
-            }
-        },
         mounted() {
             console.log('Component mounted.')
         }

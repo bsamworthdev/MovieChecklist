@@ -2901,7 +2901,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     parentData: Object,
-    people: Array,
     selectedPersonId: {
       type: Number,
       "default": function _default() {
@@ -2934,7 +2933,7 @@ __webpack_require__.r(__webpack_exports__);
         movie_id: this.movie.id,
         onWatchList: !this.isOnWatchList
       }).then(function (response) {
-        _this.isOnWatchList = !_this.isOnWatchList; // location.reload();
+        _this.isOnWatchList = !_this.isOnWatchList;
 
         if (_this.isOnWatchList) {
           _this.movie.on_watch_list = '1';
@@ -3139,12 +3138,6 @@ __webpack_require__.r(__webpack_exports__);
       watchListHover: false
     };
   },
-  watch: {
-    all_movies: {
-      handler: function handler(someData) {},
-      immediate: true
-    }
-  },
   mounted: function mounted() {
     console.log('Component mounted.');
   }
@@ -3179,6 +3172,8 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+//
+//
 //
 //
 //
@@ -3417,13 +3412,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       });
       var index = this.all_movies.map(function (x) {
         return x.id;
-      }).indexOf(movie.id); // this.all_movies[index].on_watch_list = '1';
-      // movie = this.all_movies[index];
-      // movie.on_watch_list = '1'
-      // this.all_movies.splice(index, 1);
-      // this.all_movies.splice(index, 0, movie);
-      // this.all_movies.push(movie);
-
+      }).indexOf(movie.id);
       this.forceRerender();
     },
     removeMovieFromWatchList: function removeMovieFromWatchList(movie) {
@@ -3433,17 +3422,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       this.watchList.splice(index, 1);
       var index2 = this.all_movies.map(function (x) {
         return x.id;
-      }).indexOf(movie.id); //this.all_movies[index2].on_watch_list = '0';
-      // movie = this.all_movies[index2];
-      // movie.on_watch_list = '0';
-      // this.all_movies.splice(index2, 1);
-      // this.all_movies.splice(index2, 0, movie);
-      // this.all_movies.push(movie);
-
+      }).indexOf(movie.id);
       this.forceRerender();
     },
     forceRerender: function forceRerender() {
       this.componentKey += 1;
+      this.randomMovieComponentKey += 1;
+      this.watchListComponentKey += 1;
     }
   },
   events: {},
@@ -3457,7 +3442,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       friendsStats: null,
       watchList: this.watch_list,
       all_movies: this.movies,
-      componentKey: 0
+      componentKey: 0,
+      watchListComponentKey: 0,
+      randomMovieComponentKey: 0
     };
   },
   mounted: function mounted() {
@@ -8980,7 +8967,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#chosenMovieImage[data-v-9f3ff62a]{\n    background-position: top;\n    background-repeat: no-repeat;\n    background-size: contain;\n    height:46vh;\n    min-height:200px;\n}\n.platform[data-v-9f3ff62a] {\n    width:40px;\n    height:40px;\n    background-size: cover;\n    margin-bottom:6px;\n    margin-left:auto;\n    margin-right:auto;\n}\n.platform.netflix[data-v-9f3ff62a] {\n    background-image: url('/images/netflix.jpg');\n}\n.platform.amazon[data-v-9f3ff62a] {\n    background-image: url('/images/amazon.jpeg');\n}\n.platform.nowtv[data-v-9f3ff62a] {\n    background-image: url('/images/nowtv.jpg');\n}\n", ""]);
+exports.push([module.i, "\n#chosenMovieImage[data-v-9f3ff62a]{\n    background-position: top;\n    background-repeat: no-repeat;\n    background-size: contain;\n    height: 100%;\n    min-height:200px;\n}\n.platform[data-v-9f3ff62a] {\n    width:40px;\n    height:40px;\n    background-size: cover;\n    margin-bottom:6px;\n    margin-left:auto;\n    margin-right:auto;\n}\n.platform.netflix[data-v-9f3ff62a] {\n    background-image: url('/images/netflix.jpg');\n}\n.platform.amazon[data-v-9f3ff62a] {\n    background-image: url('/images/amazon.jpeg');\n}\n.platform.nowtv[data-v-9f3ff62a] {\n    background-image: url('/images/nowtv.jpg');\n}\n", ""]);
 
 // exports
 
@@ -42728,11 +42715,7 @@ var render = function() {
                     {
                       staticClass: "btn btn-primary",
                       attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          return _vm.$emit("retry")
-                        }
-                      }
+                      on: { click: _vm.retry }
                     },
                     [
                       _c("i", { staticClass: "fa fa-thumbsup" }),
@@ -43230,6 +43213,7 @@ var render = function() {
       _vm._v(" "),
       _vm.activeModal == 1
         ? _c("random-movie-modal", {
+            key: _vm.randomMovieComponentKey,
             attrs: { movie: _vm.randomMovie },
             on: {
               close: function($event) {
@@ -43244,6 +43228,7 @@ var render = function() {
       _vm._v(" "),
       _vm.activeModal == 8
         ? _c("watch-list-modal", {
+            key: _vm.watchListComponentKey,
             attrs: { watch_list: _vm.watchList },
             on: {
               close: function($event) {

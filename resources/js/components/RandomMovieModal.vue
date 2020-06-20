@@ -40,7 +40,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12 text-center mt-2">
-                                    <button type="button" class="btn btn-primary" @click="$emit('retry')"><i class="fa fa-thumbsup"></i>Pick me another</button>
+                                    <button type="button" class="btn btn-primary" @click="retry"><i class="fa fa-thumbsup"></i>Pick me another</button>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +60,6 @@
     export default {
         props: {
             parentData: Object,
-            people: Array,
             selectedPersonId: {
                 type: Number,
                 default() { 
@@ -92,8 +91,7 @@
                     onWatchList:!this.isOnWatchList                 
                 })
                 .then((response) => {
-                    this.isOnWatchList = !this.isOnWatchList;
-                    // location.reload();
+                    this.isOnWatchList = !this.isOnWatchList;                 
                     if (this.isOnWatchList){
                         this.movie.on_watch_list = '1';
                         this.$emit('addMovieToWatchList', this.movie);
@@ -121,7 +119,7 @@
         background-position: top;
         background-repeat: no-repeat;
         background-size: contain;
-        height:46vh;
+        height: 100%;
         min-height:200px;
     }
 
