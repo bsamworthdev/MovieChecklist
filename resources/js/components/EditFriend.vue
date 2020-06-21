@@ -49,8 +49,7 @@
             }
         },
         components: {
-            modal,
-            VueTagsInput
+            modal
         },
         mounted() {
             for (var i = 0; i < this.friend.tags.length; i++) {

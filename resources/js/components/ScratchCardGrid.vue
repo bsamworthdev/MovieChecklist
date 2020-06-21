@@ -339,7 +339,4 @@
         width: 100%;
         height: 100%;
     }
-    .scratchCardContainer{
-        width:auto;
-    }
 </style>

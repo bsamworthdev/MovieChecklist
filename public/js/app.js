@@ -2096,8 +2096,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   components: {
-    modal: _Modal__WEBPACK_IMPORTED_MODULE_0__["default"],
-    VueTagsInput: VueTagsInput
+    modal: _Modal__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   mounted: function mounted() {
     for (var i = 0; i < this.friend.tags.length; i++) {
@@ -9051,7 +9050,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-adb89816] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n.scratchCardContainer[data-v-adb89816]{\n    width:auto;\n}\n", ""]);
+exports.push([module.i, "\n.btn-group[data-v-adb89816]{\n    padding-bottom:10px;\n}\n.watchedMovies[data-v-adb89816]{\n    color:red;\n    font-weight:bold;\n}\n.btn-separator[data-v-adb89816]:after {\n    content: ' ';\n    display: block;\n    float: left;\n    margin: 0 2px;\n    height: 34px;\n    width: 1px;\n}\n.overlay[data-v-adb89816] {\n    background: #0e0e0e;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    opacity: 0.7;\n    width: 100%;\n    height: 100%;\n}\n", ""]);
 
 // exports
 
