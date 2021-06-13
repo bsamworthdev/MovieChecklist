@@ -38,6 +38,7 @@ class NonAuthHomeController extends Controller
         $session = $request->session();
         $session_id = $session->getId();
         
+        if ($search_text == "null") $search_text = '';
 
         // $user->friendsCount = $UserObj->friendsCount();
 
