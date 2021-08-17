@@ -42664,7 +42664,8 @@ var render = function() {
           _c("div", { staticClass: "col-md-6 col-xs-12" }, [
             _c("div", {
               style: {
-                backgroundImage: "url(" + _vm.movie.image_url_small + ")"
+                backgroundImage:
+                  "url(" + _vm.movie.image_url_small_extended + ")"
               },
               attrs: { id: "chosenMovieImage" }
             })
@@ -42826,7 +42827,9 @@ var render = function() {
         "div",
         {
           staticClass: "card-body movieImage",
-          style: { backgroundImage: "url(" + _vm.movie.image_url_small + ")" }
+          style: {
+            backgroundImage: "url(" + _vm.movie.image_url_small_extended + ")"
+          }
         },
         [
           _c("h4", [
@@ -43492,7 +43495,9 @@ var render = function() {
           "div",
           {
             staticClass: "card-body movieImage",
-            style: { backgroundImage: "url(" + _vm.movie.image_url_small + ")" }
+            style: {
+              backgroundImage: "url(" + _vm.movie.image_url_small_extended + ")"
+            }
           },
           [
             _c("h4", [

@@ -113,7 +113,7 @@ class MovieController extends Controller
                 $small_image = Image::make(Storage::disk('public')->get($name) )->resize(229,287)->stream();
                 Storage::disk('public')->put($name, $small_image);
 
-                $movie->image_url_small = 'https://moviechecklistcdn.s3.amazonaws.com/storage/'.$name;
+                $movie->image_url_small = '/storage/'.$name;
                 $movie->save();
             }
         }
@@ -403,6 +403,7 @@ class MovieController extends Controller
         ->take(100)
         ->get([
             'movies.*',
+            DB::raw('CONCAT(\'https://moviechecklistcdn.s3.amazonaws.com\',movies.image_url_small) as image_url_small_extended'),
             DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
             DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
             DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),

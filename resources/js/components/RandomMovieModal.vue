@@ -9,7 +9,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-xs-12">
-                        <div id="chosenMovieImage" :style="{ backgroundImage: `url(${movie.image_url_small})`}" >
+                        <div id="chosenMovieImage" :style="{ backgroundImage: `url(${movie.image_url_small_extended})`}" >
                         </div>
                     </div>
                     <div class="col-md-6 col-xs-12">

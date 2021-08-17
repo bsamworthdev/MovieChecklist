@@ -1,7 +1,7 @@
 <template>
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
         <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
-            <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small})` }">
+            <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small_extended})` }">
                 <h4>{{ movie.name }} ({{ movie.year }})</h4>
                 <div class="rank" :class="{ rounded: (movie.index==movie.rank) }">
                     <span class="filtered_rank">{{ movie.index }}</span>
