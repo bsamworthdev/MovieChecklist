@@ -7,7 +7,7 @@
 
         <div slot="body">
             <div class="container">
-                <h5>{{ movie.friendsWatched }} of your friends has also watched {{ movie.name }}</h5>
+                <h5>{{ movie.friendsWatched }} of your friends also watched {{ movie.name }}</h5>
                 <br>
                 <div class="col-12">
                     <div id="friendsContainer" class="container">

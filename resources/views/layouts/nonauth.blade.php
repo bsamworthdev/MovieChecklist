@@ -19,6 +19,11 @@
         .card{
             padding:20px;
         }
+        body {
+            background-image:url('{{ asset('images/curtainBg.jpg') }}');
+            background-size: cover;
+            background-attachment: fixed;
+        }
     </style>
 </head>
 <body>
