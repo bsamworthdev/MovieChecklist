@@ -30,11 +30,65 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(
-        $genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, 
-        $favourites_only = 0, $search_text = "", $netflix_only = 0, $amazon_only = 0, 
-        $nowtv_only = 0, $unwatched_by_friends = '')
-    {
+    // public function index(
+    //     $genre = 'all', $time_period = 'all', $english_only = 0, $unwatched_only = 0, 
+    //     $favourites_only = 0, $search_text = "", $netflix_only = 0, $amazon_only = 0, 
+    //     $nowtv_only = 0, $unwatched_by_friends = '')
+    // {
+    public function index(Request $request)
+        {
+
+        $genre = 'all'; 
+        $time_period = 'all';
+        $english_only = 0;
+        $unwatched_only = 0;
+        $favourites_only = 0;
+        $search_text = "";
+        $netflix_only = 0;
+        $amazon_only = 0;
+        $nowtv_only = 0;
+        $unwatched_by_friends = '';
+        
+        // dd($request->fullUrl());
+        $filters = $request->input('filters');
+        if ($filters){
+            $filters = explode(';', $filters);
+            foreach ($filters as $filter){
+                $val = explode(':', $filter)[1];
+                switch (explode(':', $filter)[0]){
+                    case 'genre':
+                        $genre=$val;
+                        break;
+                    case 'time':
+                        $time_period=$val;
+                        break;
+                    case 'english':
+                        $english_only=$val;
+                        break;
+                    case 'unwatched':
+                        $unwatched_only=$val;
+                        break;
+                    case 'favourites':
+                        $favourites_only=$val;
+                        break;
+                    case 'search':
+                        $search_text=$val;
+                        break;
+                    case 'netflix':
+                        $netflix_only=$val;
+                        break;
+                    case 'amazon':
+                        $amazon_only=$val;
+                        break;
+                    case 'nowtv':
+                        $nowtv_only=$val;
+                        break;
+                    case 'friends':
+                        $unwatched_by_friends=$val;
+                        break;
+                }
+            }
+        }
 
         //Users
         $user = Auth::user();
