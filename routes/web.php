@@ -47,7 +47,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin', 'AdminController@index')->name('admin');
 });
 
-Route::get('/home_nonauth/{genre?}/{time_period?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}', 'NonAuthHomeController@show')->name('nonauthhome');
+Route::get('/home_nonauth', 'NonAuthHomeController@show')->name('nonauthhome');
 Route::post('/saveMovieUserNonAuth', 'UserNonAuthController@saveMovieUser');
 Route::post('/setMovieAsFavouriteNonAuth', 'UserNonAuthController@setMovieAsFavourite');
 Route::post('/toggleMovieInWatchListNonAuth', 'UserNonAuthController@toggleMovieInWatchList');

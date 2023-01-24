@@ -270,30 +270,6 @@
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         var searchInput = document.getElementById('search_input');
-
-        // form.setAttribute('action', '/home/' + genreSelect.value + 
-        //     '/' + timePeriodSelect.value + 
-        //     '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
-        //     '/' + ((unwatchedOnlyCheckbox && unwatchedOnlyCheckbox.checked) ? '1' : '0') + 
-        //     '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
-        //     '/' + (searchInput.value !=='' ? searchInput.value : 'null') + 
-        //     '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
-        //     '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
-        //     '/' + (nowtvOnlyCheckbox.checked ? '1' : '0') + 
-        //     '/' + (selectedFriends && selectedFriends.value ? selectedFriends.value : '') +
-        //     '/');
-
-        // form.setAttribute('action', '/home?genre=' + genreSelect.value + 
-        //     '&time' + timePeriodSelect.value + 
-        //     (englishOnlyCheckbox.checked ? '&english=1' : '0') + 
-        //     (unwatchedOnlyCheckbox.checked) ? '&unwatched=1' : '0') + 
-        //     (favouritesOnlyCheckbox.checked ? '&favourites=1' : '0') + 
-        //     (searchInput.value !=='' ? 'search=' + searchInput.value : 'null') + 
-        //     (netflixOnlyCheckbox.checked ? 'netflix=1' : '0') + 
-        //     (amazonOnlyCheckbox.checked ? 'amazon=1' : '0') + 
-        //     (nowtvOnlyCheckbox.checked ? '1' : '0') + 
-        //     '/' + (selectedFriends && selectedFriends.value ? selectedFriends.value : '') +
-        //     '/');
         
         var params = [];
         if (genreSelect.value != 'all') params.push('genre:' + genreSelect.value);
@@ -307,8 +283,6 @@
         if (nowtvOnlyCheckbox.checked) params.push('nowtv:1');
         if (selectedFriends && selectedFriends.value) params.push('friends:' + selectedFriends.value);
 
-        // form.setAttribute('action', '/home' + (params.length > 0 ? '?' + params.join('&') : ''));
-        // form.setAttribute('action', '/home');
         if (params.length > 0){
             filters.setAttribute('value', params.join(';'));
         } else {

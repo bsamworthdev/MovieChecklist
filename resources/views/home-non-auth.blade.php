@@ -18,7 +18,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-12">
-                                <form id="movie_form">
+                                <form id="movie_form" name="movie_form" action="/home">
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-lg-3 col-12">
@@ -117,6 +117,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" class="form-input"  id="filters" name="filters">
                                 </form>
                             </div>
                         </div>
@@ -162,6 +163,7 @@
 
     function changeSelection() {
         var form = document.getElementById('movie_form');
+        var filters = document.getElementById('filters');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
         var unwatchedOnlyCheckbox = document.getElementById('unwatched_only_checkbox');
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
@@ -172,16 +174,23 @@
         var genreSelect = document.getElementById('genre_select');
         var searchInput = document.getElementById('search_input');
         
-        form.setAttribute('action', '/home_nonauth/' + genreSelect.value + 
-            '/' + timePeriodSelect.value + 
-            '/' + (englishOnlyCheckbox.checked ? '1' : '0') + 
-            '/' + (unwatchedOnlyCheckbox.checked ? '1' : '0') + 
-            '/' + (favouritesOnlyCheckbox.checked ? '1' : '0') + 
-            '/' + (searchInput.value!=='' ? searchInput.value : 'null') + 
-            '/' + (netflixOnlyCheckbox.checked ? '1' : '0') + 
-            '/' + (amazonOnlyCheckbox.checked ? '1' : '0') + 
-            '/' + (nowtvOnlyCheckbox.checked ? '1' : '0') + 
-            '/');
+        var params = [];
+        if (genreSelect.value != 'all') params.push('genre:' + genreSelect.value);
+        if (timePeriodSelect.value != 'all') params.push('time:' + timePeriodSelect.value);
+        if (englishOnlyCheckbox.checked) params.push('english:1'); 
+        if (unwatchedOnlyCheckbox.checked) params.push('unwatched:1');
+        if (favouritesOnlyCheckbox.checked) params.push('favourites:1');
+        if (searchInput.value) params.push('search:' + searchInput.value);
+        if (netflixOnlyCheckbox.checked) params.push('netflix:1');
+        if (amazonOnlyCheckbox.checked) params.push('amazon:1');
+        if (nowtvOnlyCheckbox.checked) params.push('nowtv:1');
+
+        if (params.length > 0){
+            filters.setAttribute('value', params.join(';'));
+        } else {
+            window.location.href="/home";
+            return;
+        }
         form.submit();
     }
 

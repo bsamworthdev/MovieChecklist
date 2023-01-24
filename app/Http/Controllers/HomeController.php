@@ -54,6 +54,8 @@ class HomeController extends Controller
         if ($filters){
             $filters = explode(';', $filters);
             foreach ($filters as $filter){
+                if (!str_contains($filter,':')) break;
+                
                 $val = explode(':', $filter)[1];
                 switch (explode(':', $filter)[0]){
                     case 'genre':
