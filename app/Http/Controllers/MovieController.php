@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
+use Goutte\Client;
+use Illuminate\Support\Facades\Log;
 
 class MovieController extends Controller
 {
@@ -19,41 +21,43 @@ class MovieController extends Controller
     }
     //
     function updateMovies(){
-
+        set_time_limit(30000);
         for($page=0;$page<10;$page++){
-            $url = 'https://www.imdb.com/search/title/?groups=top_1000&view=simple&sort=user_rating,desc&count=100&start='.(($page * 100) + 1).'&ref_=adv_nxt';
+            $url = 'https://www.imdb.com/search/title/?groups=top_1000&view=simple&sort=user_rating,desc&count=100&start='.(($page * 100) + 1);
+            // $url = 'https://www.imdb.com/search/title/?count=100&groups=top_1000&sort=user_rating';
+            $client = new Client();
+            $crawler = $client->request('GET', $url);        
+            $scraped_movies = $crawler->evaluate('//span[@class="lister-item-header"]');
+            foreach ($scraped_movies as $key => $movie) {
+                $movie_imdb_id = explode("/", $crawler->evaluate('//span[@class="lister-item-header"]//span//a')->eq($key)->link()->getUri())[4];
+                $movie_rank = $crawler->evaluate('//span[@class="lister-item-header"]//span[@class="lister-item-index unbold text-primary"]')->eq($key)->text();
 
-            $dom = new \DOMDocument;
-            @$dom->loadHTMLFile($url);
-            $dom->preserveWhiteSpace = false;
-            
-            $xpath = new \DOMXpath($dom);
-
-            //Create node lists
-            $nl_name = $xpath->query('//div[contains(@class, "lister-item-content")]//span[contains(@class, "lister-item-header")]//a');
-            $nl_rank = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "text-primary")]');
-            $nl_rating = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "col-imdb-rating")]//strong');
-            // $nl_image_url = $xpath->query('//div[contains(@class, "lister-item-image")]//img/@src');
-            $nl_imdb_id = $xpath->query('//div[contains(@class, "lister-item-image")]//img/@data-tconst');
-            $nl_year = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "lister-item-year")]');
-            $nl_genre = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "genre")]');
-
-            $nl_rating = $xpath->query('//div[contains(@class, "lister-item-content")]//*[contains(@class, "col-imdb-rating")]//strong');
-            for($i=0;$i<count($nl_name);$i++){ 
-                
-                $imdb_id = $nl_imdb_id->item($i)->nodeValue;
-                $existing_movies_count = Movie::where('imdb_id','=',$imdb_id)->get()->count();
+                $existing_movies_count = Movie::where('imdb_id','=',$movie_imdb_id)->get()->count();
                 if ($existing_movies_count == 0){
+                    //Movie needs to be added
+                    $movie_title = $crawler->evaluate('//span[@class="lister-item-header"]//span//a')->eq($key)->text();
+                    $movie_rating = $crawler->evaluate('//div[@class="lister-item-content"]//div[@class="col-imdb-rating"]//strong')->eq($key)->text();
+                    $movie_year = $crawler->evaluate('//span[@class="lister-item-header"]//span[@class="lister-item-year text-muted unbold"]')->eq($key)->text();
+                    $movie_genre = '';
+                    $movie_language = 'english';
+
                     $movie = new Movie;
-                    $movie->name = $nl_name->item($i)->nodeValue;
-                    $movie->rank = $nl_rank->item($i)->nodeValue;
-                    $movie->rating = $nl_rating->item($i)->nodeValue;
-                    // $movie->image_url = $nl_image_url->item($i)->nodeValue;
-                    $movie->imdb_id = $imdb_id;
-                    $movie->year = str_replace(')','',str_replace('(','',str_replace('I','',$nl_year->item($i)->nodeValue)));
-                    $movie->genre = $nl_genre->item($i)->nodeValue;
+                    $movie->imdb_id = $movie_imdb_id;
+                    $movie->name = $movie_title;
+                    $movie->rank = str_replace(',','', str_replace('.','', $movie_rank));
+                    $movie->rating = $movie_rating;
+                    $movie->year = str_replace(' ','',str_replace('(', '', str_replace(')', '', str_replace('I','', $movie_year))));
+                    $movie->genre = $movie_genre;
+                    $movie->language = $movie_language;
                     $movie->save();
+                } else {
+                    //Movie exists, so just update rank
+                    Movie::where('imdb_id',$movie_imdb_id)
+                        ->update([
+                            'rank' => str_replace(',','', str_replace('.','', $movie_rank)) 
+                        ]);
                 }
+                
             }
         }
 

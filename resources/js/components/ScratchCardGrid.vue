@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row justify-content-left">
-            <div v-if="user.role=='admin'" class="d-none btn-group col-12">
+            <div v-if="user.role=='admin'" class="btn-group col-12">
                 <button class="btn btn-success" @click="updateMovies">Update Movies</button>
                 <span class="btn-separator"></span>
                 <button class="btn btn-success" @click="updateMovieImages">Update Movie Images</button>
