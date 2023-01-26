@@ -153,7 +153,7 @@ class User extends Authenticatable
                 ->when($filterType, function($query) use ($filterSQL) {   
                     return $query->whereRaw($filterSQL);
                 })
-                ->orderBy('movies.id')
+                ->orderBy('movies.rank')
                 ->limit('100')
                 ->get();
             Cache::set("movies_$filterType"."_$filterValue", $movies);
@@ -172,7 +172,7 @@ class User extends Authenticatable
             ->when($filterType, function($query) use ($filterSQL) { 
                 return $query->whereRaw($filterSQL);
             })
-            ->orderBy('movies.id')
+            ->orderBy('movies.rank')
             ->limit('100')
             ->get();
               
