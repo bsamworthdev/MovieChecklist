@@ -57,7 +57,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="filters" style="{{ ($user->filters_shown == 0) ? 'display:none;' : '' }}" class="row mt-3">
+                                        <div id="filtersContainer" style="{{ ($user->filters_shown == 0) ? 'display:none;' : '' }}" class="row mt-3">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
                                                     <label>
@@ -229,13 +229,13 @@
     }
 
     function showFilters(){
-        var filters = document.getElementById("filters");
+        var filtersContainer = document.getElementById("filtersContainer");
         var showFiltersButton = document.getElementById("showFiltersButton");
         var hideFiltersButton = document.getElementById("hideFiltersButton");
 
         axios.post('/updateFiltersShown/1')
         .then((response) => {
-            filters.style.display = "";
+            filtersContainer.style.display = "";
             showFiltersButton.style.display = "none";
             hideFiltersButton.style.display = "";
         })
@@ -246,14 +246,14 @@
     }
 
     function hideFilters(){
-        var filters = document.getElementById("filters");
+        var filtersContainer = document.getElementById("filtersContainer");
         var showFiltersButton = document.getElementById("showFiltersButton");
         var hideFiltersButton = document.getElementById("hideFiltersButton");
 
 
         axios.post('/updateFiltersShown/0')
         .then((response) => {
-            filters.style.display = "none";
+            filtersContainer.style.display = "none";
             showFiltersButton.style.display = "";
             hideFiltersButton.style.display = "none";
         })
@@ -333,6 +333,7 @@
         if (selectedFriends && selectedFriends.value) params.push('friends:' + selectedFriends.value);
 
         if (params.length > 0){
+            // window.location.href="/home?" + params.join('&');
             filters.setAttribute('value', params.join(';'));
         } else {
             window.location.href="/home";
