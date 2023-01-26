@@ -87,6 +87,15 @@ class UserController extends Controller
         return $friendsStats;
     }
 
+    public function updateFiltersShown(Request $request, $show = 0){
+        $user_id = Auth::user()->id;
+
+        User::where('id', $user_id)
+           ->update([
+                'filters_shown' => $show
+           ]);
+    }
+
     public function findUserByEmail(Request $request){
 
         $user_id = Auth::user()->id;

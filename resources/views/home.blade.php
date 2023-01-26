@@ -14,7 +14,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header pb-0 pl-0 pr-0">
                     <div class="container">
                         <div class="row">
                             <div class="col-12">
@@ -49,7 +49,15 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="row mt-3">
+                                        <div id="showFiltersButton" style="{{ ($user->filters_shown == 1) ? 'display:none;' : '' }}" class="row mt-1 mb-0">
+                                            <div class="col-12">
+                                                <div class="button btn btn-light btn-block pt-0 pb-0 text-small" onclick="showFilters()">
+                                                    <i class="fa fa-chevron-down"></i>
+                                                    <small>More Filters</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="filters" style="{{ ($user->filters_shown == 0) ? 'display:none;' : '' }}" class="row mt-3">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
                                                     <label>
@@ -132,6 +140,13 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div id="hideFiltersButton" class="row mt-0 mb-0" style="{{ ($user->filters_shown == 0) ? 'display:none;' : '' }}">
+                                        <div class="col-12">
+                                            <div class="button btn btn-light btn-block pt-0 pb-0 text-small" onclick="hideFilters()">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <input type="hidden" class="form-input"  id="filters" name="filters">
                                 </form>
                             </div>
@@ -211,6 +226,40 @@
         } else {
             topButton.style.display = "none";
         }
+    }
+
+    function showFilters(){
+        var filters = document.getElementById("filters");
+        var showFiltersButton = document.getElementById("showFiltersButton");
+        var hideFiltersButton = document.getElementById("hideFiltersButton");
+
+        axios.post('/updateFiltersShown/1')
+        .then((response) => {
+            filters.style.display = "";
+            showFiltersButton.style.display = "none";
+            hideFiltersButton.style.display = "";
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+        
+    }
+
+    function hideFilters(){
+        var filters = document.getElementById("filters");
+        var showFiltersButton = document.getElementById("showFiltersButton");
+        var hideFiltersButton = document.getElementById("hideFiltersButton");
+
+
+        axios.post('/updateFiltersShown/0')
+        .then((response) => {
+            filters.style.display = "none";
+            showFiltersButton.style.display = "";
+            hideFiltersButton.style.display = "none";
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
     function showFriendsContainer(){

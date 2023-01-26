@@ -41,6 +41,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/createFriendRequest', 'FriendRequestController@create');  
     Route::post('/findUserByEmail', 'UserController@findUserByEmail'); 
+
+    Route::post('/updateFiltersShown/{show?}', 'UserController@updateFiltersShown');  
 });
 
 Route::group(['middleware' => 'admin'], function () {
