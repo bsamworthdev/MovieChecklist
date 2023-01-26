@@ -168,7 +168,8 @@ class User extends Authenticatable
             )
             ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
             ->where('movie_user.user_id', $user_id)
-            ->where('movie_user.movie_id', '<=', $max_movie_id)
+            //->where('movie_user.movie_id', '<=', $max_movie_id)
+            ->where('movies.rank', '<=', 100)
             ->when($filterType, function($query) use ($filterSQL) { 
                 return $query->whereRaw($filterSQL);
             })
