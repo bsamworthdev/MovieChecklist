@@ -16,6 +16,7 @@
                                     <img v-if="movie.on_netflix == '1'" src="/images/netflix.jpg" class="netflix" >
                                     <img v-if="movie.on_amazon == '1'" src="/images/amazon.jpeg" class="amazon" >
                                     <img v-if="movie.on_nowtv == '1'" src="/images/nowtv.jpg" class="nowtv" >
+                                    <img v-if="movie.on_disney_plus == '1'" src="/images/disney_plus.jpg" class="disney_plus" >
                                 </div>
                                 <div class="col-sm-3">
                                     <i class="fa fa-trash text-danger" @click="remove(movie)" title="Remove from list"></i>
@@ -85,7 +86,7 @@
         background-size: contain;
         height:60vh;
     }
-    .netflix, .amazon, .nowtv{
+    .netflix, .amazon, .nowtv, .disney_plus{
         width: 17px;
     }
 </style>

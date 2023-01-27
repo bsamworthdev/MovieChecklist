@@ -307,12 +307,21 @@ class MovieController extends Controller
                 DB::update("UPDATE nowtv SET on_nowtv=?, updated_at=?
                 WHERE movie_id=?", [$status, NOW(), $movie_id]);
             }
+        } elseif ($platform == 'disney_plus'){
+            $movies =  DB::table('disney_plus')->where('movie_id', '=', $movie_id)->get();
+            if (count($movies) == 0) {
+                DB::insert("INSERT INTO disney_plus (movie_id, on_disney_plus, created_at, updated_at) 
+                VALUES ($movie_id, $status, NOW(), NOW())");
+            } else {
+                DB::update("UPDATE disney_plus SET on_disney_plus=?, updated_at=?
+                WHERE movie_id=?", [$status, NOW(), $movie_id]);
+            }
         }
     }
 
     function getMovies($genre, $time_period, $english_only, $unwatched_only, 
         $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, 
-        $unwatched_by_friends, $skip_count = 0) {
+        $disney_plus_only, $unwatched_by_friends, $skip_count = 0) {
 
         $user = Auth::user();
         $user_id = $user->id;
@@ -327,6 +336,9 @@ class MovieController extends Controller
         })
         ->leftJoin('nowtv', function ($join) {
             $join->on('nowtv.movie_id', '=', 'movies.id');
+        })
+        ->leftJoin('disney_plus', function ($join) {
+            $join->on('disney_plus.movie_id', '=', 'movies.id');
         })
         ->leftJoin('watch_list', function ($join) use ($user_id) {
             $join->on('watch_list.movie_id', '=', 'movies.id');
@@ -356,39 +368,17 @@ class MovieController extends Controller
         ->when($search_text != '', function ($q) use ($search_text) {
             return $q->where('movies.name', 'LIKE', '%'.trim($search_text).'%');
         })
-        ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
-            return $q->where(function ($q) {
-                $q->where('netflix.on_netflix', '=', '1')
-                    ->orWhere('amazon.on_amazon', '=', '1')
-                    ->orWhere('nowtv.on_nowtv', '=', '1');
-            });
-        })
-        ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
-            return $q->where(function ($q) {
-                $q->where('netflix.on_netflix', '=', '1')
-                    ->orWhere('amazon.on_amazon', '=', '1');
-            });
-        })
-        ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
-            return $q->where(function ($q) {
-                $q->where('netflix.on_netflix', '=', '1')
-                    ->orWhere('nowtv.on_nowtv', '=', '1');
-            });
-        })
-        ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
-            return $q->where(function ($q) {
-                $q->where('amazon.on_amazon', '=', '1')
-                    ->orWhere('nowtv.on_nowtv', '=', '1');
-            });
-        })
-        ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 0), function ($q) {
+        ->when(($netflix_only == 1), function ($q) {
             return $q->where('netflix.on_netflix', '=', '1');
         })
-        ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
+        ->when(($amazon_only == 1), function ($q) {
             return $q->where('amazon.on_amazon', '=', '1');
         })
-        ->when(($netflix_only == 0 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
+        ->when(($nowtv_only == 1), function ($q) {
             return $q->where('nowtv.on_nowtv', '=', '1');
+        })
+        ->when(($disney_plus_only == 1), function ($q) {
+            return $q->where('disney_plus.on_disney_plus', '=', '1');
         })
         ->when($unwatched_only == 1, function ($q) {
             return $q->where('mu.user_id', '=', NULL);
@@ -411,6 +401,7 @@ class MovieController extends Controller
             DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
             DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
             DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
+            DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
             DB::raw('IF(ISNULL(mu.user_id), \'0\', \'1\') as watched'),
             DB::raw('IF(ISNULL(mu.favourite), \'0\', mu.favourite) as favourite'),
             DB::raw('IF(ISNULL(watch_list.movie_id), \'0\', \'1\') as on_watch_list')
@@ -434,6 +425,7 @@ class MovieController extends Controller
         $netflix_only = $request->netflix_only;
         $amazon_only = $request->amazon_only;
         $nowtv_only = $request->nowtv_only;
+        $disney_plus_only = $request->disney_plus_only;
         $skip_count = $request->skip_count;
         $unwatched_by_friends = $request->unwatched_by_friends;
 
@@ -441,7 +433,7 @@ class MovieController extends Controller
         if ($search_text == "null") $search_text = '';
 
         $movies = $this->getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, 
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $disney_plus_only,
         $unwatched_by_friends, $skip_count);
 
         //Set movie index

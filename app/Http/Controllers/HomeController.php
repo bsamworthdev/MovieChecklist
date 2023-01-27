@@ -47,6 +47,7 @@ class HomeController extends Controller
         $netflix_only = 0;
         $amazon_only = 0;
         $nowtv_only = 0;
+        $disney_plus_only = 0;
         $unwatched_by_friends = '';
         
         // dd($request->fullUrl());
@@ -85,6 +86,9 @@ class HomeController extends Controller
                     case 'nowtv':
                         $nowtv_only=$val;
                         break;
+                    case 'disney_plus':
+                        $disney_plus_only=$val;
+                        break;
                     case 'friends':
                         $unwatched_by_friends=$val;
                         break;
@@ -102,7 +106,7 @@ class HomeController extends Controller
 
         $movieController = new MovieController;
         $movies = $movieController->getMovies($genre, $time_period, $english_only, $unwatched_only, 
-        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $unwatched_by_friends);
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $disney_plus_only, $unwatched_by_friends);
 
         $count = 1;
         foreach ($movies as $movie) {
@@ -123,6 +127,7 @@ class HomeController extends Controller
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
         $selected_nowtv_only = $nowtv_only;
+        $selected_disney_plus_only = $disney_plus_only;
         $selected_unwatched_by_friends = $unwatched_by_friends;
 
 
@@ -182,12 +187,16 @@ class HomeController extends Controller
                 ->leftJoin('nowtv', function ($join) {
                     $join->on('nowtv.movie_id', '=', 'movies.id');
                 })
+                ->leftJoin('disney_plus', function ($join) {
+                    $join->on('disney_plus.movie_id', '=', 'disney_plus.id');
+                })
                 ->orderBy('rank', 'ASC')
                 ->get([
                     'movies.*',
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                     DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
-                    DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv')
+                    DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
+                    DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus')
                 ]);
         
         $info_messages = InfoMessage::where('start_date', '<', DB::raw('now()'))
@@ -204,6 +213,7 @@ class HomeController extends Controller
             "netflix_only" => $selected_netflix_only,
             "amazon_only" => $selected_amazon_only,
             "nowtv_only" => $selected_nowtv_only,
+            "disney_plus_only" => $selected_disney_plus_only,
             "unwatched_by_friends" => $selected_unwatched_by_friends
         ]);
 
@@ -225,6 +235,7 @@ class HomeController extends Controller
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
+                "selectedDisneyPlusOnly" => $selected_disney_plus_only,
                 "selectedUnwatchedByFriends" => $selected_unwatched_by_friends,
                 "infoMessages" => $info_messages
             ]

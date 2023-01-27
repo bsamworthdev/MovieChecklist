@@ -30,6 +30,7 @@
                                     <div v-if="movie.on_netflix == 1" class="platform netflix" title="On netflix"></div>
                                     <div v-if="movie.on_amazon  == 1" class="platform amazon" title="On amazon video"></div>
                                     <div v-if="movie.on_nowtv  == 1" class="platform nowtv" title="On Now TV"></div>
+                                    <div v-if="movie.on_disney_plus  == 1" class="platform disney_plus" title="On Disney Plus"></div>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -142,5 +143,8 @@
 
     .platform.nowtv {
         background-image: url('/images/nowtv.jpg');
+    }
+    .platform.disney_plus {
+        background-image: url('/images/disney_plus.jpg');
     }
 </style>

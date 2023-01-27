@@ -31,7 +31,8 @@
                  <div class="platforms">
                     <div v-if="isOnNetflix == 1" class="platform netflix" title="On netflix"></div>
                     <div v-if="isOnAmazon  == 1" class="platform amazon" title="On amazon video"></div>
-                    <div v-if="isOnNowtv  == 1" class="platform nowtv" title="On Now TV"></div>                
+                    <div v-if="isOnNowtv  == 1" class="platform nowtv" title="On Now TV"></div>  
+                    <div v-if="isOnDisneyPlus  == 1" class="platform disney_plus" title="On Disney Plus"></div>                 
                 </div>
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
@@ -134,6 +135,7 @@
                 isOnNetflix: (this.movie.on_netflix == 1),
                 isOnAmazon: (this.movie.on_amazon == 1),
                 isOnNowtv: (this.movie.on_nowtv == 1),
+                isOnDisneyPlus: (this.movie.on_disney_plus == 1),
                 favouriteHover: false,
                 watchListHover: false
             }
@@ -348,6 +350,9 @@
 
     .movieCard .platform.nowtv {
         background-image: url('/images/nowtv.jpg');
+    }
+    .movieCard .platform.disney_plus {
+        background-image: url('/images/disney_plus.jpg');
     }
 
     .movieCard .rating span{

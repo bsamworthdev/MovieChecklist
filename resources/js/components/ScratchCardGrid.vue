@@ -6,7 +6,7 @@
                 <span class="btn-separator"></span>
                 <button class="btn btn-success" @click="updateMovieImages">Update Movie Images</button>
             </div>
-            <div v-if="user.role=='admin'" class="btn-group col-12 d-none">
+            <div v-if="user.role=='admin'" class="btn-group col-12">
                 <button class="btn btn-success" @click="updateSavedMovieImages">Update Saved Movie Images</button>
             </div>
             <div v-if="user.role=='admin'" class="d-none btn-group col-12">
@@ -223,7 +223,6 @@
                     arr.push(value);
                 }
                 filterString = this.all_movies.length + '/' + arr.join('/');
-
                 axios.post('/getMoreMovies/' + filterString)
                 .then((response) => {
                     this.all_movies = this.all_movies.concat(response.data);

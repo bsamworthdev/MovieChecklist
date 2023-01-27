@@ -93,6 +93,17 @@
                                                                 {{( $selectedNowtvOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
+                                                        &nbsp;&nbsp;
+                                                        <span class="nowrap">
+                                                            <label for="disney_plus_only_checkbox"> 
+                                                                <img class="disney_plus_logo" title="Now TV" src="/images/disney_plus.jpg">
+                                                            </label>
+                                                            <input type="checkbox" 
+                                                                class="form-input" 
+                                                                id="disney_plus_only_checkbox" 
+                                                                {{( $selectedDisneyPlusOnly ? "checked" : '')}} 
+                                                                onchange="return changeSelection();">
+                                                        </span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -316,6 +327,7 @@
         var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
         var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
         var nowtvOnlyCheckbox = document.getElementById('nowtv_only_checkbox');
+        var disneyPlusOnlyCheckbox = document.getElementById('disney_plus_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         var searchInput = document.getElementById('search_input');
@@ -330,6 +342,7 @@
         if (netflixOnlyCheckbox.checked) params.push('netflix:1');
         if (amazonOnlyCheckbox.checked) params.push('amazon:1');
         if (nowtvOnlyCheckbox.checked) params.push('nowtv:1');
+        if (disneyPlusOnlyCheckbox.checked) params.push('disney_plus:1');
         if (selectedFriends && selectedFriends.value) params.push('friends:' + selectedFriends.value);
 
         if (params.length > 0){
@@ -419,9 +432,9 @@
         color:red;
         font-size:17px;
     }
-    .netflix_logo, .amazon_logo, .nowtv_logo{
-        width:30px;
-        height:30px;
+    .netflix_logo, .amazon_logo, .nowtv_logo, .disney_plus_logo{
+        width:20px;
+        height:20px;
     }
     #streamCard{
         text-align:center;

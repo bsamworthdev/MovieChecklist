@@ -41,6 +41,7 @@ class NonAuthHomeController extends Controller
         $netflix_only = 0;
         $amazon_only = 0;
         $nowtv_only = 0;
+        $disney_plus_only = 0;
         
         $filters = $request->input('filters');
         if ($filters){
@@ -77,6 +78,9 @@ class NonAuthHomeController extends Controller
                     case 'nowtv':
                         $nowtv_only=$val;
                         break;
+                    case 'disney_plus':
+                        $disney_plus_only=$val;
+                        break;
                 }
             }
         }
@@ -99,6 +103,9 @@ class NonAuthHomeController extends Controller
             })
             ->leftJoin('nowtv', function ($join) {
                 $join->on('nowtv.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('disney_plus', function ($join) {
+                $join->on('disney_plus.movie_id', '=', 'movies.id');
             })
             ->leftJoin('watch_list_non_auth', function ($join) use ($session_id) {
                 $join->on('watch_list_non_auth.movie_id', '=', 'movies.id');
@@ -128,41 +135,18 @@ class NonAuthHomeController extends Controller
             ->when($search_text != '', function ($q) use ($search_text) {
                 return $q->where('movies.name', 'LIKE', '%'.$search_text.'%');
             })
-            ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('netflix.on_netflix', '=', '1')
-                        ->orWhere('amazon.on_amazon', '=', '1')
-                        ->orWhere('nowtv.on_nowtv', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 1 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('netflix.on_netflix', '=', '1')
-                        ->orWhere('amazon.on_amazon', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('netflix.on_netflix', '=', '1')
-                        ->orWhere('nowtv.on_nowtv', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 1), function ($q) {
-                return $q->where(function ($q) {
-                    $q->where('amazon.on_amazon', '=', '1')
-                        ->orWhere('nowtv.on_nowtv', '=', '1');
-                });
-            })
-            ->when(($netflix_only == 1 && $amazon_only == 0 && $nowtv_only == 0), function ($q) {
+            ->when(($netflix_only == 1), function ($q) {
                 return $q->where('netflix.on_netflix', '=', '1');
             })
-            ->when(($netflix_only == 0 && $amazon_only == 1 && $nowtv_only == 0), function ($q) {
+            ->when(($amazon_only == 1), function ($q) {
                 return $q->where('amazon.on_amazon', '=', '1');
             })
-            ->when(($netflix_only == 0 && $amazon_only == 0 && $nowtv_only == 1), function ($q) {
+            ->when(($nowtv_only == 1), function ($q) {
                 return $q->where('nowtv.on_nowtv', '=', '1');
             })
-            
+            ->when(($disney_plus_only == 1), function ($q) {
+                return $q->where('disney_plus.on_disney_plus', '=', '1');
+            })
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user_non_auth.session_id', '=', NULL);
             })
@@ -174,6 +158,7 @@ class NonAuthHomeController extends Controller
                 DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                 DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
                 DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
+                DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
                 DB::raw('IF(ISNULL(movie_user_non_auth.session_id), \'0\', \'1\') as watched'),
                 DB::raw('IF(ISNULL(movie_user_non_auth.favourite), \'0\', movie_user_non_auth.favourite) as favourite'),
                 DB::raw('IF(ISNULL(watch_list_non_auth.movie_id), \'0\', \'1\') as on_watch_list')
@@ -197,6 +182,7 @@ class NonAuthHomeController extends Controller
         $selected_search_text = $search_text;
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
+        $selected_disney_plus_only = $disney_plus_only;
         $selected_nowtv_only = $nowtv_only;
 
 
@@ -236,12 +222,16 @@ class NonAuthHomeController extends Controller
                 ->leftJoin('nowtv', function ($join) {
                     $join->on('nowtv.movie_id', '=', 'movies.id');
                 })
+                ->leftJoin('disney_plus', function ($join) {
+                    $join->on('disney_plus.movie_id', '=', 'movies.id');
+                })
                 ->orderBy('rank', 'ASC')
                 ->get([
                     'movies.*',
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                     DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
-                    DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv')
+                    DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
+                    DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus')
                 ]);
         
         $info_messages = InfoMessage::where('start_date', '<', DB::raw('now()'))
@@ -264,6 +254,7 @@ class NonAuthHomeController extends Controller
                 "selectedNetflixOnly" => $selected_netflix_only,
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
+                "selectedDisneyPlusOnly" => $selected_disney_plus_only,
                 "infoMessages" => $info_messages
             ]
         );

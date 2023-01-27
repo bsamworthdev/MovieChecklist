@@ -80,6 +80,29 @@
             <u>IS NOT</u> On Now TV
           </button>
         </div>
+        <br />
+        <div v-if="movie.on_disney_plus == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON DISNEY PLUS</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'disney_plus', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on Disney Plus
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON DISNEY PLUS</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'disney_plus', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On Disney Plus
+          </button>
+        </div>
       </div>
     </div>
 
