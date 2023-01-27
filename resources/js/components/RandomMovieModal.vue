@@ -33,13 +33,13 @@
                                     <div v-if="movie.on_disney_plus  == 1" class="platform disney_plus" title="On Disney Plus"></div>
                                 </div>
                             </div>
-                            <div class="row mt-3">
+                            <div v-if="auth" class="row mt-3">
                                 <div class="col-sm-12 text-center">
                                     <button v-if="isOnWatchList" type="button" class="btn btn-danger" @click="toggleIsOnWatchlist($event)"><i class="fa fa-thumbsup"></i> Remove From List</button>
                                     <button v-else type="button" class="btn btn-success" @click="toggleIsOnWatchlist($event)"><i class="fa fa-thumbsup"></i> Add it to my list!</button>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div v-if="auth" class="row">
                                 <div class="col-sm-12 text-center mt-2">
                                     <button type="button" class="btn btn-primary" @click="retry"><i class="fa fa-thumbsup"></i>Pick me another</button>
                                 </div>
@@ -60,14 +60,8 @@
     import modal from './Modal' ;
     export default {
         props: {
-            parentData: Object,
-            selectedPersonId: {
-                type: Number,
-                default() { 
-                    return 0; 
-                }
-            },
-            movie: Object
+            movie: Object,
+            auth: Number
         },
         components: {
             modal

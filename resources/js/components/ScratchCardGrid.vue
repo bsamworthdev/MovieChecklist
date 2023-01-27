@@ -73,7 +73,8 @@
             :key="randomMovieComponentKey"
             @addMovieToWatchList="addMovieToWatchList"
             @removeMovieFromWatchList="removeMovieFromWatchList"
-            :movie="randomMovie">
+            :movie="randomMovie"
+            :auth=1>
         </random-movie-modal>
         <watch-list-modal 
             v-if="activeModal==8" 

@@ -38,7 +38,8 @@
             @close="activeModal=0"
             :movie="randomMovie"
             @addMovieToWatchList="addMovieToWatchList"
-            @removeMovieFromWatchList="removeMovieFromWatchList">
+            @removeMovieFromWatchList="removeMovieFromWatchList"
+            :auth=0>
         </random-movie-modal>
         <watch-list-modal 
             v-if="activeModal==8" 
