@@ -6,7 +6,7 @@
                 <span class="btn-separator"></span>
                 <button class="btn btn-success" @click="updateMovieImages">Update Movie Images</button>
             </div>
-            <div v-if="user.role=='admin'" class="btn-group col-12">
+            <div v-if="user.role=='admin'" class="btn-group col-12 d-none">
                 <button class="btn btn-success" @click="updateSavedMovieImages">Update Saved Movie Images</button>
             </div>
             <div v-if="user.role=='admin'" class="d-none btn-group col-12">

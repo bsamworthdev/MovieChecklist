@@ -22,41 +22,45 @@ class MovieController extends Controller
     //
     function updateMovies(){
         set_time_limit(30000);
-        for($page=0;$page<10;$page++){
+        for($page=1;$page<10;$page++){
             $url = 'https://www.imdb.com/search/title/?groups=top_1000&view=simple&sort=user_rating,desc&count=100&start='.(($page * 100) + 1);
             // $url = 'https://www.imdb.com/search/title/?count=100&groups=top_1000&sort=user_rating';
             $client = new Client();
             $crawler = $client->request('GET', $url);        
             $scraped_movies = $crawler->evaluate('//span[@class="lister-item-header"]');
+            Log::Debug('starting...');
             foreach ($scraped_movies as $key => $movie) {
                 $movie_imdb_id = explode("/", $crawler->evaluate('//span[@class="lister-item-header"]//span//a')->eq($key)->link()->getUri())[4];
                 $movie_rank = $crawler->evaluate('//span[@class="lister-item-header"]//span[@class="lister-item-index unbold text-primary"]')->eq($key)->text();
+                $movie_rating = $crawler->evaluate('//div[@class="lister-item-content"]//div[@class="col-imdb-rating"]//strong')->eq($key)->text();
 
-                $existing_movies_count = Movie::where('imdb_id','=',$movie_imdb_id)->get()->count();
-                if ($existing_movies_count == 0){
-                    //Movie needs to be added
-                    $movie_title = $crawler->evaluate('//span[@class="lister-item-header"]//span//a')->eq($key)->text();
-                    $movie_rating = $crawler->evaluate('//div[@class="lister-item-content"]//div[@class="col-imdb-rating"]//strong')->eq($key)->text();
-                    $movie_year = $crawler->evaluate('//span[@class="lister-item-header"]//span[@class="lister-item-year text-muted unbold"]')->eq($key)->text();
-                    $movie_genre = '';
-                    $movie_language = 'english';
+                // $existing_movies_count = Movie::where('imdb_id','=',$movie_imdb_id)->get()->count();
+                // if ($existing_movies_count == 0){
+                //     //Movie needs to be added
+                //     $movie_title = $crawler->evaluate('//span[@class="lister-item-header"]//span//a')->eq($key)->text();
+                //     $movie_rating = $crawler->evaluate('//div[@class="lister-item-content"]//div[@class="col-imdb-rating"]//strong')->eq($key)->text();
+                //     $movie_year = $crawler->evaluate('//span[@class="lister-item-header"]//span[@class="lister-item-year text-muted unbold"]')->eq($key)->text();
+                //     $movie_genre = '';
+                //     $movie_language = 'english';
 
-                    $movie = new Movie;
-                    $movie->imdb_id = $movie_imdb_id;
-                    $movie->name = $movie_title;
-                    $movie->rank = str_replace(',','', str_replace('.','', $movie_rank));
-                    $movie->rating = $movie_rating;
-                    $movie->year = str_replace(' ','',str_replace('(', '', str_replace(')', '', str_replace('I','', $movie_year))));
-                    $movie->genre = $movie_genre;
-                    $movie->language = $movie_language;
-                    $movie->save();
-                } else {
+                //     $movie = new Movie;
+                //     $movie->imdb_id = $movie_imdb_id;
+                //     $movie->name = $movie_title;
+                //     $movie->rank = str_replace(',','', str_replace('.','', $movie_rank));
+                //     $movie->rating = $movie_rating;
+                //     $movie->year = str_replace(' ','',str_replace('(', '', str_replace(')', '', str_replace('I','', $movie_year))));
+                //     $movie->genre = $movie_genre;
+                //     $movie->language = $movie_language;
+                //     $movie->save();
+                // } else {
                     //Movie exists, so just update rank
                     Movie::where('imdb_id',$movie_imdb_id)
                         ->update([
-                            'rank' => str_replace(',','', str_replace('.','', $movie_rank)) 
+                            // 'rank' => str_replace(',','', str_replace('.','', $movie_rank)), 
+                            'rating' => $movie_rating 
                         ]);
-                }
+                // }
+                Log::Debug('movie rank:'.$movie_rank);
                 
             }
         }

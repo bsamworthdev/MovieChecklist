@@ -40,17 +40,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Movie Checklist
                 </a>
-                <div data-v-9e0f86b4="" class="container" title="Create an account to use this feature">
-                    <div data-v-9e0f86b4="" class="trophyContainer disabled">
-                        <i data-v-9e0f86b4="" class="fas fa-trophy trophy gold"></i>0
-                    </div> 
-                    <div data-v-9e0f86b4="" class="trophyContainer disabled">
-                        <i data-v-9e0f86b4="" class="fas fa-trophy trophy silver"></i>0
-                    </div> 
-                    <div data-v-9e0f86b4="" class="trophyContainer disabled">
-                        <i data-v-9e0f86b4="" class="fas fa-trophy trophy bronze"></i>0
-                    </div>
-                </div>
+                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
