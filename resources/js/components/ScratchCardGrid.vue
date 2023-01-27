@@ -176,7 +176,7 @@
                 if (hasWatched){
                     this.watchedMoviesCount++;
                 } else {
-                    this.watchedMoviesCount--;
+                    if (this.watchedMoviesCount != 0) this.watchedMoviesCount--;
                 }
             },
             editMovieDetailsClicked(platform, movie) {
