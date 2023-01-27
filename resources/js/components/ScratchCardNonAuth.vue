@@ -5,7 +5,7 @@
                 <h4>{{ movie.name }} ({{ movie.year }})</h4>
                 <div class="rank" :class="{ rounded: (movie.index==movie.rank) }">
                     <span class="filtered_rank">{{ movie.index }}</span>
-                    <span v-if="movie.index!=movie.rank" class="actual_rank">({{ movie.rank }})</span>
+                    <span v-if="movie.index!=movie.rank" class="actual_rank">({{ rankTidy }})</span>
                 </div>
                 <div v-if="hasWatched" class="favourite"
                         :class="{ selected: isFavourite, hovering: favouriteHover}" 
@@ -125,6 +125,13 @@
                     title = 'Add To Watch List';
                 }
                 return title;
+            },
+            rankTidy: function(){
+                if (this.movie.rank <= 1000){
+                    return this.movie.rank;
+                } else {
+                    return '>1000';
+                }
             },
         },
         data() {
