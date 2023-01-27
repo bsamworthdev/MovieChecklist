@@ -18,7 +18,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-12">
-                                <form id="movie_form" name="movie_form" action="/home">
+                                <form id="movie_form" name="movie_form" action="/home_nonauth">
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-lg-3 col-12">
@@ -201,7 +201,7 @@
         if (params.length > 0){
             filters.setAttribute('value', params.join(';'));
         } else {
-            window.location.href="/home";
+            window.location.href="/home_nonauth";
             return;
         }
         form.submit();
