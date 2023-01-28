@@ -17,19 +17,20 @@ class Movie extends Model
 
     static function parseTimePeriod($time_period)
     {
+       
         $date_now = Carbon::now();
 
         switch ($time_period) {
             case 'last_50_years':
-                $yearFrom = $date_now->subYears("50");
+                $yearFrom = $date_now->subYears("50")->year;
                 $yearTo = $date_now->year;
                 break;
             case 'last_25_years':
-                $yearFrom = $date_now->subYears("25");
+                $yearFrom = $date_now->subYears("25")->year;
                 $yearTo = $date_now->year;
                 break;
             case 'last_10_years':
-                $yearFrom = $date_now->subYears("10");
+                $yearFrom = $date_now->subYears("10")->year;
                 $yearTo = $date_now->year;
                 break;
             case '2020s':
