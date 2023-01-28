@@ -22,51 +22,51 @@ class Movie extends Model
 
         switch ($time_period) {
             case 'last_50_years':
-                $yearFrom = $date_now->subYears("50")->year;
                 $yearTo = $date_now->year;
+                $yearFrom = $date_now->subYears("50")->year;     
                 break;
             case 'last_25_years':
-                $yearFrom = $date_now->subYears("25")->year;
                 $yearTo = $date_now->year;
+                $yearFrom = $date_now->subYears("25")->year;
                 break;
             case 'last_10_years':
-                $yearFrom = $date_now->subYears("10")->year;
                 $yearTo = $date_now->year;
+                $yearFrom = $date_now->subYears("10")->year;
                 break;
             case '2020s':
-                $yearFrom = '2020';
                 $yearTo = $date_now->year;
+                $yearFrom = '2020';
                 break;
             case '2010s':
-                $yearFrom = '2010';
                 $yearTo = '2019';
+                $yearFrom = '2010';
                 break;
             case '2000s':
-                $yearFrom = '2000';
                 $yearTo = '2009';
+                $yearFrom = '2000';
                 break;
             case '90s':
-                $yearFrom = '1990';
                 $yearTo = '1999';
+                $yearFrom = '1990';
                 break;
             case '80s':
-                $yearFrom = '1980';
                 $yearTo = '1989';
+                $yearFrom = '1980';
                 break;
             case '70s':
-                $yearFrom = '1970';
                 $yearTo = '1979';
+                $yearFrom = '1970';
                 break;
             case '60s':
-                $yearFrom = '1960';
                 $yearTo = '1969';
+                $yearFrom = '1960';
                 break;
             default:
                 break;
         }
         $dates = [
-            'from' => $yearFrom,
-            'to' => $yearTo
+            'to' => $yearTo,
+            'from' => $yearFrom
         ];
         return $dates;
     }
