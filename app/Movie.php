@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class Movie extends Model
 {
@@ -16,19 +17,24 @@ class Movie extends Model
 
     static function parseTimePeriod($time_period)
     {
+        $date_now = Carbon::now();
 
         switch ($time_period) {
             case 'last_50_years':
-                $yearFrom = '1970';
-                $yearTo = '2020';
+                $yearFrom = $date_now->subYears("50");
+                $yearTo = $date_now->year;
                 break;
             case 'last_25_years':
-                $yearFrom = '1995';
-                $yearTo = '2020';
+                $yearFrom = $date_now->subYears("25");
+                $yearTo = $date_now->year;
                 break;
             case 'last_10_years':
-                $yearFrom = '2010';
-                $yearTo = '2020';
+                $yearFrom = $date_now->subYears("10");
+                $yearTo = $date_now->year;
+                break;
+            case '2020s':
+                $yearFrom = '2020';
+                $yearTo = $date_now->year;
                 break;
             case '2010s':
                 $yearFrom = '2010';
