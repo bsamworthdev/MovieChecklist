@@ -35,6 +35,7 @@ class NonAuthHomeController extends Controller
         $genre = 'all'; 
         $time_period = 'all';
         $english_only = 0;
+        $popular_only = 0;
         $unwatched_only = 0;
         $favourites_only = 0;
         $search_text = "";
@@ -59,6 +60,9 @@ class NonAuthHomeController extends Controller
                         break;
                     case 'english':
                         $english_only=$val;
+                        break;
+                    case 'popular':
+                        $popular_only=$val;
                         break;
                     case 'unwatched':
                         $unwatched_only=$val;
@@ -129,6 +133,9 @@ class NonAuthHomeController extends Controller
             ->when($english_only == 1, function ($q) {
                 return $q->where('movies.language', '=', 'english');
             })
+            ->when($popular_only == 1, function ($q) {
+                return $q->where('movies.votes', '>', 250000);
+            })
             ->when($favourites_only == 1, function ($q) {
                 return $q->where('movie_user_non_auth.favourite', '=', '1');
             })
@@ -177,6 +184,7 @@ class NonAuthHomeController extends Controller
         $selected_time_period = $time_period;
 
         $selected_english_only = $english_only;
+        $selected_popular_only = $popular_only;
         $selected_unwatched_only = $unwatched_only;
         $selected_favourites_only = $favourites_only;
         $selected_search_text = $search_text;
@@ -248,6 +256,7 @@ class NonAuthHomeController extends Controller
                 "timePeriods" => $time_periods,
                 "selectedTimePeriod" => $selected_time_period,
                 "selectedEnglishOnly" => $selected_english_only,
+                "selectedPopularOnly" => $selected_popular_only,
                 "selectedUnwatchedOnly" => $selected_unwatched_only,
                 "selectedFavouritesOnly" => $selected_favourites_only,
                 "selectedSearchText" => $selected_search_text,

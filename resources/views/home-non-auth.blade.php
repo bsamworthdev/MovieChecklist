@@ -99,7 +99,7 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-12"></div>
+                                            <div class="col-lg-1 col-12"></div>
                                             <div class="col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
@@ -122,7 +122,15 @@
                                             <div class="col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
-                                                        Unwatched By Me <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                        Popular Only <i data-toggle="tooltip" data-placement="right" title="" class="fa fa-info-circle" data-original-title="Popular movies are those with over 250k votes on imdb."></i>
+                                                        <input type="checkbox" class="form-input" id="popular_only_checkbox" {{( $selectedPopularOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2 col-12">
+                                                <label class="vertAlign">
+                                                    <span class="nowrap">
+                                                        Unwatched Only <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
                                                     </span>
                                                 </label>
                                             </div>
@@ -176,6 +184,7 @@
         var form = document.getElementById('movie_form');
         var filters = document.getElementById('filters');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
+        var popularOnlyCheckbox = document.getElementById('popular_only_checkbox');
         var unwatchedOnlyCheckbox = document.getElementById('unwatched_only_checkbox');
         var favouritesOnlyCheckbox = document.getElementById('favourites_only_checkbox');
         var netflixOnlyCheckbox = document.getElementById('netflix_only_checkbox');
@@ -190,6 +199,7 @@
         if (genreSelect.value != 'all') params.push('genre:' + genreSelect.value);
         if (timePeriodSelect.value != 'all') params.push('time:' + timePeriodSelect.value);
         if (englishOnlyCheckbox.checked) params.push('english:1'); 
+        if (popularOnlyCheckbox.checked) params.push('popular:1'); 
         if (unwatchedOnlyCheckbox.checked) params.push('unwatched:1');
         if (favouritesOnlyCheckbox.checked) params.push('favourites:1');
         if (searchInput.value) params.push('search:' + searchInput.value);
