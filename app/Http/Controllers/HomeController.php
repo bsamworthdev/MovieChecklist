@@ -41,6 +41,7 @@ class HomeController extends Controller
         $genre = 'all'; 
         $time_period = 'all';
         $english_only = 0;
+        $popular_only = 0;
         $unwatched_only = 0;
         $favourites_only = 0;
         $search_text = "";
@@ -67,6 +68,9 @@ class HomeController extends Controller
                         break;
                     case 'english':
                         $english_only=$val;
+                        break;
+                    case 'popular':
+                        $popular_only=$val;
                         break;
                     case 'unwatched':
                         $unwatched_only=$val;
@@ -105,7 +109,7 @@ class HomeController extends Controller
         if ($search_text == "null") $search_text = '';
 
         $movieController = new MovieController;
-        $movies = $movieController->getMovies($genre, $time_period, $english_only, $unwatched_only, 
+        $movies = $movieController->getMovies($genre, $time_period, $english_only, $popular_only, $unwatched_only, 
         $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $disney_plus_only, $unwatched_by_friends);
 
         $count = 1;
@@ -121,6 +125,7 @@ class HomeController extends Controller
         $selected_time_period = $time_period;
 
         $selected_english_only = $english_only;
+        $selected_popular_only = $popular_only;
         $selected_unwatched_only = $unwatched_only;
         $selected_favourites_only = $favourites_only;
         $selected_search_text = $search_text;
@@ -207,6 +212,7 @@ class HomeController extends Controller
             "genre" => $selected_genre,
             "time_period" => $selected_time_period,
             "english_only" => $selected_english_only,
+            "popular_only" => $selected_popular_only,
             "unwatched_only" => $selected_unwatched_only,
             "favourites_only" => $selected_favourites_only,
             "search_text" => $selected_search_text,
@@ -229,6 +235,7 @@ class HomeController extends Controller
                 "filters" => $filters,
                 "selectedTimePeriod" => $selected_time_period,
                 "selectedEnglishOnly" => $selected_english_only,
+                "selectedPopularOnly" => $selected_popular_only,
                 "selectedUnwatchedOnly" => $selected_unwatched_only,
                 "selectedFavouritesOnly" => $selected_favourites_only,
                 "selectedSearchText" => $selected_search_text,

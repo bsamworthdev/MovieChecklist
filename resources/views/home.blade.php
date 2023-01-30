@@ -61,7 +61,7 @@
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
                                                     <label>
-                                                        <span class="nowrap">
+                                                        <span class="nowrap mr-2">
                                                             <label for="netflix_only_checkbox"> 
                                                                 <img class="netflix_logo" title="Netflix" src="/images/netflix.jpg">
                                                             </label>
@@ -71,8 +71,7 @@
                                                                 {{( $selectedNetflixOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                        &nbsp;&nbsp;
-                                                        <span class="nowrap">
+                                                        <span class="nowrap mr-2">
                                                             <label for="amazon_only_checkbox"> 
                                                                 <img class="amazon_logo" title="Amazon Prime" src="/images/amazon.jpeg">
                                                             </label>
@@ -82,8 +81,7 @@
                                                                 {{( $selectedAmazonOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                        &nbsp;&nbsp;
-                                                        <span class="nowrap">
+                                                        <span class="nowrap mr-2">
                                                             <label for="nowtv_only_checkbox"> 
                                                                 <img class="nowtv_logo" title="Now TV" src="/images/nowtv.jpg">
                                                             </label>
@@ -93,8 +91,7 @@
                                                                 {{( $selectedNowtvOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                        &nbsp;&nbsp;
-                                                        <span class="nowrap">
+                                                        <span class="nowrap mr-2">
                                                             <label for="disney_plus_only_checkbox"> 
                                                                 <img class="disney_plus_logo" title="Now TV" src="/images/disney_plus.jpg">
                                                             </label>
@@ -129,11 +126,17 @@
                                             <div class="col-lg-2 col-12">
                                                 <label class="vertAlign">
                                                     <span class="nowrap">
-                                                        Unwatched By Me <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                        Popular Only <i data-toggle="tooltip" data-placement="right" title="" class="fa fa-info-circle" data-original-title="Popular movies are those with over 250k votes on imdb."></i>
+                                                        <input type="checkbox" class="form-input" id="popular_only_checkbox" {{( $selectedPopularOnly ? "checked" : '')}} onchange="return changeSelection();">
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="col-lg-3 col-12">
+                                                <label class="vertAlign">
+                                                    <span class="nowrap">
+                                                        Unwatched By Me <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
+                                                    </span>
+                                                </label>
                                                 <label class="vertAlign" >
                                                     @if(count($user->friends) > 0)
                      
@@ -320,6 +323,7 @@
         var form = document.getElementById('movie_form');
         var filters = document.getElementById('filters');
         var englishOnlyCheckbox = document.getElementById('english_only_checkbox');
+        var popularOnlyCheckbox = document.getElementById('popular_only_checkbox');
         var unwatchedOnlyCheckbox = document.getElementById('unwatched_only_checkbox');
         var selectedFriends = document.getElementById('selectedFriends');
         var friendMultiSelect = document.getElementById('friendMultiSelect');
@@ -336,6 +340,7 @@
         if (genreSelect.value != 'all') params.push('genre:' + genreSelect.value);
         if (timePeriodSelect.value != 'all') params.push('time:' + timePeriodSelect.value);
         if (englishOnlyCheckbox.checked) params.push('english:1'); 
+        if (popularOnlyCheckbox.checked) params.push('popular:1'); 
         if (unwatchedOnlyCheckbox.checked) params.push('unwatched:1');
         if (favouritesOnlyCheckbox.checked) params.push('favourites:1');
         if (searchInput.value) params.push('search:' + searchInput.value);
@@ -389,6 +394,12 @@
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     }
+
+    window.onload = function(){
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    };
 
 </script>
 <style>
@@ -446,7 +457,7 @@
         margin-bottom:0px;
     }
     .vertAlign { 
-        height:40px;
+        height:30px;
         display: flex;
         align-items: center;
         margin-bottom:0px;
