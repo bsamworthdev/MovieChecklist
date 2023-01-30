@@ -223,6 +223,12 @@
         document.documentElement.scrollTop = 0;
     }
 
+    window.onload = function(){
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    };
+
 </script>
 <style>
     #movie_form{
