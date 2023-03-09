@@ -181,6 +181,7 @@
                         :movies="{{ $movies }}" 
                         :filters="{{ $filters }}">
                     </scratch-card-grid>
+    
                 </div>
 
 

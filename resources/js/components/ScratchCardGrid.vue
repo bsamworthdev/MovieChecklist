@@ -239,8 +239,8 @@
                 this.watchList.push(movie);
 
                 this.watchList.sort(function(a, b){
-                    if(a.rank < b.rank) { return -1; }
-                    if(a.rank > b.rank) { return 1; }
+                    if(a.top250_rank < b.top250_rank) { return -1; }
+                    if(a.top250_rank > b.top250_rank) { return 1; }
                     return 0;
                 })
 

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -195,7 +196,7 @@ class HomeController extends Controller
                 ->leftJoin('disney_plus', function ($join) {
                     $join->on('disney_plus.movie_id', '=', 'disney_plus.id');
                 })
-                ->orderBy('rank', 'ASC')
+                ->orderBy('top250_rank', 'ASC')
                 ->get([
                     'movies.*',
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),

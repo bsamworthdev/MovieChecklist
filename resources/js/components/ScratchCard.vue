@@ -2,9 +2,9 @@
     <div class="card movieCard" :class="{ watched: hasWatched }" @click="toggleWatched">
         <div class="card-body movieImage" :style="{ backgroundImage: `url(${movie.image_url_small_extended})` }">
             <h4>{{ movie.name }} ({{ movie.year }})</h4>
-            <div class="rank" :class="{ rounded: (movie.index==movie.rank) }">
+            <div class="rank" :class="{ rounded: (movie.index==movie.top250_rank) }">
                 <span class="filtered_rank">{{ movie.index }}</span>
-                <span v-if="movie.index!=movie.rank" class="actual_rank">({{ rankTidy }})</span>
+                <span v-if="movie.index!=movie.top250_rank" class="actual_rank">({{ rankTidy }})</span>
             </div>
             <div v-if="hasWatched" class="favourite"
                     :class="{ selected: isFavourite, hovering: favouriteHover, hasFriends: user.friendsCount > 0 }" 
@@ -182,8 +182,8 @@
                 return title;
             },
             rankTidy: function(){
-                if (this.movie.rank <= 1000){
-                    return this.movie.rank;
+                if (this.movie.top250_rank <= 1000){
+                    return this.movie.top250_rank;
                 } else {
                     return '>1000';
                 }

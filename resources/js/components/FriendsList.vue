@@ -87,7 +87,7 @@
                                 <div class="card card-body">
                                     <div class="row" v-for="favourite in friend.stats.favourites" :key="favourite.id">
                                         <div class="col-12">
-                                            <span class="favourite">({{ favourite.rank }}) {{favourite.name}}</span>
+                                            <span class="favourite">({{ favourite.top250_rank }}) {{favourite.name}}</span>
                                         </div>
                                     </div>
                                 </div>

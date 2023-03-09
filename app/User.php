@@ -101,7 +101,7 @@ class User extends Authenticatable
         // Log::debug('after getSpecificStats-'.\Carbon\Carbon::now());
         $favouriteMovies =  Movie::select(
                 'movies.name', 
-                'movies.rank', 
+                'movies.top250_rank', 
                 'movies.imdb_id',
             )
             ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
@@ -147,13 +147,13 @@ class User extends Authenticatable
         
             $movies =  Movie:: select('movies.id',
                     'movies.name', 
-                    'movies.rank', 
+                    'movies.top250_rank', 
                     'movies.imdb_id',
                 )
                 ->when($filterType, function($query) use ($filterSQL) {   
                     return $query->whereRaw($filterSQL);
                 })
-                ->orderBy('movies.rank')
+                ->orderBy('movies.top250_rank')
                 ->limit('100')
                 ->get();
             Cache::set("movies_$filterType"."_$filterValue", $movies);
@@ -162,18 +162,18 @@ class User extends Authenticatable
         $max_movie_id = (int)$movies->last()['id'];
 
         $userMovies =  Movie::select('movies.name', 
-                'movies.rank', 
+                'movies.top250_rank', 
                 'movies.imdb_id',
                 'movie_user.favourite',
             )
             ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
             ->where('movie_user.user_id', $user_id)
             //->where('movie_user.movie_id', '<=', $max_movie_id)
-            ->where('movies.rank', '<=', 100)
+            ->where('movies.top250_rank', '<=', 100)
             ->when($filterType, function($query) use ($filterSQL) { 
                 return $query->whereRaw($filterSQL);
             })
-            ->orderBy('movies.rank')
+            ->orderBy('movies.top250_rank')
             ->limit('100')
             ->get();
               

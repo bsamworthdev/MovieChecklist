@@ -23,8 +23,9 @@ class MovieController extends Controller
     function updateMovies(){
         set_time_limit(30000);
         // for($page=0;$page<10;$page++){
-        //     $url = 'https://www.imdb.com/search/title/?groups=top_1000&view=simple&sort=user_rating,desc&count=100&start='.(($page * 100) + 1);
+        //     //$url = 'https://www.imdb.com/search/title/?groups=top_1000&view=simple&sort=user_rating,desc&count=100&start='.(($page * 100) + 1);
         //     // $url = 'https://www.imdb.com/search/title/?count=100&groups=top_1000&sort=user_rating';
+        //     $url = 'https://www.imdb.com/search/title/?groups=top_250&view=simple&sort=user_rating,desc&count=50&start='.(($page * 50) + 1);
         //     $client = new Client();
         //     $crawler = $client->request('GET', $url);        
         //     $scraped_movies = $crawler->evaluate('//span[@class="lister-item-header"]');
@@ -35,41 +36,45 @@ class MovieController extends Controller
         //         $movie_rating = $crawler->evaluate('//div[@class="lister-item-content"]//div[@class="col-imdb-rating"]//strong')->eq($key)->text();
 
         //         $existing_movies_count = Movie::where('imdb_id','=',$movie_imdb_id)->get()->count();
-        //         if ($existing_movies_count == 0){
-        //             //Movie needs to be added
-        //             $movie_title = $crawler->evaluate('//span[@class="lister-item-header"]//span//a')->eq($key)->text();
-        //             $movie_rating = $crawler->evaluate('//div[@class="lister-item-content"]//div[@class="col-imdb-rating"]//strong')->eq($key)->text();
-        //             $movie_year = $crawler->evaluate('//span[@class="lister-item-header"]//span[@class="lister-item-year text-muted unbold"]')->eq($key)->text();
-        //             $movie_genre = '';
-        //             $movie_language = 'english';
+        //         // if ($existing_movies_count == 0){
+        //         //     //Movie needs to be added
+        //         //     $movie_title = $crawler->evaluate('//span[@class="lister-item-header"]//span//a')->eq($key)->text();
+        //         //     $movie_rating = $crawler->evaluate('//div[@class="lister-item-content"]//div[@class="col-imdb-rating"]//strong')->eq($key)->text();
+        //         //     $movie_year = $crawler->evaluate('//span[@class="lister-item-header"]//span[@class="lister-item-year text-muted unbold"]')->eq($key)->text();
+        //         //     $movie_genre = '';
+        //         //     $movie_language = 'english';
 
-        //             $movie = new Movie;
-        //             $movie->imdb_id = $movie_imdb_id;
-        //             $movie->name = $movie_title;
-        //             $movie->rank = str_replace(',','', str_replace('.','', $movie_rank));
-        //             $movie->rating = $movie_rating;
-        //             $movie->year = str_replace(' ','',str_replace('(', '', str_replace(')', '', str_replace('I','', $movie_year))));
-        //             $movie->genre = $movie_genre;
-        //             $movie->language = $movie_language;
-        //             $movie->save();
-        //         } else {
+        //         //     $movie = new Movie;
+        //         //     $movie->imdb_id = $movie_imdb_id;
+        //         //     $movie->name = $movie_title;
+        //         //     $movie->rank = str_replace(',','', str_replace('.','', $movie_rank));
+        //         //     $movie->rating = $movie_rating;
+        //         //     $movie->year = str_replace(' ','',str_replace('(', '', str_replace(')', '', str_replace('I','', $movie_year))));
+        //         //     $movie->genre = $movie_genre;
+        //         //     $movie->language = $movie_language;
+        //         //     $movie->save();
+        //         // } else {
         //             //Movie exists, so just update rank
+        //             // Movie::where('imdb_id',$movie_imdb_id)
+        //             //     ->update([
+        //             //         'rank' => str_replace(',','', str_replace('.','', $movie_rank)), 
+        //             //         'rating' => $movie_rating 
+        //             //     ]);
         //             Movie::where('imdb_id',$movie_imdb_id)
         //                 ->update([
-        //                     'rank' => str_replace(',','', str_replace('.','', $movie_rank)), 
-        //                     'rating' => $movie_rating 
+        //                     'top250_rank' => str_replace(',','', str_replace('.','', $movie_rank))
         //                 ]);
-        //         }
+        //         // }
         //         Log::Debug('movie rank:'.$movie_rank);
                 
         //     }
         // }
 
-        // //Update votes
-        // $this->updateVotes();
+        //Update votes
+        $this->updateVotes();
 
         //Update weighted ratings/rankings
-        $this->updateWeightedRatings();
+        //$this->updateWeightedRatings();
     }
 
     function updateVotes(){
@@ -113,6 +118,8 @@ class MovieController extends Controller
         $movies = Movie::all();
         $m = 25000;
         $C = ($movies->sum('rating'))/$movies->count();
+
+        Log::Debug($C);
 
         foreach($movies as $movie){
             $R = $movie->rating;
@@ -453,7 +460,7 @@ class MovieController extends Controller
                     ->whereIn('mu2.user_id', $arr);
             });
         })
-        ->orderBy('rank', 'ASC')
+        ->orderBy('top250_rank', 'ASC')
         ->skip($skip_count)
         ->take(100)
         ->get([
@@ -476,7 +483,6 @@ class MovieController extends Controller
     //     $unwatched_only = 0, $favourites_only = 0, $netflix_only = 0, $amazon_only = 0, $nowtv_only = 0, 
     //     $search_text = '') {
     function getMoreMovies(Request $request) {
-            
         $genre = $request->genre;
         $time_period = $request->time_period; 
         $english_only = $request->english_only;
