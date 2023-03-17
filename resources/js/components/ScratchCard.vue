@@ -182,10 +182,10 @@
                 return title;
             },
             rankTidy: function(){
-                if (this.movie.top250_rank <= 1000){
+                if (this.movie.top250_rank < 250){
                     return this.movie.top250_rank;
                 } else {
-                    return '>1000';
+                    return '>250';
                 }
             },
         },

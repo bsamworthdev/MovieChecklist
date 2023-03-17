@@ -158,6 +158,7 @@ class NonAuthHomeController extends Controller
                 return $q->where('movie_user_non_auth.session_id', '=', NULL);
             })
             ->orderBy('top250_rank', 'ASC')
+            ->orderBy('rank', 'ASC')
             ->take(100)
             ->get([
                 'movies.*',
@@ -234,6 +235,7 @@ class NonAuthHomeController extends Controller
                     $join->on('disney_plus.movie_id', '=', 'movies.id');
                 })
                 ->orderBy('top250_rank', 'ASC')
+                ->orderBy('rank', 'ASC')
                 ->get([
                     'movies.*',
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),

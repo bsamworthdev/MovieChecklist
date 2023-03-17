@@ -197,6 +197,7 @@ class HomeController extends Controller
                     $join->on('disney_plus.movie_id', '=', 'disney_plus.id');
                 })
                 ->orderBy('top250_rank', 'ASC')
+                ->orderBy('rank', 'ASC')
                 ->get([
                     'movies.*',
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),

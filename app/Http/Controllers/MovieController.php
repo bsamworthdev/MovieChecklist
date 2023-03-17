@@ -461,6 +461,7 @@ class MovieController extends Controller
             });
         })
         ->orderBy('top250_rank', 'ASC')
+        ->orderBy('rank', 'ASC')
         ->skip($skip_count)
         ->take(100)
         ->get([
