@@ -146,7 +146,7 @@
                 <br>
                 @guest
                     @if (Route::has('register'))
-                        <button class="registerButton btn btn-success" onclick="location.href='{{ route('register') }}'">Sign Up (It's free)</button>
+                        <button class="registerButton btn btn-success" onclick="location.href='{{ route('register') }}'">Sign Up (It's free!)</button>
                         <br>
                         <a href="{{ route('login') }}">I already have an account</a>
                         <br><br>
