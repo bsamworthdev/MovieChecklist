@@ -220,8 +220,7 @@
                 var filterString = '';
                 var arr = [];
                 for (const [key, value] of Object.entries(this.filters)) { 
-                    if (value==='') value = 'null';
-                    arr.push(value);
+                    arr.push(value === '' ? 'null' : value);
                 }
                 filterString = this.all_movies.length + '/' + arr.join('/');
                 axios.post('/getMoreMovies/' + filterString)
