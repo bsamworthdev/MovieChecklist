@@ -204,12 +204,20 @@
             },
             pickMovie() {
 
-                var unwatchedMovies = this.movies.filter(function (el) {
+                var unwatchedMovies = this.all_movies.filter(function (el) {
                     return el.watched == false
                 });
 
+                if (unwatchedMovies.length === 0) {
+                    this.randomMovieComponentKey++;
+                    this.randomMovie = null;
+                    this.activeModal = 1;
+                    return;
+                }
+
                 var movie = unwatchedMovies[Math.floor(Math.random() * unwatchedMovies.length)];
                 console.log('your random movie is ' + movie.name);
+                this.randomMovieComponentKey++;
                 this.randomMovie = movie;
                 this.activeModal = 1;
             },

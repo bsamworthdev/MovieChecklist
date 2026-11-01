@@ -2,11 +2,11 @@
     <modal @close="close">
         <div slot="header">
             <button type="button" class="close" @click="$emit('close')" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h5 class="modal-title">Your Chosen Movie</h5>
+            <h5 class="modal-title">{{ movie ? 'Your Chosen Movie' : 'No unwatched movies' }}</h5>
         </div>
 
         <div slot="body">
-            <div class="container">
+            <div v-if="movie" class="container">
                 <div class="row">
                     <div class="col-md-6 col-xs-12">
                         <div id="chosenMovieImage" :style="{ backgroundImage: `url(${movie.image_url_small_extended})`}" >
@@ -48,6 +48,7 @@
                     </div>
                 </div>
             </div>
+            <p v-else>There are no unwatched movies among the movies currently shown.</p>
         </div>
 
         <div slot="footer">
@@ -103,7 +104,7 @@
         },
         data() {
             return {
-                isOnWatchList: (this.movie.on_watch_list == 1),
+                isOnWatchList: (this.movie && this.movie.on_watch_list == 1),
                 modalId:'randomMovieModal'
             }
         },

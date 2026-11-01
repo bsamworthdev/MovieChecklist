@@ -67,6 +67,7 @@
                 });
             },
             movieStatusChanged() {
+                this.$set(this.movie, 'watched', this.hasWatched);
                 this.$emit('movieStatusChanged', this.hasWatched);
             },
             toggleIsFavourite(e){

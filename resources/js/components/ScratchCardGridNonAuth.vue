@@ -91,6 +91,12 @@
                     return el.watched == false
                 });
 
+                if (unwatchedMovies.length === 0) {
+                    this.randomMovie = null;
+                    this.activeModal = 1;
+                    return;
+                }
+
                 var movie = unwatchedMovies[Math.floor(Math.random() * unwatchedMovies.length)];
                 console.log('your random movie is ' + movie.name);
                 this.randomMovie = movie;
