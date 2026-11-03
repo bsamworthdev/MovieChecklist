@@ -103,6 +103,29 @@
             <u>IS NOT</u> On Disney Plus
           </button>
         </div>
+        <br />
+        <div v-if="movie.on_hbo_max == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON HBO MAX</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'hbo_max', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on HBO Max
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON HBO MAX</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'hbo_max', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On HBO Max
+          </button>
+        </div>
       </div>
     </div>
 

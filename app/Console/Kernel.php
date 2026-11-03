@@ -24,7 +24,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('catalogues:update')
+            ->dailyAt('00:00')
+            ->timezone('Europe/London')
+            ->withoutOverlapping(180)
+            ->appendOutputTo(storage_path('logs/catalogue-updates.log'));
     }
 
     /**

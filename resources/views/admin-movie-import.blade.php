@@ -16,7 +16,7 @@
         <label for="movie-import-html">Complete HTML from IMDb’s Top 250 page</label>
         <textarea id="movie-import-html" class="form-control" rows="7" spellcheck="false" aria-describedby="movie-import-html-help"></textarea>
         <small id="movie-import-html-help" class="form-text text-muted">Paste the HTML, rather than the page URL or plain movie titles.</small>
-        <button type="button" id="movie-import-preview" class="btn btn-secondary mt-3">Preview Movies</button>
+        <button type="button" id="movie-import-preview" class="btn btn-primary mt-3"><i class="fas fa-search mr-2" aria-hidden="true"></i>Preview Movies</button>
         <section id="movie-import-review" class="mt-4" hidden>
             <p id="movie-import-count"></p>
             <div id="movie-import-missing" hidden>
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <p>Applying this list replaces the previous Top 250 order. Movies leaving the list remain in your database.</p>
-            <button type="submit" id="movie-import-apply" class="btn btn-success">Apply Updates</button>
+            <button type="submit" id="movie-import-apply" class="btn btn-primary"><i class="fas fa-check mr-2" aria-hidden="true"></i>Apply Updates</button>
         </section>
     </form>
 </dialog>

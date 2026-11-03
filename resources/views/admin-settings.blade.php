@@ -12,13 +12,14 @@
                                 <div id="title">Admin Settings</div> 
                             </div>
                             <div class="col-6 d-flex flex-wrap justify-content-end">
-                                <button type="button" id="update-movies-button" class="btn btn-success mr-2 mb-2">Fetch latest movies from IMDB</button>
-                                <button type="button" id="generate-movie-thumbnails-button" class="btn btn-success mb-2" data-url="{{ route('admin.movies.thumbnails') }}">Generate missing thumbnails</button>
+                                <button type="button" id="update-movies-button" class="btn btn-primary mr-2 mb-2"><i class="fas fa-film mr-2" aria-hidden="true"></i>Fetch latest movies from IMDB</button>
+                                <button type="button" id="generate-movie-thumbnails-button" class="btn btn-primary mb-2" data-url="{{ route('admin.movies.thumbnails') }}"><i class="fas fa-images mr-2" aria-hidden="true"></i>Generate missing thumbnails</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
+                    @include('admin-catalogues')
                     <users-table
                         :users = "{{ $users }}">
                     </users-table>

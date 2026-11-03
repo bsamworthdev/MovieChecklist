@@ -24,15 +24,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/friends/{tag?}', 'FriendshipController@index')->name('friend');
 
     Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
-    Route::post('/updatenetflixstatuses', 'MovieController@updateNetflixStatuses');
-    Route::post('/updateamazonstatuses', 'MovieController@updateAmazonStatuses');
 
     Route::post('/saveMovieUser', 'UserController@saveMovieUser');
     Route::post('/setMovieAsFavourite', 'UserController@setMovieAsFavourite');
     Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
     Route::post('/getFriendsStats/{movie_id?}/', 'UserController@getFriendsStats'); 
     Route::post('/toggleMovieInWatchList', 'UserController@toggleMovieInWatchList');
-    Route::post('/getMoreMovies/{skip_count?}/{genre?}/{time_period?}/{popular_only?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/{disney_plus_only?}/{unwatched_by_friends?}/', 'MovieController@getMoreMovies');
+    Route::post('/getMoreMovies/{skip_count?}/{genre?}/{time_period?}/{popular_only?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/{disney_plus_only?}/{unwatched_by_friends?}/{hbo_max_only?}/', 'MovieController@getMoreMovies');
     Route::post('/editfriend', 'FriendshipController@edit');
     Route::post('/deletefriend', 'FriendshipController@delete');
 
@@ -46,7 +44,11 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('/admin', 'AdminController@index')->name('admin');
     Route::post('/admin/movies/preview', 'AdminMovieImportController@preview')->name('admin.movies.preview');
     Route::post('/admin/movies/apply', 'AdminMovieImportController@apply')->name('admin.movies.apply');
+    Route::post('/admin/catalogues/start', 'AdminCatalogueController@start')->name('admin.catalogues.start');
+    Route::post('/admin/catalogues/step', 'AdminCatalogueController@step')->name('admin.catalogues.step');
     Route::post('/updatemovies', 'MovieController@updateMovies');
+    Route::post('/updatenetflixstatuses', 'MovieController@updateNetflixStatuses');
+    Route::post('/updateamazonstatuses', 'MovieController@updateAmazonStatuses');
     Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages')->name('admin.movies.thumbnails');
 });
 

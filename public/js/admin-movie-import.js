@@ -23,6 +23,9 @@
         busy = value;
         openButton.disabled = value;
         if (thumbnailButton) thumbnailButton.disabled = value;
+        document.querySelectorAll('[data-catalogue-update]').forEach(button => {
+            button.disabled = value || button.dataset.configured !== 'true';
+        });
         ['preview', 'apply', 'close', 'html'].forEach(id => { element(id).disabled = value; });
         dialog.querySelectorAll('input').forEach(input => { input.disabled = value; });
     };

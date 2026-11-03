@@ -352,6 +352,19 @@ class MovieController extends Controller
         $platform = $request->platform;
         $status = $request->status;
 
+        if ($platform === 'hbo_max') {
+            abort_unless(in_array($request->user()->role, ['admin', 'editor'], true), 403);
+            $data = $request->validate(['movie_id' => 'required|integer|exists:movies,id', 'status' => 'required|boolean']);
+            DB::table('hbo_max')->insertOrIgnore([
+                'movie_id' => $data['movie_id'], 'on_hbo_max' => (int) $data['status'],
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
+            DB::table('hbo_max')->where('movie_id', $data['movie_id'])->update([
+                'on_hbo_max' => (int) $data['status'], 'updated_at' => now(),
+            ]);
+            return response()->json(['updated' => true]);
+        }
+
         if ($platform == 'netflix'){
             $movies =  DB::table('netflix')->where('movie_id', '=', $movie_id)->get();
             if (count($movies) == 0) {
@@ -393,7 +406,7 @@ class MovieController extends Controller
 
     function getMovies($genre, $time_period, $english_only, $popular_only, $unwatched_only, 
         $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, 
-        $disney_plus_only, $unwatched_by_friends, $skip_count = 0) {
+        $disney_plus_only, $unwatched_by_friends, $skip_count = 0, $hbo_max_only = 0) {
 
         $user = Auth::user();
         $user_id = $user->id;
@@ -411,6 +424,9 @@ class MovieController extends Controller
         })
         ->leftJoin('disney_plus', function ($join) {
             $join->on('disney_plus.movie_id', '=', 'movies.id');
+        })
+        ->leftJoin('hbo_max', function ($join) {
+            $join->on('hbo_max.movie_id', '=', 'movies.id');
         })
         ->leftJoin('watch_list', function ($join) use ($user_id) {
             $join->on('watch_list.movie_id', '=', 'movies.id');
@@ -455,6 +471,9 @@ class MovieController extends Controller
         ->when(($disney_plus_only == 1), function ($q) {
             return $q->where('disney_plus.on_disney_plus', '=', '1');
         })
+        ->when(($hbo_max_only == 1), function ($q) {
+            return $q->where('hbo_max.on_hbo_max', '=', '1');
+        })
         ->when($unwatched_only == 1, function ($q) {
             return $q->where('mu.user_id', '=', NULL);
         })
@@ -478,6 +497,7 @@ class MovieController extends Controller
             DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
             DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
             DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
+            DB::raw('IF(ISNULL(hbo_max.on_hbo_max), \'0\', hbo_max.on_hbo_max) as on_hbo_max'),
             DB::raw('IF(ISNULL(mu.user_id), \'0\', \'1\') as watched'),
             DB::raw('IF(ISNULL(mu.favourite), \'0\', mu.favourite) as favourite'),
             DB::raw('IF(ISNULL(watch_list.movie_id), \'0\', \'1\') as on_watch_list')
@@ -502,6 +522,7 @@ class MovieController extends Controller
         $amazon_only = $request->amazon_only;
         $nowtv_only = $request->nowtv_only;
         $disney_plus_only = $request->disney_plus_only;
+        $hbo_max_only = $request->hbo_max_only ?? 0;
         $skip_count = $request->skip_count;
         $unwatched_by_friends = $request->unwatched_by_friends;
 
@@ -510,7 +531,7 @@ class MovieController extends Controller
 
         $movies = $this->getMovies($genre, $time_period, $english_only, $popular_only, $unwatched_only, 
         $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $disney_plus_only,
-        $unwatched_by_friends, $skip_count);
+        $unwatched_by_friends, $skip_count, $hbo_max_only);
 
         //Set movie index
         $count = $skip_count + 1;

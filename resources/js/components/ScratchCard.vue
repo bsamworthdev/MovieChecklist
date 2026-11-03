@@ -39,12 +39,14 @@
                     <div :class="{'dimmed': (isOnAmazon == 0) }" @click="editMovieDetailsClicked($event, 'amazon')" class="platform amazon" title="On amazon video"></div>
                     <div :class="{'dimmed': (isOnNowtv == 0) }" @click="editMovieDetailsClicked($event, 'nowtv')" class="platform nowtv" title="On Now TV"></div>
                     <div :class="{'dimmed': (isOnDisneyPlus == 0) }" @click="editMovieDetailsClicked($event, 'disney_plus')" class="platform disney_plus" title="On Disney Plus"></div>
+                    <div :class="{'dimmed': (isOnHboMax == 0) }" @click="editMovieDetailsClicked($event, 'hbo_max')" class="platform hbo_max" title="On HBO Max"></div>
                 </div>
                 <div v-else>
                     <div v-if="isOnNetflix == 1" class="platform netflix" title="On netflix"></div>
                     <div v-if="isOnAmazon  == 1" class="platform amazon" title="On amazon video"></div>
                     <div v-if="isOnNowtv  == 1" class="platform nowtv" title="On Now TV"></div>
                     <div v-if="isOnDisneyPlus  == 1" class="platform disney_plus" title="On Disney Plus"></div>
+                    <div v-if="isOnHboMax  == 1" class="platform hbo_max" title="On HBO Max"></div>
                 </div>                 
             </div>
             <div class="tickContainer">
@@ -199,6 +201,7 @@
                 isOnAmazon: (this.movie.on_amazon == 1),
                 isOnNowtv: (this.movie.on_nowtv == 1),
                 isOnDisneyPlus: (this.movie.on_disney_plus == 1),
+                isOnHboMax: (this.movie.on_hbo_max == 1),
                 favouriteHover: false,
                 watchListHover: false
             }
@@ -434,6 +437,9 @@
 
     .movieCard .platform.disney_plus {
         background-image: url('/images/disney_plus.jpg');
+    }
+    .movieCard .platform.hbo_max {
+        background-image: url('/images/hbo_max.png');
     }
 
     .movieCard .rating span{

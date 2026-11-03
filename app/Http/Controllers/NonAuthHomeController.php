@@ -43,6 +43,7 @@ class NonAuthHomeController extends Controller
         $amazon_only = 0;
         $nowtv_only = 0;
         $disney_plus_only = 0;
+        $hbo_max_only = 0;
         
         $filters = $request->input('filters');
         if ($filters){
@@ -85,6 +86,9 @@ class NonAuthHomeController extends Controller
                     case 'disney_plus':
                         $disney_plus_only=$val;
                         break;
+                    case 'hbo_max':
+                        $hbo_max_only=$val;
+                        break;
                 }
             }
         }
@@ -110,6 +114,9 @@ class NonAuthHomeController extends Controller
             })
             ->leftJoin('disney_plus', function ($join) {
                 $join->on('disney_plus.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('hbo_max', function ($join) {
+                $join->on('hbo_max.movie_id', '=', 'movies.id');
             })
             ->leftJoin('watch_list_non_auth', function ($join) use ($session_id) {
                 $join->on('watch_list_non_auth.movie_id', '=', 'movies.id');
@@ -154,6 +161,9 @@ class NonAuthHomeController extends Controller
             ->when(($disney_plus_only == 1), function ($q) {
                 return $q->where('disney_plus.on_disney_plus', '=', '1');
             })
+            ->when(($hbo_max_only == 1), function ($q) {
+                return $q->where('hbo_max.on_hbo_max', '=', '1');
+            })
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user_non_auth.session_id', '=', NULL);
             })
@@ -167,6 +177,7 @@ class NonAuthHomeController extends Controller
                 DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
                 DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
                 DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
+                DB::raw('IF(ISNULL(hbo_max.on_hbo_max), \'0\', hbo_max.on_hbo_max) as on_hbo_max'),
                 DB::raw('IF(ISNULL(movie_user_non_auth.session_id), \'0\', \'1\') as watched'),
                 DB::raw('IF(ISNULL(movie_user_non_auth.favourite), \'0\', movie_user_non_auth.favourite) as favourite'),
                 DB::raw('IF(ISNULL(watch_list_non_auth.movie_id), \'0\', \'1\') as on_watch_list')
@@ -192,6 +203,7 @@ class NonAuthHomeController extends Controller
         $selected_netflix_only = $netflix_only;
         $selected_amazon_only = $amazon_only;
         $selected_disney_plus_only = $disney_plus_only;
+        $selected_hbo_max_only = $hbo_max_only;
         $selected_nowtv_only = $nowtv_only;
 
 
@@ -234,6 +246,9 @@ class NonAuthHomeController extends Controller
                 ->leftJoin('disney_plus', function ($join) {
                     $join->on('disney_plus.movie_id', '=', 'movies.id');
                 })
+                ->leftJoin('hbo_max', function ($join) {
+                    $join->on('hbo_max.movie_id', '=', 'movies.id');
+                })
                 ->orderBy('top250_rank', 'ASC')
                 ->orderBy('rank', 'ASC')
                 ->get([
@@ -241,7 +256,8 @@ class NonAuthHomeController extends Controller
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                     DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
                     DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
-                    DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus')
+                    DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
+                    DB::raw('IF(ISNULL(hbo_max.on_hbo_max), \'0\', hbo_max.on_hbo_max) as on_hbo_max'),
                 ]);
         
         $info_messages = InfoMessage::where('start_date', '<', DB::raw('now()'))
@@ -266,6 +282,7 @@ class NonAuthHomeController extends Controller
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
                 "selectedDisneyPlusOnly" => $selected_disney_plus_only,
+                "selectedHboMaxOnly" => $selected_hbo_max_only,
                 "infoMessages" => $info_messages
             ]
         );

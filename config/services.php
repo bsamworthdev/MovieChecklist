@@ -2,6 +2,11 @@
 
 return [
 
+    'tmdb' => [
+        'token' => env('TMDB_API_TOKEN'),
+        'api_key' => env('TMDB_API_KEY'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

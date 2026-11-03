@@ -96,6 +96,16 @@
                                                                 {{( $selectedDisneyPlusOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
+                                                        <span class="nowrap">
+                                                            <label for="hbo_max_only_checkbox">
+                                                                <img class="hbo_max_logo" title="HBO Max" src="/images/hbo_max.png">
+                                                            </label>
+                                                            <input type="checkbox"
+                                                                class="form-input"
+                                                                id="hbo_max_only_checkbox"
+                                                                {{( $selectedHboMaxOnly ? "checked" : '')}}
+                                                                onchange="return changeSelection();">
+                                                        </span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -154,6 +164,7 @@
                         :watch_list="{{ $watchList }}" 
                         :movies="{{ $movies }}" >
                     </scratch-card-grid-non-auth>
+                    @include('streaming-attribution')
                 </div>
             </div>
         </div>
@@ -191,6 +202,7 @@
         var amazonOnlyCheckbox = document.getElementById('amazon_only_checkbox');
         var nowtvOnlyCheckbox = document.getElementById('nowtv_only_checkbox');
         var disneyPlusOnlyCheckbox = document.getElementById('disney_plus_only_checkbox');
+        var hboMaxOnlyCheckbox = document.getElementById('hbo_max_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         var searchInput = document.getElementById('search_input');
@@ -207,6 +219,7 @@
         if (amazonOnlyCheckbox.checked) params.push('amazon:1');
         if (nowtvOnlyCheckbox.checked) params.push('nowtv:1');
         if (disneyPlusOnlyCheckbox.checked) params.push('disney_plus:1');
+        if (hboMaxOnlyCheckbox.checked) params.push('hbo_max:1');
 
         if (params.length > 0){
             filters.setAttribute('value', params.join(';'));
@@ -271,7 +284,7 @@
         color:red;
         font-size:17px;
     }
-    .netflix_logo, .amazon_logo, .nowtv_logo, .disney_plus_logo{
+    .netflix_logo, .amazon_logo, .nowtv_logo, .disney_plus_logo, .hbo_max_logo{
         width:20px;
         height:20px;
     }

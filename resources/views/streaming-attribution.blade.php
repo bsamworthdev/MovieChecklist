@@ -1,0 +1,1 @@
+<p class="small text-muted text-center mt-3 mb-0">Streaming availability from <a href="https://www.justwatch.com/uk">JustWatch</a> via <a href="https://www.themoviedb.org">TMDB</a>. <a href="{{ url('/about') }}">Data credits</a></p>

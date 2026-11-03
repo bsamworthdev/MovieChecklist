@@ -17,6 +17,11 @@
   
                   <div class="card-body">
                     <p>
+                      <a href="https://www.themoviedb.org"><img src="{{ asset('images/tmdb-logo.svg') }}" alt="TMDB" width="120" height="16"></a>
+                    </p>
+                    <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+                    <p>UK streaming availability data is provided by <a href="https://www.justwatch.com/uk">JustWatch</a> via TMDB.</p>
+                    <p>
                       <ul>
                         <li>Movie Checklist is a way to see which of IMDb's top 100 movies you have and haven't seen. </li>
                         <li>It also provides away to see which movies can be streamed online via Netflix, Amazon Prime, etc.</li>

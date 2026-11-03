@@ -50,6 +50,7 @@ class HomeController extends Controller
         $amazon_only = 0;
         $nowtv_only = 0;
         $disney_plus_only = 0;
+        $hbo_max_only = 0;
         $unwatched_by_friends = '';
         
         // dd($request->fullUrl());
@@ -94,6 +95,9 @@ class HomeController extends Controller
                     case 'disney_plus':
                         $disney_plus_only=$val;
                         break;
+                    case 'hbo_max':
+                        $hbo_max_only=$val;
+                        break;
                     case 'friends':
                         $unwatched_by_friends=$val;
                         break;
@@ -111,7 +115,7 @@ class HomeController extends Controller
 
         $movieController = new MovieController;
         $movies = $movieController->getMovies($genre, $time_period, $english_only, $popular_only, $unwatched_only, 
-        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $disney_plus_only, $unwatched_by_friends);
+        $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $disney_plus_only, $unwatched_by_friends, 0, $hbo_max_only);
 
         $count = 1;
         foreach ($movies as $movie) {
@@ -134,6 +138,7 @@ class HomeController extends Controller
         $selected_amazon_only = $amazon_only;
         $selected_nowtv_only = $nowtv_only;
         $selected_disney_plus_only = $disney_plus_only;
+        $selected_hbo_max_only = $hbo_max_only;
         $selected_unwatched_by_friends = $unwatched_by_friends;
 
 
@@ -196,6 +201,9 @@ class HomeController extends Controller
                 ->leftJoin('disney_plus', function ($join) {
                     $join->on('disney_plus.movie_id', '=', 'disney_plus.id');
                 })
+                ->leftJoin('hbo_max', function ($join) {
+                    $join->on('hbo_max.movie_id', '=', 'movies.id');
+                })
                 ->orderBy('top250_rank', 'ASC')
                 ->orderBy('rank', 'ASC')
                 ->get([
@@ -203,7 +211,8 @@ class HomeController extends Controller
                     DB::raw('IF(ISNULL(netflix.on_netflix), \'0\', netflix.on_netflix) as on_netflix'),
                     DB::raw('IF(ISNULL(amazon.on_amazon), \'0\', amazon.on_amazon) as on_amazon'),
                     DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
-                    DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus')
+                    DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
+                    DB::raw('IF(ISNULL(hbo_max.on_hbo_max), \'0\', hbo_max.on_hbo_max) as on_hbo_max'),
                 ]);
         
         $info_messages = InfoMessage::where('start_date', '<', DB::raw('now()'))
@@ -222,7 +231,8 @@ class HomeController extends Controller
             "amazon_only" => $selected_amazon_only,
             "nowtv_only" => $selected_nowtv_only,
             "disney_plus_only" => $selected_disney_plus_only,
-            "unwatched_by_friends" => $selected_unwatched_by_friends
+            "unwatched_by_friends" => $selected_unwatched_by_friends,
+            "hbo_max_only" => $selected_hbo_max_only
         ]);
 
         return view(
@@ -245,6 +255,7 @@ class HomeController extends Controller
                 "selectedAmazonOnly" => $selected_amazon_only,
                 "selectedNowtvOnly" => $selected_nowtv_only,
                 "selectedDisneyPlusOnly" => $selected_disney_plus_only,
+                "selectedHboMaxOnly" => $selected_hbo_max_only,
                 "selectedUnwatchedByFriends" => $selected_unwatched_by_friends,
                 "infoMessages" => $info_messages
             ]
