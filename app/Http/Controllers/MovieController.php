@@ -352,15 +352,15 @@ class MovieController extends Controller
         $platform = $request->platform;
         $status = $request->status;
 
-        if ($platform === 'hbo_max') {
+        if (in_array($platform, ['hbo_max', 'apple_tv', 'paramount_plus', 'bbc_iplayer', 'itvx', 'channel4'], true)) {
             abort_unless(in_array($request->user()->role, ['admin', 'editor'], true), 403);
             $data = $request->validate(['movie_id' => 'required|integer|exists:movies,id', 'status' => 'required|boolean']);
-            DB::table('hbo_max')->insertOrIgnore([
-                'movie_id' => $data['movie_id'], 'on_hbo_max' => (int) $data['status'],
+            DB::table($platform)->insertOrIgnore([
+                'movie_id' => $data['movie_id'], 'on_'.$platform => (int) $data['status'],
                 'created_at' => now(), 'updated_at' => now(),
             ]);
-            DB::table('hbo_max')->where('movie_id', $data['movie_id'])->update([
-                'on_hbo_max' => (int) $data['status'], 'updated_at' => now(),
+            DB::table($platform)->where('movie_id', $data['movie_id'])->update([
+                'on_'.$platform => (int) $data['status'], 'updated_at' => now(),
             ]);
             return response()->json(['updated' => true]);
         }
@@ -406,7 +406,7 @@ class MovieController extends Controller
 
     function getMovies($genre, $time_period, $english_only, $popular_only, $unwatched_only, 
         $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, 
-        $disney_plus_only, $unwatched_by_friends, $skip_count = 0, $hbo_max_only = 0) {
+        $disney_plus_only, $unwatched_by_friends, $skip_count = 0, $hbo_max_only = 0, $apple_tv_only = 0, $paramount_plus_only = 0, $bbc_iplayer_only = 0, $itvx_only = 0, $channel4_only = 0) {
 
         $user = Auth::user();
         $user_id = $user->id;
@@ -427,6 +427,21 @@ class MovieController extends Controller
         })
         ->leftJoin('hbo_max', function ($join) {
             $join->on('hbo_max.movie_id', '=', 'movies.id');
+        })
+        ->leftJoin('apple_tv', function ($join) {
+            $join->on('apple_tv.movie_id', '=', 'movies.id');
+        })
+        ->leftJoin('paramount_plus', function ($join) {
+            $join->on('paramount_plus.movie_id', '=', 'movies.id');
+        })
+        ->leftJoin('bbc_iplayer', function ($join) {
+            $join->on('bbc_iplayer.movie_id', '=', 'movies.id');
+        })
+        ->leftJoin('itvx', function ($join) {
+            $join->on('itvx.movie_id', '=', 'movies.id');
+        })
+        ->leftJoin('channel4', function ($join) {
+            $join->on('channel4.movie_id', '=', 'movies.id');
         })
         ->leftJoin('watch_list', function ($join) use ($user_id) {
             $join->on('watch_list.movie_id', '=', 'movies.id');
@@ -474,6 +489,21 @@ class MovieController extends Controller
         ->when(($hbo_max_only == 1), function ($q) {
             return $q->where('hbo_max.on_hbo_max', '=', '1');
         })
+        ->when(($apple_tv_only == 1), function ($q) {
+            return $q->where('apple_tv.on_apple_tv', '=', '1');
+        })
+        ->when(($paramount_plus_only == 1), function ($q) {
+            return $q->where('paramount_plus.on_paramount_plus', '=', '1');
+        })
+        ->when(($bbc_iplayer_only == 1), function ($q) {
+            return $q->where('bbc_iplayer.on_bbc_iplayer', '=', '1');
+        })
+        ->when(($itvx_only == 1), function ($q) {
+            return $q->where('itvx.on_itvx', '=', '1');
+        })
+        ->when(($channel4_only == 1), function ($q) {
+            return $q->where('channel4.on_channel4', '=', '1');
+        })
         ->when($unwatched_only == 1, function ($q) {
             return $q->where('mu.user_id', '=', NULL);
         })
@@ -498,6 +528,11 @@ class MovieController extends Controller
             DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
             DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
             DB::raw('IF(ISNULL(hbo_max.on_hbo_max), \'0\', hbo_max.on_hbo_max) as on_hbo_max'),
+            DB::raw('IF(ISNULL(apple_tv.on_apple_tv), \'0\', apple_tv.on_apple_tv) as on_apple_tv'),
+            DB::raw('IF(ISNULL(paramount_plus.on_paramount_plus), \'0\', paramount_plus.on_paramount_plus) as on_paramount_plus'),
+            DB::raw('IF(ISNULL(bbc_iplayer.on_bbc_iplayer), \'0\', bbc_iplayer.on_bbc_iplayer) as on_bbc_iplayer'),
+            DB::raw('IF(ISNULL(itvx.on_itvx), \'0\', itvx.on_itvx) as on_itvx'),
+            DB::raw('IF(ISNULL(channel4.on_channel4), \'0\', channel4.on_channel4) as on_channel4'),
             DB::raw('IF(ISNULL(mu.user_id), \'0\', \'1\') as watched'),
             DB::raw('IF(ISNULL(mu.favourite), \'0\', mu.favourite) as favourite'),
             DB::raw('IF(ISNULL(watch_list.movie_id), \'0\', \'1\') as on_watch_list')
@@ -523,6 +558,11 @@ class MovieController extends Controller
         $nowtv_only = $request->nowtv_only;
         $disney_plus_only = $request->disney_plus_only;
         $hbo_max_only = $request->hbo_max_only ?? 0;
+        $apple_tv_only = $request->apple_tv_only ?? 0;
+        $paramount_plus_only = $request->paramount_plus_only ?? 0;
+        $bbc_iplayer_only = $request->bbc_iplayer_only ?? 0;
+        $itvx_only = $request->itvx_only ?? 0;
+        $channel4_only = $request->channel4_only ?? 0;
         $skip_count = $request->skip_count;
         $unwatched_by_friends = $request->unwatched_by_friends;
 
@@ -531,7 +571,7 @@ class MovieController extends Controller
 
         $movies = $this->getMovies($genre, $time_period, $english_only, $popular_only, $unwatched_only, 
         $favourites_only, $search_text, $netflix_only, $amazon_only, $nowtv_only, $disney_plus_only,
-        $unwatched_by_friends, $skip_count, $hbo_max_only);
+        $unwatched_by_friends, $skip_count, $hbo_max_only, $apple_tv_only, $paramount_plus_only, $bbc_iplayer_only, $itvx_only, $channel4_only);
 
         //Set movie index
         $count = $skip_count + 1;

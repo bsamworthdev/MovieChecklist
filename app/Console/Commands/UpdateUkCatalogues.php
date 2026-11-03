@@ -15,7 +15,7 @@ class UpdateUkCatalogues extends Command
 {
     protected $signature = 'catalogues:update {--service=* : Update only these service keys; defaults to all services}';
 
-    protected $description = 'Update UK subscription availability for all configured streaming services';
+    protected $description = 'Update UK streaming availability for all configured streaming services';
 
     public function handle(UkCatalogueUpdate $updater, TmdbUkAvailability $api): int
     {

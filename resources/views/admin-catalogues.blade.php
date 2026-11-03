@@ -2,7 +2,7 @@
 <section id="uk-catalogues" class="mb-4 pb-3 border-bottom"
     data-start-url="{{ route('admin.catalogues.start') }}" data-step-url="{{ route('admin.catalogues.step') }}">
     <h2 class="h5">Update UK streaming catalogues</h2>
-    <p>Check which movies in your database are included with each subscription. Rentals, purchases and extra Prime channels are excluded.</p>
+    <p>Check which movies in your database are available on each service, including free and ad-supported viewing. Rentals, purchases and extra Prime channels are excluded.</p>
     @unless($catalogueConfigured)
         <div class="alert alert-warning">
             Add your <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer">TMDB API Read Access Token</a>

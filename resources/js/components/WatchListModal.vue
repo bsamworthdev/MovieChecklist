@@ -18,6 +18,11 @@
                                     <img v-if="movie.on_nowtv == '1'" src="/images/nowtv.jpg" class="nowtv" >
                                     <img v-if="movie.on_disney_plus == '1'" src="/images/disney_plus.jpg" class="disney_plus" >
                                     <img v-if="movie.on_hbo_max == '1'" src="/images/hbo_max.png" class="hbo_max" >
+                                    <img v-if="movie.on_apple_tv == '1'" src="/images/apple_tv.png" class="apple_tv" >
+                                    <img v-if="movie.on_paramount_plus == '1'" src="/images/paramount_plus.png" class="paramount_plus" >
+                                    <img v-if="movie.on_bbc_iplayer == '1'" src="/images/bbc_iplayer.png" class="bbc_iplayer" >
+                                    <img v-if="movie.on_itvx == '1'" src="/images/itvx.png" class="itvx" >
+                                    <img v-if="movie.on_channel4 == '1'" src="/images/channel4.png" class="channel4" >
                                 </div>
                                 <div class="col-sm-3">
                                     <i class="fa fa-trash text-danger" @click="remove(movie)" title="Remove from list"></i>
@@ -87,7 +92,7 @@
         background-size: contain;
         height:60vh;
     }
-    .netflix, .amazon, .nowtv, .disney_plus, .hbo_max{
+    .netflix, .amazon, .nowtv, .disney_plus, .hbo_max, .apple_tv, .paramount_plus, .bbc_iplayer, .itvx, .channel4{
         width: 17px;
     }
 </style>

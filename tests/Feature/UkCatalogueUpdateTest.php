@@ -31,7 +31,7 @@ class UkCatalogueUpdateTest extends TestCase
             Schema::create($service['table'], function (Blueprint $table) use ($service) {
                 $table->id();
                 $table->integer('movie_id');
-                if ($service['table'] === 'hbo_max') $table->unique('movie_id');
+                if (!in_array($service['table'], ['amazon', 'netflix', 'disney_plus', 'nowtv'], true)) $table->unique('movie_id');
                 $table->tinyInteger($service['column']);
                 $table->timestamps();
             });
@@ -73,6 +73,17 @@ class UkCatalogueUpdateTest extends TestCase
                     ['provider_id' => 39, 'provider_name' => 'Now TV Cinema'],
                     ['provider_id' => 1899, 'provider_name' => 'HBO Max'],
                     ['provider_id' => 1825, 'provider_name' => 'HBO Max Amazon Channel'],
+                    ['provider_id' => 350, 'provider_name' => 'Apple TV'],
+                    ['provider_id' => 2, 'provider_name' => 'Apple TV Store'],
+                    ['provider_id' => 531, 'provider_name' => 'Paramount Plus'],
+                    ['provider_id' => 2303, 'provider_name' => 'Paramount Plus Premium'],
+                    ['provider_id' => 2304, 'provider_name' => 'Paramount Plus Basic with Ads'],
+                    ['provider_id' => 582, 'provider_name' => 'Paramount+ Amazon Channel'],
+                    ['provider_id' => 38, 'provider_name' => 'BBC iPlayer'],
+                    ['provider_id' => 41, 'provider_name' => 'ITVX'],
+                    ['provider_id' => 2300, 'provider_name' => 'ITVX Premium'],
+                    ['provider_id' => 103, 'provider_name' => 'Channel 4'],
+                    ['provider_id' => 2311, 'provider_name' => 'Channel 4 Plus'],
                 ]]);
             }
             if (preg_match('~/find/tt(\d+)$~', $path, $matches)) {
@@ -166,6 +177,7 @@ class UkCatalogueUpdateTest extends TestCase
         $this->movie();
         $this->fakeApi([1 => ['GB' => ['flatrate' => [
             ['provider_id' => 9], ['provider_id' => 1796], ['provider_id' => 337], ['provider_id' => 39], ['provider_id' => 1899],
+            ['provider_id' => 350], ['provider_id' => 531], ['provider_id' => 38], ['provider_id' => 41], ['provider_id' => 103],
         ]]]]);
         foreach (config('catalogues.services') as $key => $config) {
             $result = $this->finish($key);
@@ -338,5 +350,72 @@ class UkCatalogueUpdateTest extends TestCase
         $route = app('router')->getRoutes()->match(\Illuminate\Http\Request::create('/getMoreMovies/100/all/all/0/0/0/0/null/0/0/0/0/null/1', 'POST'));
         $this->assertSame('1', $route->parameter('hbo_max_only'));
         $this->assertSame('null', $route->parameter('unwatched_by_friends'));
+    }
+
+    public function test_broadcasters_match_free_ads_and_premium_but_exclude_rentals_and_other_countries(): void
+    {
+        $this->admin();
+        $free = $this->movie();
+        $rental = $this->movie('tt1000002');
+        $premium = $this->movie('tt1000003');
+        $this->fakeApi([
+            1 => ['GB' => ['free' => [['provider_id' => 38], ['provider_id' => 103]], 'ads' => [['provider_id' => 41]]]],
+            2 => ['GB' => ['rent' => [['provider_id' => 38], ['provider_id' => 41], ['provider_id' => 103]]],
+                'US' => ['free' => [['provider_id' => 38], ['provider_id' => 41], ['provider_id' => 103]]]],
+            3 => ['GB' => ['flatrate' => [['provider_id' => 2300], ['provider_id' => 2311]]]],
+        ]);
+        foreach (['bbc_iplayer', 'itvx', 'channel4'] as $service) {
+            $this->finish($service);
+            $this->assertSame(1, DB::table($service)->where('movie_id', $free)->value('on_'.$service));
+            $this->assertSame(0, DB::table($service)->where('movie_id', $rental)->value('on_'.$service));
+            $this->assertSame($service === 'bbc_iplayer' ? 0 : 1, DB::table($service)->where('movie_id', $premium)->value('on_'.$service));
+        }
+        Http::assertSentCount(7);
+    }
+
+    public function test_apple_subscription_excludes_store_and_paramount_excludes_amazon_addon(): void
+    {
+        $this->admin();
+        $included = $this->movie();
+        $excluded = $this->movie('tt1000002');
+        $this->fakeApi([
+            1 => ['GB' => ['flatrate' => [['provider_id' => 350], ['provider_id' => 2304]]]],
+            2 => ['GB' => ['flatrate' => [['provider_id' => 2], ['provider_id' => 582]], 'buy' => [['provider_id' => 350], ['provider_id' => 531]]]],
+        ]);
+        foreach (['apple_tv', 'paramount_plus'] as $service) {
+            $this->finish($service);
+            $this->assertSame(1, DB::table($service)->where('movie_id', $included)->value('on_'.$service));
+            $this->assertSame(0, DB::table($service)->where('movie_id', $excluded)->value('on_'.$service));
+        }
+    }
+
+    public function test_cached_free_offers_do_not_mark_paid_services_as_subscriptions(): void
+    {
+        $this->admin();
+        $this->movie();
+        $this->fakeApi([1 => ['GB' => ['free' => [['provider_id' => 8], ['provider_id' => 38]]]]]);
+        $this->assertSame(0, $this->finish('netflix')['result']['available']);
+        $this->assertSame(1, $this->finish('bbc_iplayer')['result']['available']);
+        Http::assertSentCount(3);
+    }
+
+    public function test_new_services_have_working_manual_controls_and_filters(): void
+    {
+        $this->admin();
+        $movie = $this->movie();
+        $newServices = ['apple_tv', 'paramount_plus', 'bbc_iplayer', 'itvx', 'channel4'];
+        foreach ($newServices as $index => $service) {
+            $payload = ['platform' => $service, 'movie_id' => $movie, 'status' => 1];
+            $this->postJson('/setMovieStreamStatus', $payload)->assertOk();
+            $this->postJson('/setMovieStreamStatus', $payload)->assertOk();
+            $this->assertSame(1, DB::table($service)->count());
+            $this->assertSame(1, DB::table($service)->value('on_'.$service));
+            $filters = array_fill(0, 5, 0);
+            $filters[$index] = 1;
+            $queries = DB::connection()->pretend(function () use ($filters) {
+                app(\App\Http\Controllers\MovieController::class)->getMovies('all', 'all', 0, 0, 0, 0, '', 0, 0, 0, 0, '', 100, 0, ...$filters);
+            });
+            $this->assertStringContainsString('"'.$service.'"."on_'.$service.'" = \'1\'', $queries[0]['query']);
+        }
     }
 }

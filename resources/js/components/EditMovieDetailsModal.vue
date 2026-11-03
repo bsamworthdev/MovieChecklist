@@ -126,6 +126,121 @@
             <u>IS NOT</u> On HBO Max
           </button>
         </div>
+        <br />
+        <div v-if="movie.on_apple_tv == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON APPLE TV</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'apple_tv', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on Apple TV
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON APPLE TV</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'apple_tv', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On Apple TV
+          </button>
+        </div>
+        <br />
+        <div v-if="movie.on_paramount_plus == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON PARAMOUNT+</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'paramount_plus', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on Paramount+
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON PARAMOUNT+</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'paramount_plus', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On Paramount+
+          </button>
+        </div>
+        <br />
+        <div v-if="movie.on_bbc_iplayer == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON BBC IPLAYER</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'bbc_iplayer', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on BBC iPlayer
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON BBC IPLAYER</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'bbc_iplayer', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On BBC iPlayer
+          </button>
+        </div>
+        <br />
+        <div v-if="movie.on_itvx == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON ITVX</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'itvx', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on ITVX
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON ITVX</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'itvx', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On ITVX
+          </button>
+        </div>
+        <br />
+        <div v-if="movie.on_channel4 == 0" class="col-sm-12">
+          <span class="col-sm-12 badge badge-danger">NOT ON CHANNEL 4</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'channel4', '1')"
+          >
+            Wait! This movie
+            <u>IS</u> on Channel 4
+          </button>
+        </div>
+        <div v-else class="col-sm-12">
+          <span class="col-sm-12 badge badge-success">ON CHANNEL 4</span>
+          <button
+            type="button"
+            class="col-sm-12 btn btn-link"
+            @click="setMovieStreamStatus($event, 'channel4', '0')"
+          >
+            Wait! This Movie
+            <u>IS NOT</u> On Channel 4
+          </button>
+        </div>
       </div>
     </div>
 

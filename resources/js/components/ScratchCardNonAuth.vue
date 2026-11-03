@@ -34,6 +34,11 @@
                     <div v-if="isOnNowtv  == 1" class="platform nowtv" title="On Now TV"></div>  
                     <div v-if="isOnDisneyPlus  == 1" class="platform disney_plus" title="On Disney Plus"></div>                 
                     <div v-if="isOnHboMax  == 1" class="platform hbo_max" title="On HBO Max"></div>
+                    <div v-if="isOnAppleTv  == 1" class="platform apple_tv" title="On Apple TV"></div>
+                    <div v-if="isOnParamountPlus  == 1" class="platform paramount_plus" title="On Paramount+"></div>
+                    <div v-if="isOnBbcIplayer  == 1" class="platform bbc_iplayer" title="On BBC iPlayer"></div>
+                    <div v-if="isOnItvx  == 1" class="platform itvx" title="On ITVX"></div>
+                    <div v-if="isOnChannel4  == 1" class="platform channel4" title="On Channel 4"></div>
                 </div>
                 <div class="tickContainer">
                     <i v-if="hasWatched" class="fa fa-check tick"></i>
@@ -146,6 +151,11 @@
                 isOnNowtv: (this.movie.on_nowtv == 1),
                 isOnDisneyPlus: (this.movie.on_disney_plus == 1),
                 isOnHboMax: (this.movie.on_hbo_max == 1),
+                isOnAppleTv: (this.movie.on_apple_tv == 1),
+                isOnParamountPlus: (this.movie.on_paramount_plus == 1),
+                isOnBbcIplayer: (this.movie.on_bbc_iplayer == 1),
+                isOnItvx: (this.movie.on_itvx == 1),
+                isOnChannel4: (this.movie.on_channel4 == 1),
                 favouriteHover: false,
                 watchListHover: false
             }
@@ -333,17 +343,22 @@
 
     .movieCard .platforms{
         position:absolute;
-        text-align:center;
         right:6px;
         top:60px;
-        min-width:40px;
+        display:grid;
+        grid-template-columns:repeat(2, 30px);
+        gap:2px;
+    }
+
+    .movieCard .platforms > div:not(.platform) {
+        display:contents;
     }
 
     .movieCard .platform {
         width:30px;
         height:30px;
         background-size: cover;
-        margin-bottom:6px;
+        margin-bottom:0;
     }
 
     .movieCard .platform.dimmed {
@@ -366,6 +381,21 @@
     }
     .movieCard .platform.hbo_max {
         background-image: url('/images/hbo_max.png');
+    }
+    .movieCard .platform.apple_tv {
+        background-image: url('/images/apple_tv.png');
+    }
+    .movieCard .platform.paramount_plus {
+        background-image: url('/images/paramount_plus.png');
+    }
+    .movieCard .platform.bbc_iplayer {
+        background-image: url('/images/bbc_iplayer.png');
+    }
+    .movieCard .platform.itvx {
+        background-image: url('/images/itvx.png');
+    }
+    .movieCard .platform.channel4 {
+        background-image: url('/images/channel4.png');
     }
 
     .movieCard .rating span{

@@ -51,7 +51,7 @@ class UkCatalogueUpdate
                 return $this->progress($state);
             }
             $batch = array_slice($state['movies'], $state['processed'], max(1, min(20, (int) config('catalogues.batch_size', 10))));
-            $outcomes = $this->api->check($batch, $state['provider_ids']);
+            $outcomes = $this->api->check($batch, $state['provider_ids'], config('catalogues.services.'.$state['service'].'.offer_types', ['flatrate']));
             foreach ($batch as $movie) {
                 $outcome = $outcomes[$movie['id']];
                 if (isset($outcome['skipped'])) {

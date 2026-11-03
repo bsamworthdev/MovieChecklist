@@ -1,6 +1,6 @@
 # UK streaming catalogue updates
 
-The five buttons under **Admin → Update UK streaming catalogues** update subscription availability for movies already in the database. They do not add an entire streaming service's films to the checklist.
+The ten buttons under **Admin → Update UK streaming catalogues** update streaming availability for movies already in the database. They do not add an entire streaming service's films to the checklist.
 
 ## Setup
 
@@ -9,17 +9,17 @@ The five buttons under **Admin → Update UK streaming catalogues** update subsc
 3. Run `php artisan config:clear` if configuration was cached, then reload `/admin`.
 4. Click the service's update button and keep the page open until it finishes. No database migration or queue worker is needed.
 
-Availability is supplied by JustWatch through TMDB. Requests use IMDb IDs to resolve movies to TMDB and read **GB** subscription (`flatrate`) offers. Prime rentals, purchases and separate Prime channel subscriptions are excluded. Ad-supported subscription variants are included where the provider list names them. NOW checks the UK cinema subscription, not Sky Go. HBO Max checks its standalone UK subscription, excluding the separate Amazon channel. Run `php artisan migrate` when deploying the HBO Max table migration.
+Availability is supplied by JustWatch through TMDB. Requests use IMDb IDs to resolve movies to TMDB and read **GB** subscription (`flatrate`) offers for paid services. BBC iPlayer, ITVX and Channel 4 also include `free` and `ads` offers. ITVX Premium and Channel 4 Plus are included with their parent service. Prime rentals, purchases and separate Prime channel subscriptions are excluded. Ad-supported subscription variants are included where the provider list names them. NOW checks the UK cinema subscription, not Sky Go. HBO Max checks its standalone UK subscription, excluding the separate Amazon channel. Run `php artisan migrate` when deploying the HBO Max table migration.
 
 ## Processing and failure handling
 
 Updates run in browser-driven batches of ten movies. Results are staged in the server cache. Only after every batch succeeds does one database transaction update the chosen provider table. A failed request cannot clear the existing catalogue. The retry button resumes the same staged update; duplicate/retried batch requests do not apply changes twice. If the list of movie IDs/IMDb codes changes mid-update, restart the update.
 
-Movies without a usable IMDb ID, or without exactly one TMDB movie match, are skipped and keep their existing availability. The completion report lists them. A successfully resolved movie with no GB subscription offers is marked unavailable.
+Movies without a usable IMDb ID, or without exactly one TMDB movie match, are skipped and keep their existing availability. The completion report lists them. A successfully resolved movie with no matching GB offers is marked unavailable.
 
 Existing provider rows are updated; newly checked movies get a row, and duplicate rows for those movies are collapsed so joins do not duplicate movie cards. The other providers' tables and movie metadata are untouched.
 
-IMDb-to-TMDB mappings are cached for 30 days (unresolved IDs for one hour). UK subscription offers are cached for 15 minutes and shared across all five buttons. The provider list is cached for an hour. Update runs expire after two hours.
+IMDb-to-TMDB mappings are cached for 30 days (unresolved IDs for one hour). UK subscription/free/ad-supported offers are cached for 15 minutes and shared across all ten buttons. The provider list is cached for an hour. Update runs expire after two hours.
 
 `CATALOGUE_CACHE_STORE` defaults to `file`. On multiple web servers, choose a shared, lock-capable store such as `redis`. Sessions contain only the run token; the full movie list is never stored in the database session payload. The web server needs write access to Laravel's configured cache directory.
 
@@ -34,7 +34,7 @@ Credits appear on the movie pages, admin page and About page. `public/images/tmd
 
 ## Daily live-server schedule
 
-The application schedules `catalogues:update` for **00:00 Europe/London** every day, including GMT/BST changes. It runs all five configured services sequentially, using the same staged/transactional updates as the admin buttons. It does not need a browser or queue worker. Each service is committed separately; a failed service is logged and the remaining services are still attempted. Any service failure makes the command exit nonzero.
+The application schedules `catalogues:update` for **00:00 Europe/London** every day, including GMT/BST changes. It runs all ten configured services sequentially, using the same staged/transactional updates as the admin buttons. It does not need a browser or queue worker. Each service is committed separately; a failed service is logged and the remaining services are still attempted. Any service failure makes the command exit nonzero.
 
 After deploying these files:
 
@@ -57,4 +57,4 @@ To rerun one provider after a failure:
 php artisan catalogues:update --service=netflix
 ```
 
-Valid keys are `prime`, `netflix`, `disney`, `now`, and `hbo_max`. Multiple `--service` options may be supplied. All services are selected when the option is omitted.
+Valid keys are `prime`, `netflix`, `disney`, `now`, `hbo_max`, `apple_tv`, `paramount_plus`, `bbc_iplayer`, `itvx`, and `channel4`. Multiple `--service` options may be supplied. All services are selected when the option is omitted.

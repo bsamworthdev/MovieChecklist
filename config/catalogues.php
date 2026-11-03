@@ -25,5 +25,25 @@ return [
             'label' => 'NOW TV', 'table' => 'nowtv', 'column' => 'on_nowtv', 'icon' => 'nowtv.jpg',
             'provider_names' => ['Now TV Cinema', 'NOW Cinema', 'Now TV', 'NOW'],
         ],
+        'apple_tv' => [
+            'label' => 'Apple TV', 'table' => 'apple_tv', 'column' => 'on_apple_tv', 'icon' => 'apple_tv.png',
+            'provider_names' => ['Apple TV', 'Apple TV Plus', 'Apple TV+'], 'offer_types' => ['flatrate'],
+        ],
+        'paramount_plus' => [
+            'label' => 'Paramount+', 'table' => 'paramount_plus', 'column' => 'on_paramount_plus', 'icon' => 'paramount_plus.png',
+            'provider_names' => ['Paramount Plus', 'Paramount+', 'Paramount Plus Premium', 'Paramount Plus Basic with Ads'], 'offer_types' => ['flatrate'],
+        ],
+        'bbc_iplayer' => [
+            'label' => 'BBC iPlayer', 'table' => 'bbc_iplayer', 'column' => 'on_bbc_iplayer', 'icon' => 'bbc_iplayer.png',
+            'provider_names' => ['BBC iPlayer'], 'offer_types' => ['flatrate', 'free', 'ads'],
+        ],
+        'itvx' => [
+            'label' => 'ITVX', 'table' => 'itvx', 'column' => 'on_itvx', 'icon' => 'itvx.png',
+            'provider_names' => ['ITVX', 'ITVX Premium'], 'offer_types' => ['flatrate', 'free', 'ads'],
+        ],
+        'channel4' => [
+            'label' => 'Channel 4', 'table' => 'channel4', 'column' => 'on_channel4', 'icon' => 'channel4.png',
+            'provider_names' => ['Channel 4', 'Channel 4 Plus'], 'offer_types' => ['flatrate', 'free', 'ads'],
+        ],
     ],
 ];

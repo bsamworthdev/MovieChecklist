@@ -52,7 +52,7 @@ class TmdbUkAvailability
         return array_values(array_unique($ids));
     }
 
-    public function check(array $movies, array $providerIds): array
+    public function check(array $movies, array $providerIds, array $offerTypes = ['flatrate']): array
     {
         $cache = Cache::store(config('catalogues.cache_store', 'file'));
         $identities = [];
@@ -86,7 +86,7 @@ class TmdbUkAvailability
                 continue;
             }
             $id = $identity['id'];
-            $offer = $cache->get('tmdb:gb:subscriptions:'.$id);
+            $offer = $cache->get('tmdb:gb:offers:v2:'.$id);
             if ($offer === null) {
                 $pending[$id] = ['path' => '/movie/'.$id.'/watch/providers', 'query' => []];
             } else {
@@ -103,23 +103,23 @@ class TmdbUkAvailability
                     throw new CatalogueUpdateException('TMDB returned invalid regional availability. No availability was changed.');
                 }
             }
-            if (isset($regions['GB']) && array_key_exists('flatrate', $regions['GB']) && !is_array($regions['GB']['flatrate'])) {
-                throw new CatalogueUpdateException('TMDB returned invalid UK subscription offers. No availability was changed.');
-            }
-            $subscriptions = $regions['GB']['flatrate'] ?? [];
-            if (!is_array($subscriptions)) {
-                throw new CatalogueUpdateException('TMDB returned invalid UK subscription offers. No availability was changed.');
-            }
-            $ids = [];
-            foreach ($subscriptions as $provider) {
-                if (!$this->validId($provider['provider_id'] ?? null)) {
-                    throw new CatalogueUpdateException('TMDB returned an invalid subscription provider. No availability was changed.');
+            $groups = [];
+            foreach (['flatrate', 'free', 'ads'] as $type) {
+                if (isset($regions['GB']) && array_key_exists($type, $regions['GB']) && !is_array($regions['GB'][$type])) {
+                    throw new CatalogueUpdateException('TMDB returned invalid UK streaming offers. No availability was changed.');
                 }
-                $ids[] = (int) $provider['provider_id'];
+                $ids = [];
+                foreach ($regions['GB'][$type] ?? [] as $provider) {
+                    if (!$this->validId($provider['provider_id'] ?? null)) {
+                        throw new CatalogueUpdateException('TMDB returned an invalid streaming provider. No availability was changed.');
+                    }
+                    $ids[] = (int) $provider['provider_id'];
+                }
+                $groups[$type] = array_values(array_unique($ids));
             }
-            // Share recent UK results across the service buttons; rentals, purchases and other countries are excluded.
-            $offers[$id] = array_values(array_unique($ids));
-            $cache->put('tmdb:gb:subscriptions:'.$id, $offers[$id], 900);
+            // Cache all supported access types, but never rentals/purchases, for sharing across services.
+            $offers[$id] = $groups;
+            $cache->put('tmdb:gb:offers:v2:'.$id, $groups, 900);
         }
         $outcomes = [];
         foreach ($movies as $movie) {
@@ -128,7 +128,14 @@ class TmdbUkAvailability
             if (!$identity || !$identity['id']) {
                 $outcomes[$movie['id']] = ['skipped' => $code ? 'IMDb code could not be resolved to one TMDB movie.' : 'No IMDb code.'];
             } else {
-                $outcomes[$movie['id']] = ['available' => count(array_intersect($providerIds, $offers[$identity['id']])) > 0];
+                $allowed = [];
+                foreach ($offerTypes as $type) {
+                    if (!in_array($type, ['flatrate', 'free', 'ads'], true)) {
+                        throw new CatalogueUpdateException('Unsupported streaming access type. No availability was changed.');
+                    }
+                    $allowed = array_merge($allowed, $offers[$identity['id']][$type] ?? []);
+                }
+                $outcomes[$movie['id']] = ['available' => count(array_intersect($providerIds, $allowed)) > 0];
             }
         }
         return $outcomes;

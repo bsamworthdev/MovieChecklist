@@ -106,6 +106,56 @@
                                                                 {{( $selectedHboMaxOnly ? "checked" : '')}}
                                                                 onchange="return changeSelection();">
                                                         </span>
+<span class="nowrap">
+                                                            <label for="apple_tv_only_checkbox">
+                                                                <img class="apple_tv_logo" title="Apple TV" src="/images/apple_tv.png">
+                                                            </label>
+                                                            <input type="checkbox"
+                                                                class="form-input"
+                                                                id="apple_tv_only_checkbox"
+                                                                {{( $selectedAppleTvOnly ? "checked" : '')}}
+                                                                onchange="return changeSelection();">
+                                                        </span>
+<span class="nowrap">
+                                                            <label for="paramount_plus_only_checkbox">
+                                                                <img class="paramount_plus_logo" title="Paramount+" src="/images/paramount_plus.png">
+                                                            </label>
+                                                            <input type="checkbox"
+                                                                class="form-input"
+                                                                id="paramount_plus_only_checkbox"
+                                                                {{( $selectedParamountPlusOnly ? "checked" : '')}}
+                                                                onchange="return changeSelection();">
+                                                        </span>
+<span class="nowrap">
+                                                            <label for="bbc_iplayer_only_checkbox">
+                                                                <img class="bbc_iplayer_logo" title="BBC iPlayer" src="/images/bbc_iplayer.png">
+                                                            </label>
+                                                            <input type="checkbox"
+                                                                class="form-input"
+                                                                id="bbc_iplayer_only_checkbox"
+                                                                {{( $selectedBbcIplayerOnly ? "checked" : '')}}
+                                                                onchange="return changeSelection();">
+                                                        </span>
+<span class="nowrap">
+                                                            <label for="itvx_only_checkbox">
+                                                                <img class="itvx_logo" title="ITVX" src="/images/itvx.png">
+                                                            </label>
+                                                            <input type="checkbox"
+                                                                class="form-input"
+                                                                id="itvx_only_checkbox"
+                                                                {{( $selectedItvxOnly ? "checked" : '')}}
+                                                                onchange="return changeSelection();">
+                                                        </span>
+<span class="nowrap">
+                                                            <label for="channel4_only_checkbox">
+                                                                <img class="channel4_logo" title="Channel 4" src="/images/channel4.png">
+                                                            </label>
+                                                            <input type="checkbox"
+                                                                class="form-input"
+                                                                id="channel4_only_checkbox"
+                                                                {{( $selectedChannel4Only ? "checked" : '')}}
+                                                                onchange="return changeSelection();">
+                                                        </span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -203,6 +253,11 @@
         var nowtvOnlyCheckbox = document.getElementById('nowtv_only_checkbox');
         var disneyPlusOnlyCheckbox = document.getElementById('disney_plus_only_checkbox');
         var hboMaxOnlyCheckbox = document.getElementById('hbo_max_only_checkbox');
+        var appleTvOnlyCheckbox = document.getElementById('apple_tv_only_checkbox');
+        var paramountPlusOnlyCheckbox = document.getElementById('paramount_plus_only_checkbox');
+        var bbcIplayerOnlyCheckbox = document.getElementById('bbc_iplayer_only_checkbox');
+        var itvxOnlyCheckbox = document.getElementById('itvx_only_checkbox');
+        var channel4OnlyCheckbox = document.getElementById('channel4_only_checkbox');
         var timePeriodSelect = document.getElementById('time_period_select');
         var genreSelect = document.getElementById('genre_select');
         var searchInput = document.getElementById('search_input');
@@ -220,6 +275,11 @@
         if (nowtvOnlyCheckbox.checked) params.push('nowtv:1');
         if (disneyPlusOnlyCheckbox.checked) params.push('disney_plus:1');
         if (hboMaxOnlyCheckbox.checked) params.push('hbo_max:1');
+        if (appleTvOnlyCheckbox.checked) params.push('apple_tv:1');
+        if (paramountPlusOnlyCheckbox.checked) params.push('paramount_plus:1');
+        if (bbcIplayerOnlyCheckbox.checked) params.push('bbc_iplayer:1');
+        if (itvxOnlyCheckbox.checked) params.push('itvx:1');
+        if (channel4OnlyCheckbox.checked) params.push('channel4:1');
 
         if (params.length > 0){
             filters.setAttribute('value', params.join(';'));
@@ -284,7 +344,7 @@
         color:red;
         font-size:17px;
     }
-    .netflix_logo, .amazon_logo, .nowtv_logo, .disney_plus_logo, .hbo_max_logo{
+    .netflix_logo, .amazon_logo, .nowtv_logo, .disney_plus_logo, .hbo_max_logo, .apple_tv_logo, .paramount_plus_logo, .bbc_iplayer_logo, .itvx_logo, .channel4_logo{
         width:20px;
         height:20px;
     }

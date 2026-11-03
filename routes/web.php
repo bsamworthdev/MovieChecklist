@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/setMovieStreamStatus', 'MovieController@setMovieStreamStatus');
     Route::post('/getFriendsStats/{movie_id?}/', 'UserController@getFriendsStats'); 
     Route::post('/toggleMovieInWatchList', 'UserController@toggleMovieInWatchList');
-    Route::post('/getMoreMovies/{skip_count?}/{genre?}/{time_period?}/{popular_only?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/{disney_plus_only?}/{unwatched_by_friends?}/{hbo_max_only?}/', 'MovieController@getMoreMovies');
+    Route::post('/getMoreMovies/{skip_count?}/{genre?}/{time_period?}/{popular_only?}/{english_only?}/{unwatched_only?}/{favourites_only?}/{search_text?}/{netflix_only?}/{amazon_only?}/{nowtv_only?}/{disney_plus_only?}/{unwatched_by_friends?}/{hbo_max_only?}/{apple_tv_only?}/{paramount_plus_only?}/{bbc_iplayer_only?}/{itvx_only?}/{channel4_only?}/', 'MovieController@getMoreMovies');
     Route::post('/editfriend', 'FriendshipController@edit');
     Route::post('/deletefriend', 'FriendshipController@delete');
 

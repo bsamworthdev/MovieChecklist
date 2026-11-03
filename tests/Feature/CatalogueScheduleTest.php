@@ -35,7 +35,7 @@ class CatalogueScheduleTest extends TestCase
         ]);
     }
 
-    public function test_command_runs_all_five_services_without_a_browser(): void
+    public function test_command_runs_all_configured_services_without_a_browser(): void
     {
         $this->configured();
         $mock = $this->mock(UkCatalogueUpdate::class);

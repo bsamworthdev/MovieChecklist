@@ -32,6 +32,11 @@
                                     <div v-if="movie.on_nowtv  == 1" class="platform nowtv" title="On Now TV"></div>
                                     <div v-if="movie.on_disney_plus  == 1" class="platform disney_plus" title="On Disney Plus"></div>
                                     <div v-if="movie.on_hbo_max  == 1" class="platform hbo_max" title="On HBO Max"></div>
+                                    <div v-if="movie.on_apple_tv  == 1" class="platform apple_tv" title="On Apple TV"></div>
+                                    <div v-if="movie.on_paramount_plus  == 1" class="platform paramount_plus" title="On Paramount+"></div>
+                                    <div v-if="movie.on_bbc_iplayer  == 1" class="platform bbc_iplayer" title="On BBC iPlayer"></div>
+                                    <div v-if="movie.on_itvx  == 1" class="platform itvx" title="On ITVX"></div>
+                                    <div v-if="movie.on_channel4  == 1" class="platform channel4" title="On Channel 4"></div>
                                 </div>
                             </div>
                             <div v-if="auth" class="row mt-3">
@@ -145,5 +150,20 @@
     }
     .platform.hbo_max {
         background-image: url('/images/hbo_max.png');
+    }
+    .platform.apple_tv {
+        background-image: url('/images/apple_tv.png');
+    }
+    .platform.paramount_plus {
+        background-image: url('/images/paramount_plus.png');
+    }
+    .platform.bbc_iplayer {
+        background-image: url('/images/bbc_iplayer.png');
+    }
+    .platform.itvx {
+        background-image: url('/images/itvx.png');
+    }
+    .platform.channel4 {
+        background-image: url('/images/channel4.png');
     }
 </style>

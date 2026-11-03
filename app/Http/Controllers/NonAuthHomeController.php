@@ -44,6 +44,11 @@ class NonAuthHomeController extends Controller
         $nowtv_only = 0;
         $disney_plus_only = 0;
         $hbo_max_only = 0;
+        $apple_tv_only = 0;
+        $paramount_plus_only = 0;
+        $bbc_iplayer_only = 0;
+        $itvx_only = 0;
+        $channel4_only = 0;
         
         $filters = $request->input('filters');
         if ($filters){
@@ -89,6 +94,21 @@ class NonAuthHomeController extends Controller
                     case 'hbo_max':
                         $hbo_max_only=$val;
                         break;
+                    case 'apple_tv':
+                        $apple_tv_only=$val;
+                        break;
+                    case 'paramount_plus':
+                        $paramount_plus_only=$val;
+                        break;
+                    case 'bbc_iplayer':
+                        $bbc_iplayer_only=$val;
+                        break;
+                    case 'itvx':
+                        $itvx_only=$val;
+                        break;
+                    case 'channel4':
+                        $channel4_only=$val;
+                        break;
                 }
             }
         }
@@ -117,6 +137,21 @@ class NonAuthHomeController extends Controller
             })
             ->leftJoin('hbo_max', function ($join) {
                 $join->on('hbo_max.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('apple_tv', function ($join) {
+                $join->on('apple_tv.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('paramount_plus', function ($join) {
+                $join->on('paramount_plus.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('bbc_iplayer', function ($join) {
+                $join->on('bbc_iplayer.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('itvx', function ($join) {
+                $join->on('itvx.movie_id', '=', 'movies.id');
+            })
+            ->leftJoin('channel4', function ($join) {
+                $join->on('channel4.movie_id', '=', 'movies.id');
             })
             ->leftJoin('watch_list_non_auth', function ($join) use ($session_id) {
                 $join->on('watch_list_non_auth.movie_id', '=', 'movies.id');
@@ -164,6 +199,21 @@ class NonAuthHomeController extends Controller
             ->when(($hbo_max_only == 1), function ($q) {
                 return $q->where('hbo_max.on_hbo_max', '=', '1');
             })
+            ->when(($apple_tv_only == 1), function ($q) {
+                return $q->where('apple_tv.on_apple_tv', '=', '1');
+            })
+            ->when(($paramount_plus_only == 1), function ($q) {
+                return $q->where('paramount_plus.on_paramount_plus', '=', '1');
+            })
+            ->when(($bbc_iplayer_only == 1), function ($q) {
+                return $q->where('bbc_iplayer.on_bbc_iplayer', '=', '1');
+            })
+            ->when(($itvx_only == 1), function ($q) {
+                return $q->where('itvx.on_itvx', '=', '1');
+            })
+            ->when(($channel4_only == 1), function ($q) {
+                return $q->where('channel4.on_channel4', '=', '1');
+            })
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user_non_auth.session_id', '=', NULL);
             })
@@ -178,6 +228,11 @@ class NonAuthHomeController extends Controller
                 DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
                 DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
                 DB::raw('IF(ISNULL(hbo_max.on_hbo_max), \'0\', hbo_max.on_hbo_max) as on_hbo_max'),
+                DB::raw('IF(ISNULL(apple_tv.on_apple_tv), \'0\', apple_tv.on_apple_tv) as on_apple_tv'),
+                DB::raw('IF(ISNULL(paramount_plus.on_paramount_plus), \'0\', paramount_plus.on_paramount_plus) as on_paramount_plus'),
+                DB::raw('IF(ISNULL(bbc_iplayer.on_bbc_iplayer), \'0\', bbc_iplayer.on_bbc_iplayer) as on_bbc_iplayer'),
+                DB::raw('IF(ISNULL(itvx.on_itvx), \'0\', itvx.on_itvx) as on_itvx'),
+                DB::raw('IF(ISNULL(channel4.on_channel4), \'0\', channel4.on_channel4) as on_channel4'),
                 DB::raw('IF(ISNULL(movie_user_non_auth.session_id), \'0\', \'1\') as watched'),
                 DB::raw('IF(ISNULL(movie_user_non_auth.favourite), \'0\', movie_user_non_auth.favourite) as favourite'),
                 DB::raw('IF(ISNULL(watch_list_non_auth.movie_id), \'0\', \'1\') as on_watch_list')
@@ -204,6 +259,11 @@ class NonAuthHomeController extends Controller
         $selected_amazon_only = $amazon_only;
         $selected_disney_plus_only = $disney_plus_only;
         $selected_hbo_max_only = $hbo_max_only;
+        $selected_apple_tv_only = $apple_tv_only;
+        $selected_paramount_plus_only = $paramount_plus_only;
+        $selected_bbc_iplayer_only = $bbc_iplayer_only;
+        $selected_itvx_only = $itvx_only;
+        $selected_channel4_only = $channel4_only;
         $selected_nowtv_only = $nowtv_only;
 
 
@@ -249,6 +309,21 @@ class NonAuthHomeController extends Controller
                 ->leftJoin('hbo_max', function ($join) {
                     $join->on('hbo_max.movie_id', '=', 'movies.id');
                 })
+                ->leftJoin('apple_tv', function ($join) {
+                    $join->on('apple_tv.movie_id', '=', 'movies.id');
+                })
+                ->leftJoin('paramount_plus', function ($join) {
+                    $join->on('paramount_plus.movie_id', '=', 'movies.id');
+                })
+                ->leftJoin('bbc_iplayer', function ($join) {
+                    $join->on('bbc_iplayer.movie_id', '=', 'movies.id');
+                })
+                ->leftJoin('itvx', function ($join) {
+                    $join->on('itvx.movie_id', '=', 'movies.id');
+                })
+                ->leftJoin('channel4', function ($join) {
+                    $join->on('channel4.movie_id', '=', 'movies.id');
+                })
                 ->orderBy('top250_rank', 'ASC')
                 ->orderBy('rank', 'ASC')
                 ->get([
@@ -258,6 +333,11 @@ class NonAuthHomeController extends Controller
                     DB::raw('IF(ISNULL(nowtv.on_nowtv), \'0\', nowtv.on_nowtv) as on_nowtv'),
                     DB::raw('IF(ISNULL(disney_plus.on_disney_plus), \'0\', disney_plus.on_disney_plus) as on_disney_plus'),
                     DB::raw('IF(ISNULL(hbo_max.on_hbo_max), \'0\', hbo_max.on_hbo_max) as on_hbo_max'),
+                    DB::raw('IF(ISNULL(apple_tv.on_apple_tv), \'0\', apple_tv.on_apple_tv) as on_apple_tv'),
+                    DB::raw('IF(ISNULL(paramount_plus.on_paramount_plus), \'0\', paramount_plus.on_paramount_plus) as on_paramount_plus'),
+                    DB::raw('IF(ISNULL(bbc_iplayer.on_bbc_iplayer), \'0\', bbc_iplayer.on_bbc_iplayer) as on_bbc_iplayer'),
+                    DB::raw('IF(ISNULL(itvx.on_itvx), \'0\', itvx.on_itvx) as on_itvx'),
+                    DB::raw('IF(ISNULL(channel4.on_channel4), \'0\', channel4.on_channel4) as on_channel4'),
                 ]);
         
         $info_messages = InfoMessage::where('start_date', '<', DB::raw('now()'))
@@ -283,6 +363,11 @@ class NonAuthHomeController extends Controller
                 "selectedNowtvOnly" => $selected_nowtv_only,
                 "selectedDisneyPlusOnly" => $selected_disney_plus_only,
                 "selectedHboMaxOnly" => $selected_hbo_max_only,
+                "selectedAppleTvOnly" => $selected_apple_tv_only,
+                "selectedParamountPlusOnly" => $selected_paramount_plus_only,
+                "selectedBbcIplayerOnly" => $selected_bbc_iplayer_only,
+                "selectedItvxOnly" => $selected_itvx_only,
+                "selectedChannel4Only" => $selected_channel4_only,
                 "infoMessages" => $info_messages
             ]
         );
