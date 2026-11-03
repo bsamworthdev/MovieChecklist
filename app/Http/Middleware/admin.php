@@ -15,10 +15,10 @@ class admin
      */
     public function handle($request, Closure $next)
     {
-        if (\Auth::user()->role == 'admin') {
+        if ($request->user() && $request->user()->role === 'admin') {
             return $next($request);
-          }
-      
-            return redirect('home');
+        }
+
+        abort(403);
     }
 }

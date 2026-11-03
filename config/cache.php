@@ -20,6 +20,9 @@ return [
 
     'default' => env('CACHE_DRIVER', 'file'),
 
+    // Chart previews exceed database-session/TEXT limits. Use file or a shared Redis store.
+    'movie_import_store' => env('MOVIE_IMPORT_CACHE_STORE', 'file'),
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores

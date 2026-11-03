@@ -166,6 +166,7 @@ class MovieController extends Controller
     }
 
     function updateSavedMovieImages() {
+        $generated = 0;
         $movies = Movie::whereNull('image_url_small')->get();;
         foreach($movies as $movie){
             if ($movie->image_url && !$movie->image_url_small){
@@ -184,8 +185,14 @@ class MovieController extends Controller
 
                 $movie->image_url_small = '/storage/'.$name;
                 $movie->save();
+                $generated++;
             }
         }
+
+        return response()->json([
+            'generated' => $generated,
+            'remaining' => Movie::whereNull('image_url_small')->whereNotNull('image_url')->where('image_url', '<>', '')->count(),
+        ]);
     }
 
     function updateNetflixStatuses(){

@@ -11,7 +11,9 @@
                             <div class="col-6">
                                 <div id="title">Admin Settings</div> 
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 d-flex flex-wrap justify-content-end">
+                                <button type="button" id="update-movies-button" class="btn btn-success mr-2 mb-2">Fetch latest movies from IMDB</button>
+                                <button type="button" id="generate-movie-thumbnails-button" class="btn btn-success mb-2" data-url="{{ route('admin.movies.thumbnails') }}">Generate missing thumbnails</button>
                             </div>
                         </div>
                     </div>
@@ -26,6 +28,7 @@
     </div>
     <button onclick="returnToTop()" id="topButton" title="Go to top">Back To Top</button>
 </div>
+@include('admin-movie-import')
 @endsection
 
 <script>

@@ -23,9 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/friends/{tag?}', 'FriendshipController@index')->name('friend');
 
-    Route::post('/updatemovies', 'MovieController@updateMovies');
     Route::post('/updatemovieimages', 'MovieController@updateMovieImages');
-    Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages');
     Route::post('/updatenetflixstatuses', 'MovieController@updateNetflixStatuses');
     Route::post('/updateamazonstatuses', 'MovieController@updateAmazonStatuses');
 
@@ -44,8 +42,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/updateFiltersShown/{show?}', 'UserController@updateFiltersShown');  
 });
 
-Route::group(['middleware' => 'admin'], function () {
+Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('/admin', 'AdminController@index')->name('admin');
+    Route::post('/admin/movies/preview', 'AdminMovieImportController@preview')->name('admin.movies.preview');
+    Route::post('/admin/movies/apply', 'AdminMovieImportController@apply')->name('admin.movies.apply');
+    Route::post('/updatemovies', 'MovieController@updateMovies');
+    Route::post('/updatesavedmovieimages', 'MovieController@updateSavedMovieImages')->name('admin.movies.thumbnails');
 });
 
 Route::get('/home_nonauth', 'NonAuthHomeController@show')->name('nonauthhome');

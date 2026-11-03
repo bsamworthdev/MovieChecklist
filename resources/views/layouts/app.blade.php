@@ -25,6 +25,7 @@
             background-attachment: fixed;
         }
     </style>
+    @stack('styles')
 </head>
 <body>
     <div id="app">
@@ -102,5 +103,6 @@
             @yield('content')
         </main>
     </div>
+    @stack('scripts')
 </body>
 </html>
