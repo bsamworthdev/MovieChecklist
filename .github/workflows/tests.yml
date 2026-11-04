@@ -14,8 +14,28 @@ jobs:
     name: PHP and JavaScript tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_HOST: '%'
+          MYSQL_ROOT_PASSWORD: ci-only-password
+          MYSQL_DATABASE: moviechecklist_test_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pci-only-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
     env:
       APP_ENV: testing
+      RUN_MYSQL_TESTS: '1'
+      MYSQL_TEST_DATABASE: moviechecklist_test_ci
+      MYSQL_TEST_HOST: 127.0.0.1
+      MYSQL_TEST_PORT: '3306'
+      MYSQL_TEST_USERNAME: root
+      MYSQL_TEST_PASSWORD: ci-only-password
       DB_CONNECTION: sqlite
       DB_DATABASE: ':memory:'
       CACHE_DRIVER: array
@@ -28,7 +48,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          extensions: mbstring, pdo_sqlite, gd, dom, xml, curl, zip
+          extensions: mbstring, pdo_mysql, pdo_sqlite, gd, dom, xml, curl, zip
           tools: composer:v2
           coverage: none
       - uses: actions/setup-node@v6

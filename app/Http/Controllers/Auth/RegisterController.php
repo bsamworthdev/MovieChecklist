@@ -73,33 +73,27 @@ class RegisterController extends Controller
     {
         $session_id = $this->request->session()->getId();
 
-        //Create user
-        // $user = User::create([
-        //     'username' => $data['username'],
-        //     'name' => isset($data['name']) ? $data['name']:'',
-        //     'email' => isset($data['email']) ? $data['email']:'',
-        //     'password' => Hash::make($data['password'])
-        // ]);
+        return DB::transaction(function () use ($data, $session_id) {
+            $user = new User();
+            $user->username = $data['username'];
+            $user->name = isset($data['name']) ? $data['name']:'';
+            $user->email = isset($data['email']) ? $data['email']:'';
+            $user->password = Hash::make($data['password']);
+            $user->save();
 
-        $user = new User();
-        $user->username = $data['username'];
-        $user->name = isset($data['name']) ? $data['name']:'';
-        $user->email = isset($data['email']) ? $data['email']:'';
-        $user->password = Hash::make($data['password']);
-        $user->save();
+            //Update WatchList
+            $select = WatchListNonAuth::where('session_id', '=', $session_id)
+                ->select(DB::raw("$user->id"), 'movie_id', 'movie_or_tv', 'created_at','updated_at');
+            WatchList::insertUsing(['user_id', 'movie_id', 'movie_or_tv', 'created_at','updated_at'], $select);
 
-        //Update WatchList
-        $select = WatchListNonAuth::where('session_id', '=', $session_id)
-            ->select(DB::raw("$user->id"), 'movie_id', 'movie_or_tv', 'created_at','updated_at');
-        WatchList::insertUsing(['user_id', 'movie_id', 'movie_or_tv', 'created_at','updated_at'], $select);
+            //Update MovieUser
+            $select = DB::table('movie_user_non_auth')
+                ->where('session_id', '=', $session_id)
+                ->select(DB::raw("$user->id"), 'movie_id', 'movie_or_tv', 'watched', 'favourite', 'created_at','updated_at');
+            DB::table("movie_user")
+                ->insertUsing(['user_id', 'movie_id', 'movie_or_tv', 'watched', 'favourite', 'created_at','updated_at'], $select);
 
-        //Update MovieUser
-        $select = DB::table('movie_user_non_auth')
-            ->where('session_id', '=', $session_id)
-            ->select(DB::raw("$user->id"), 'movie_id', 'movie_or_tv', 'watched', 'favourite', 'created_at','updated_at');
-        DB::table("movie_user")
-            ->insertUsing(['user_id', 'movie_id', 'movie_or_tv', 'watched', 'favourite', 'created_at','updated_at'], $select);
-
-        return $user;
+            return $user;
+        });
     }
 }

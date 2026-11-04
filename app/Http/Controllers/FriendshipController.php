@@ -127,10 +127,13 @@ class FriendshipController extends Controller
 
     function delete(Request $request) {
         $user_id = Auth::user()->id;
-        $friend_user_id = $request->id;
-        $friendship = Friendship::where('person_a_user_id', $user_id)
-            ->where('person_b_user_id', $friend_user_id)
-            ->first();
+        $data = $request->validate(['id' => 'required|integer']);
+        $friend_user_id = $data['id'];
+        $friendship = Friendship::where(function ($query) use ($user_id, $friend_user_id) {
+            $query->where('person_A_user_id', $user_id)->where('person_B_user_id', $friend_user_id);
+        })->orWhere(function ($query) use ($user_id, $friend_user_id) {
+            $query->where('person_A_user_id', $friend_user_id)->where('person_B_user_id', $user_id);
+        })->firstOrFail();
 
         $friendship->delete();
         
