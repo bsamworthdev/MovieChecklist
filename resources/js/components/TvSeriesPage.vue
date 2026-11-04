@@ -33,11 +33,11 @@
         </div>
         <div class="card-body"><div class="container">
             <div class="row justify-content-left tv-summary">
-                <div class="col-sm-12"><h4 :class="{'d-inline': !authenticated}" aria-live="polite">You have watched <span class="watchedMovies">{{ summary.watched }}</span> of <b>{{ summary.total }}</b> TV shows.</h4> <div v-if="!authenticated" class="btn-group"><a href="/register" class="btn btn-success btn-lg">Save my score!</a></div></div>
+                <div class="col-sm-12"><h4 :class="{'d-inline': !authenticated}" aria-live="polite">You have watched <span class="watchedMovies">{{ watchedShowsCount }}</span> of <b>{{ items.length }}</b> TV shows.</h4> <div v-if="!authenticated" class="btn-group"><a href="/register" class="btn btn-success btn-lg">Save my score!</a></div></div>
                 <div v-if="summary.watchlist > 0" class="col-sm-12"><h5 class="d-inline">You have <span class="watchListMovies">{{ summary.watchlist }}</span> {{ summary.watchlist === 1 ? 'TV show' : 'TV shows' }} in your Watch List.</h5> <div class="btn-group"><button type="button" class="btn btn-primary" @click="openWatchlist">Watch List</button></div></div>
                 <div class="btn-group col-12"><button type="button" class="btn btn-success" :disabled="randomLoading" @click="pickShow">Pick me a random TV show!</button></div>
             </div>
-        <div v-if="error" class="alert alert-danger" role="alert">{{ error }} <button class="btn btn-link p-0" @click="load(page)">Retry</button></div>
+        <div v-if="error" class="alert alert-danger" role="alert">{{ error }} <button class="btn btn-link p-0" @click="refresh">Retry</button></div>
         <div v-if="!loading && !items.length && !error" class="alert alert-light">{{ search || status !== 'all' || genre || decade || favourites || unwatched || english || popular || selectedServices.length ? 'No TV shows match your filters.' : 'The TV catalogue is empty. An admin can import IMDb’s Top 250 TV shows from the Admin page.' }}</div>
         <div class="row justify-content-center">
             <div v-for="(series, index) in items" :key="series.id" class="scratchCardContainer col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -47,9 +47,9 @@
                          @click="save(series, 'watched')" @keydown.enter.self.prevent="save(series, 'watched')" @keydown.space.self.prevent="save(series, 'watched')">
                         <img v-if="posterUrl(series)" :src="posterUrl(series)" class="sr-only" alt="" aria-hidden="true" @error="posterFailed(series)">
                         <h4>{{ series.name }} ({{ series.year }})</h4>
-                        <div class="rank" :class="{rounded: (page - 1) * 48 + index + 1 === Number(series.top250_rank)}">
-                            <span class="filtered_rank">{{ (page - 1) * 48 + index + 1 }}</span>
-                            <span v-if="(page - 1) * 48 + index + 1 !== Number(series.top250_rank)" class="actual_rank">({{ series.top250_rank || '–' }})</span>
+                        <div class="rank" :class="{rounded: index + 1 === Number(series.top250_rank)}">
+                            <span class="filtered_rank">{{ index + 1 }}</span>
+                            <span v-if="index + 1 !== Number(series.top250_rank)" class="actual_rank">({{ series.top250_rank || '–' }})</span>
                         </div>
                         <button v-if="Number(series.watched)" type="button" class="favourite tv-overlay-button" :class="{selected: Number(series.favourite)}"
                                 :disabled="!!saving[series.id]" :aria-pressed="!!Number(series.favourite)" aria-label="Favourite" @click.stop="save(series, 'favourite')">
@@ -108,7 +108,7 @@
                 </div>
             </section>
         </div>
-        <nav v-if="lastPage > 1" class="card p-3 d-flex flex-row justify-content-between" aria-label="TV shows pages"><button class="btn btn-primary" :disabled="loading || page === 1" @click="load(page - 1)">Previous</button><span>Page {{ page }} of {{ lastPage }}</span><button class="btn btn-primary" :disabled="loading || page === lastPage" @click="load(page + 1)">Next</button></nav>
+        <div v-if="page < lastPage" class="btn-group col-12 tv-show-more"><button type="button" class="btn btn-success" :disabled="loading" @click="showMore"><i class="fa fa-caret-down" aria-hidden="true"></i> Show more TV shows</button></div>
                 </div>
         <p class="small text-muted text-center mt-3 mb-0">Streaming availability from <a href="https://www.justwatch.com/uk">JustWatch</a> via <a href="https://www.themoviedb.org">TMDB</a>. <a href="/about">Data credits</a></p>
         </div>
@@ -119,6 +119,9 @@ const filterVisibility = require('../filter-visibility');
 export default {
     props: {authenticated: {type: Boolean, default: false}, canEditStreams: {type: Boolean, default: false}},
     data() { return {items: [], search: '', status: 'all', page: 1, lastPage: 1, total: 0, loading: false, error: '', saving: {}, requestId: 0, genre: '', decade: '', english: false, popular: false, unwatched: false, favourites: false, summary: {watched: 0, total: 0, watchlist: 0}, availableFilters: {genres: [], decades: [], has_languages: false}, watchlistOpen: false, watchlistItems: [], watchlistLoading: false, watchlistError: '', previousFocus: null, filtersShown: filterVisibility.get(), services: [], selectedServices: [], randomOpen: false, randomShow: null, randomLoading: false, randomError: '', randomPreviousFocus: null, failedThumbnails: {}}; },
+    computed: {
+        watchedShowsCount() {return this.items.filter(show => Number(show.watched) === 1).length;}
+    },
     mounted() { this.load(1); },
     beforeDestroy() { if (this.watchlistOpen || this.randomOpen) document.body.style.overflow = this.previousOverflow; },
     methods: {
@@ -168,7 +171,7 @@ export default {
             this.$set(this.saving, series.id, true); this.error = '';
             try {
                 await axios.post('/tv-series/streaming', {id: series.id, service: service.key, available: !Number(series[service.column])});
-                await this.load(this.page);
+                await this.refresh();
             } catch (error) {this.error = 'Could not save streaming availability. Please try again.';}
             finally {this.$delete(this.saving, series.id);}
         },
@@ -201,13 +204,22 @@ export default {
             catch (error) { this.watchlistError = 'Could not load your watchlist. Please try again.'; }
             finally {this.watchlistLoading = false;}
         },
-        async load(page) {
+        async showMore() {
+            if (this.loading || this.page >= this.lastPage) return;
+            await this.load(this.page + 1, true);
+        },
+        refresh() {return this.load(1, false, this.page);},
+        async load(page, append = false, pages = 1) {
             const id = ++this.requestId;
             this.loading = true; this.error = '';
             try {
-                const {data} = await axios.get('/tv-series/catalogue', {params: {...this.filterParams(), page}});
+                const params = this.filterParams();
+                const responses = await Promise.all(Array.from({length: pages}, (_, index) => axios.get('/tv-series/catalogue', {params: {...params, page: page + index}})));
                 if (id !== this.requestId) return;
-                this.items = data.data; this.page = data.current_page; this.lastPage = data.last_page; this.total = data.total;
+                const data = responses[0].data;
+                const incoming = responses.flatMap(response => response.data.data);
+                this.items = [...new Map((append ? this.items.concat(incoming) : incoming).map(show => [show.id, show])).values()];
+                this.page = Math.max(1, Math.ceil(this.items.length / 100)); this.lastPage = data.last_page; this.total = data.total;
                 this.summary = data.summary || {watched: 0, total: data.total, watchlist: 0};
                 this.availableFilters = data.filters || this.availableFilters;
                 this.services = data.services || this.services;
@@ -221,7 +233,7 @@ export default {
             try {
                 await axios.post('/tv-series/progress', {id: series.id, field, value});
                 this.$set(series, field, Number(value));
-                await this.load(this.page);
+                await this.refresh();
                 if (this.watchlistOpen) await this.fetchWatchlist();
             } catch (error) { this.error = 'Could not save your change. Please try again.'; }
             finally { this.$delete(this.saving, series.id); }
@@ -231,7 +243,7 @@ export default {
 </script>
 <style scoped src="./catalogue-card.css"></style>
 <style scoped>
-.tv-summary .btn-group {padding-bottom:10px;}
+.tv-summary .btn-group, .tv-show-more {padding-bottom:10px;}
 .watchedMovies {color:red; font-weight:bold;}
 .watchListMovies {color:blue; font-weight:bold;}
 .tv-random-poster {width:100%; max-width:229px; height:auto; margin-bottom:1rem;}

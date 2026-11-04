@@ -67,7 +67,7 @@ class TvSeriesController extends Controller
             return response()->json(['show' => $show]);
         }
         $watchedCount = (clone $query)->where('progress.watched', 1)->count();
-        $result = $query->orderByRaw('series.top250_rank IS NULL')->orderBy('series.top250_rank')->orderBy('series.name')->paginate(48)->toArray();
+        $result = $query->orderByRaw('series.top250_rank IS NULL')->orderBy('series.top250_rank')->orderBy('series.name')->paginate(100)->toArray();
         $metadata = DB::table('tv_shows')->get(['genre', 'language', 'year']);
         foreach ($result['data'] as &$show) {
             $show = (array) $show;

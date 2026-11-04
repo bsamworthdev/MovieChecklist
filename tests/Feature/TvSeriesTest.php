@@ -256,14 +256,22 @@ class TvSeriesTest extends TestCase
     public function test_random_picker_respects_filters_excludes_watched_and_searches_beyond_first_page(): void
     {
         $this->actingAs(new GenericUser(['id' => 1, 'role' => 'user']));
-        foreach (range(1, 60) as $rank) {
+        foreach (range(1, 120) as $rank) {
             $id = $this->series(['imdb_id' => 'tt'.(1000000 + $rank), 'top250_rank' => $rank, 'language' => 'en', 'votes' => 500000]);
             DB::table('netflix')->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', 'on_netflix' => 1]);
-            if ($rank < 60) DB::table('movie_user')->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', 'user_id' => 1, 'watched' => true]);
+            if ($rank < 120) DB::table('movie_user')->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', 'user_id' => 1, 'watched' => true]);
         }
         $this->series(['imdb_id' => 'tt9999999', 'language' => 'ja', 'votes' => 500000]);
-        $this->getJson('/tv-series/catalogue?random=1&english=1&popular=1&services[]=netflix')->assertOk()->assertJsonPath('show.top250_rank', 60)->assertJsonPath('show.watched', 0);
+        $this->getJson('/tv-series/catalogue?random=1&english=1&popular=1&services[]=netflix')->assertOk()->assertJsonPath('show.top250_rank', 120)->assertJsonPath('show.watched', 0);
         DB::table('movie_user')->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', 'user_id' => 1, 'watched' => true]);
         $this->getJson('/tv-series/catalogue?random=1&english=1&popular=1&services[]=netflix')->assertOk()->assertExactJson(['show' => null]);
+    }
+
+    public function test_catalogue_returns_batches_of_100_in_rank_order(): void
+    {
+        foreach (range(1, 205) as $rank) $this->series(['imdb_id' => 'tt'.(1000000 + $rank), 'top250_rank' => $rank]);
+        $this->getJson('/tv-series/catalogue')->assertOk()->assertJsonCount(100, 'data')->assertJsonPath('data.0.top250_rank', 1)->assertJsonPath('data.99.top250_rank', 100)->assertJsonPath('total', 205);
+        $this->getJson('/tv-series/catalogue?page=2')->assertOk()->assertJsonCount(100, 'data')->assertJsonPath('data.0.top250_rank', 101)->assertJsonPath('data.99.top250_rank', 200);
+        $this->getJson('/tv-series/catalogue?page=3')->assertOk()->assertJsonCount(5, 'data')->assertJsonPath('data.0.top250_rank', 201);
     }
 }

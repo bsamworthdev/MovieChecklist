@@ -43,3 +43,5 @@ Deploy the code and run `php artisan migrate --force`. Historical creation migra
 TV thumbnail generation runs in batches of three per HTTP request to avoid gateway timeouts. Saved TV paths are `/storage/tv-shows/{imdb_id}.jpg`, and the catalogue API exposes their public-disk URL as `image_url_small_extended`. On deployment run migrations and `php artisan storage:link`, then use the thumbnail button in TV Admin. Thumbnail files are generated on that server; they are not committed to Git.
 
 Guests can use **Save my score!** to register and preserve their TV watched history, favourites and watchlist. **Pick me a random TV show!** is available to guests and members. It picks from all unwatched shows matching the active filters, across every page, and offers watchlist and watched controls. An empty result explains that no unwatched shows match.
+
+The TV catalogue initially displays 100 shows. **Show more TV shows** appends the next 100 until the filtered list is exhausted. Filter changes start again at the first 100, while saving watched/favourite/watchlist or streaming changes refreshes the batches already displayed.
