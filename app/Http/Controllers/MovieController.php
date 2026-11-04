@@ -149,33 +149,7 @@ class MovieController extends Controller
     }
 
     function updateSavedMovieImages() {
-        $generated = 0;
-        $movies = Movie::whereNull('image_url_small')->get();;
-        foreach($movies as $movie){
-            if ($movie->image_url && !$movie->image_url_small){
-
-                //Fetch image from url
-                $url = $movie->image_url;
-                $contents = file_get_contents($url);
-                $name = substr($url, strrpos($url, '/') + 1);
-
-                //Store full-sized image
-                Storage::disk('public')->put($name, $contents);
-                
-                //Shrink image and re-save
-                $small_image = Image::make(Storage::disk('public')->get($name) )->resize(229,287)->stream();
-                Storage::disk('public')->put($name, $small_image);
-
-                $movie->image_url_small = '/storage/'.$name;
-                $movie->save();
-                $generated++;
-            }
-        }
-
-        return response()->json([
-            'generated' => $generated,
-            'remaining' => Movie::whereNull('image_url_small')->whereNotNull('image_url')->where('image_url', '<>', '')->count(),
-        ]);
+        return response()->json(app(\App\Services\CatalogueThumbnails::class)->generate('movie'));
     }
 
     function updateNetflixStatuses(){
@@ -204,7 +178,7 @@ class MovieController extends Controller
             }
 
             //$movies_id_db =  Movie::where('imdb_id', '=', $movie->imdb_id)->get();
-            $movies_id_db =  DB::table('netflix')
+            $movies_id_db =  DB::table('netflix')->where('movie_or_tv', 'movie')
                 ->where('movie_id', '=', $movie->id)->get();
             if (count($movies_id_db) == 0) {
                 DB::insert("INSERT INTO netflix (movie_id, on_netflix, created_at, updated_at) 
@@ -329,62 +303,18 @@ class MovieController extends Controller
     //     }
     // }
 
-    function setMovieStreamStatus (Request $request) {
-        $user_id = Auth::user()->id;
-        $movie_id = $request->movie_id;
-        $platform = $request->platform;
-        $status = $request->status;
-
-        if (in_array($platform, ['hbo_max', 'apple_tv', 'paramount_plus', 'bbc_iplayer', 'itvx', 'channel4'], true)) {
-            abort_unless(in_array($request->user()->role, ['admin', 'editor'], true), 403);
-            $data = $request->validate(['movie_id' => 'required|integer|exists:movies,id', 'status' => 'required|boolean']);
-            DB::table($platform)->insertOrIgnore([
-                'movie_id' => $data['movie_id'], 'on_'.$platform => (int) $data['status'],
-                'created_at' => now(), 'updated_at' => now(),
-            ]);
-            DB::table($platform)->where('movie_id', $data['movie_id'])->update([
-                'on_'.$platform => (int) $data['status'], 'updated_at' => now(),
-            ]);
-            return response()->json(['updated' => true]);
-        }
-
-        if ($platform == 'netflix'){
-            $movies =  DB::table('netflix')->where('movie_id', '=', $movie_id)->get();
-            if (count($movies) == 0) {
-                DB::insert("INSERT INTO netflix (movie_id, on_netflix, created_at, updated_at) 
-                VALUES ($movie_id, $status, NOW(), NOW())");
-            } else {
-                DB::update("UPDATE netflix SET on_netflix=$status, updated_at=NOW() 
-                WHERE movie_id=".$movie_id);
-            }
-        } elseif ($platform == 'amazon'){
-            $movies =  DB::table('amazon')->where('movie_id', '=', $movie_id)->get();
-            if (count($movies) == 0) {
-                DB::insert("INSERT INTO amazon (movie_id, on_amazon, created_at, updated_at) 
-                VALUES ($movie_id, $status, NOW(), NOW())");
-            } else {
-                DB::update("UPDATE amazon SET on_amazon=?, updated_at=?
-                WHERE movie_id=?", [$status, NOW(), $movie_id]);
-            }
-        } elseif ($platform == 'nowtv'){
-            $movies =  DB::table('nowtv')->where('movie_id', '=', $movie_id)->get();
-            if (count($movies) == 0) {
-                DB::insert("INSERT INTO nowtv (movie_id, on_nowtv, created_at, updated_at) 
-                VALUES ($movie_id, $status, NOW(), NOW())");
-            } else {
-                DB::update("UPDATE nowtv SET on_nowtv=?, updated_at=?
-                WHERE movie_id=?", [$status, NOW(), $movie_id]);
-            }
-        } elseif ($platform == 'disney_plus'){
-            $movies =  DB::table('disney_plus')->where('movie_id', '=', $movie_id)->get();
-            if (count($movies) == 0) {
-                DB::insert("INSERT INTO disney_plus (movie_id, on_disney_plus, created_at, updated_at) 
-                VALUES ($movie_id, $status, NOW(), NOW())");
-            } else {
-                DB::update("UPDATE disney_plus SET on_disney_plus=?, updated_at=?
-                WHERE movie_id=?", [$status, NOW(), $movie_id]);
-            }
-        }
+    function setMovieStreamStatus(Request $request) {
+        abort_unless(in_array($request->user()->role, ['admin', 'editor'], true), 403);
+        $tables = collect(config('catalogues.services'))->pluck('column', 'table')->all();
+        $data = $request->validate([
+            'platform' => ['required', \Illuminate\Validation\Rule::in(array_keys($tables))],
+            'movie_id' => 'required|integer|exists:movies,id', 'status' => 'required|boolean',
+        ]);
+        $key = ['movie_id' => $data['movie_id'], 'movie_or_tv' => 'movie'];
+        DB::table($data['platform'])->updateOrInsert($key, [
+            $tables[$data['platform']] => (int) $data['status'], 'updated_at' => now(),
+        ]);
+        return response()->json(['updated' => true]);
     }
 
     function getMovies($genre, $time_period, $english_only, $popular_only, $unwatched_only, 
@@ -398,40 +328,52 @@ class MovieController extends Controller
         $movies = DB::table('movies')
         ->leftJoin('netflix', function ($join) {
             $join->on('netflix.movie_id', '=', 'movies.id');
+            $join->where('netflix.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('amazon', function ($join) {
             $join->on('amazon.movie_id', '=', 'movies.id');
+            $join->where('amazon.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('nowtv', function ($join) {
             $join->on('nowtv.movie_id', '=', 'movies.id');
+            $join->where('nowtv.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('disney_plus', function ($join) {
             $join->on('disney_plus.movie_id', '=', 'movies.id');
+            $join->where('disney_plus.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('hbo_max', function ($join) {
             $join->on('hbo_max.movie_id', '=', 'movies.id');
+            $join->where('hbo_max.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('apple_tv', function ($join) {
             $join->on('apple_tv.movie_id', '=', 'movies.id');
+            $join->where('apple_tv.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('paramount_plus', function ($join) {
             $join->on('paramount_plus.movie_id', '=', 'movies.id');
+            $join->where('paramount_plus.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('bbc_iplayer', function ($join) {
             $join->on('bbc_iplayer.movie_id', '=', 'movies.id');
+            $join->where('bbc_iplayer.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('itvx', function ($join) {
             $join->on('itvx.movie_id', '=', 'movies.id');
+            $join->where('itvx.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('channel4', function ($join) {
             $join->on('channel4.movie_id', '=', 'movies.id');
+            $join->where('channel4.movie_or_tv', '=', 'movie');
         })
         ->leftJoin('watch_list', function ($join) use ($user_id) {
             $join->on('watch_list.movie_id', '=', 'movies.id');
+            $join->where('watch_list.movie_or_tv', 'movie');
             $join->on('watch_list.user_id', '=', DB::raw("$user_id"));
         })
         ->leftJoin('movie_user as mu', function ($join) use ($user_id) {
             $join->on('mu.movie_id', '=', 'movies.id');
+            $join->where('mu.movie_or_tv', 'movie');
             $join->on('mu.user_id', '=', DB::raw("$user_id"));
         })
         ->where(function ($q) use ($user_id) {
@@ -478,7 +420,7 @@ class MovieController extends Controller
             $arr = explode('|', $unwatched_by_friends);
             return $q->whereNotIn('movies.id', function($q) use ($arr)
             {
-                $q->from('movie_user as mu2')
+                $q->from('movie_user as mu2')->where('mu2.movie_or_tv', 'movie')
                     ->selectRaw('distinct mu2.movie_id')
                     ->whereIn('mu2.user_id', $arr);
             });
@@ -565,7 +507,7 @@ class MovieController extends Controller
         foreach ($movies as &$movie) {
             $count = 0;
 
-            $count += DB::table('movie_user')
+            $count += DB::table('movie_user')->where('movie_user.movie_or_tv', 'movie')
                 ->where ('movie_id', '=', $movie->id)
                 ->whereIn('user_id', $friends)
                 ->get()

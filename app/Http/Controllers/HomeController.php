@@ -200,7 +200,7 @@ class HomeController extends Controller
         foreach ($movies as &$movie) {
             $count = 0;
 
-            $count += DB::table('movie_user')
+            $count += DB::table('movie_user')->where('movie_user.movie_or_tv', 'movie')
                 ->where ('movie_id', '=', $movie->id)
                 ->whereIn('user_id', $friend_ids)
                 ->get()
@@ -211,38 +211,48 @@ class HomeController extends Controller
             $movie->friendsWatched = $count;
         }
 
-        $watch_list = DB::table('watch_list')
+        $watch_list = DB::table('watch_list')->where('watch_list.movie_or_tv', 'movie')
                 ->where('user_id', $user_id)
                 ->join('movies','movies.id','watch_list.movie_id')
                 ->leftJoin('netflix', function ($join) {
                     $join->on('netflix.movie_id', '=', 'movies.id');
+                    $join->where('netflix.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('amazon', function ($join) {
                     $join->on('amazon.movie_id', '=', 'movies.id');
+                    $join->where('amazon.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('nowtv', function ($join) {
                     $join->on('nowtv.movie_id', '=', 'movies.id');
+                    $join->where('nowtv.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('disney_plus', function ($join) {
-                    $join->on('disney_plus.movie_id', '=', 'disney_plus.id');
+                    $join->on('disney_plus.movie_id', '=', 'movies.id');
+                    $join->where('disney_plus.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('hbo_max', function ($join) {
                     $join->on('hbo_max.movie_id', '=', 'movies.id');
+                    $join->where('hbo_max.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('apple_tv', function ($join) {
                     $join->on('apple_tv.movie_id', '=', 'movies.id');
+                    $join->where('apple_tv.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('paramount_plus', function ($join) {
                     $join->on('paramount_plus.movie_id', '=', 'movies.id');
+                    $join->where('paramount_plus.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('bbc_iplayer', function ($join) {
                     $join->on('bbc_iplayer.movie_id', '=', 'movies.id');
+                    $join->where('bbc_iplayer.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('itvx', function ($join) {
                     $join->on('itvx.movie_id', '=', 'movies.id');
+                    $join->where('itvx.movie_or_tv', '=', 'movie');
                 })
                 ->leftJoin('channel4', function ($join) {
                     $join->on('channel4.movie_id', '=', 'movies.id');
+                    $join->where('channel4.movie_or_tv', '=', 'movie');
                 })
                 ->orderBy('top250_rank', 'ASC')
                 ->orderBy('rank', 'ASC')

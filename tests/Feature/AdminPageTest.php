@@ -25,6 +25,7 @@ class AdminPageTest extends TestCase
             $table->integer('top250_rank');
         });
         Schema::create('movie_user', function (Blueprint $table) {
+            $table->string('movie_or_tv')->default('movie');
             $table->integer('movie_id');
             $table->integer('user_id');
         });

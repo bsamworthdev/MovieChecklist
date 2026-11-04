@@ -28,6 +28,7 @@ Vue.component('friend-multi-select', require('./components/FriendMultiSelect.vue
 Vue.component('scratch-card', require('./components/ScratchCard.vue').default);
 Vue.component('friends-list', require('./components/FriendsList.vue').default);
 Vue.component('users-table', require('./components/UsersTable.vue').default);
+Vue.component('tv-series-page', require('./components/TvSeriesPage.vue').default);
 Vue.component('stats-table', require('./components/StatsTable.vue').default);
 Vue.component('trophies-header', require('./components/TrophiesHeader.vue').default);
 
@@ -43,3 +44,5 @@ const app = new Vue({
 
 
 require('./streaming-filter-controls')();
+
+require('./filter-visibility').init();

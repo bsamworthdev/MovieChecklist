@@ -50,7 +50,7 @@
                         @guest
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="/home">Home</a>
+                            <a class="nav-link" href="{{ session('catalogue') === 'tv' ? route('tv.index') : route('home') }}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/friends">Friends</a>
@@ -64,6 +64,9 @@
                     </ul>
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <li class="nav-item d-flex align-items-center">
+                            @include('catalogue-switch')
+                        </li>
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">

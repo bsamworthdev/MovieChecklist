@@ -30,13 +30,13 @@ class UserController extends Controller
         ]);
 
         if ($data['watched']) {
-            // The unique user/movie index makes repeated or concurrent requests safe.
+            // The catalogue/user/movie unique index makes repeated requests safe.
             DB::table('movie_user')->insertOrIgnore([
-                'user_id' => $user_id, 'movie_id' => $data['movie_id'], 'favourite' => 0,
+                'movie_or_tv' => 'movie', 'user_id' => $user_id, 'movie_id' => $data['movie_id'], 'favourite' => 0,
                 'created_at' => now(), 'updated_at' => now(),
             ]);
         } else {
-            DB::table('movie_user')->where('user_id', $user_id)->where('movie_id', $data['movie_id'])->delete();
+            DB::table('movie_user')->where('movie_user.movie_or_tv', 'movie')->where('user_id', $user_id)->where('movie_id', $data['movie_id'])->delete();
         }
 
         return response()->json(['watched' => (bool) $data['watched']]);
@@ -44,27 +44,17 @@ class UserController extends Controller
 
     public function setMovieAsFavourite(Request $request)
     {
-        $user_id = Auth::user()->id;
-        $movie_id = $request->movie_id;
-
-        if ($request->favourite){
-            DB::update("update movie_user set favourite=1, updated_at=NOW() where user_id=? and movie_id=?", [$user_id, $movie_id]);
-            // DB::insert('insert into users (email, votes) values (?, ?)', ['john@example.com', '0']);
-        } else {
-            DB::update("update movie_user set favourite=0, updated_at=NOW() where user_id=? and movie_id=?", [$user_id, $movie_id]);
-        }
+        $data = $request->validate(['movie_id' => 'required|integer|exists:movies,id', 'favourite' => 'required|boolean']);
+        DB::table('movie_user')->where('movie_user.movie_or_tv', 'movie')->where('user_id', $request->user()->id)->where('movie_id', $data['movie_id'])
+            ->update(['favourite' => $data['favourite'], 'updated_at' => now()]);
     }
 
     public function toggleMovieInWatchList(Request $request)
     {
-        $user_id = Auth::user()->id;
-        $movie_id = $request->movie_id;
-        
-        if ($request->onWatchList){
-            DB::statement("insert into watch_list (user_id,movie_id, created_at, updated_at) values ($user_id, $movie_id, NOW(), NOW())");
-        } else {
-            DB::statement("delete from watch_list where user_id=$user_id and movie_id=$movie_id");
-        }
+        $data = $request->validate(['movie_id' => 'required|integer|exists:movies,id', 'onWatchList' => 'required|boolean']);
+        $key = ['movie_or_tv' => 'movie', 'user_id' => $request->user()->id, 'movie_id' => $data['movie_id']];
+        if ($data['onWatchList']) DB::table('watch_list')->updateOrInsert($key, ['updated_at' => now()]);
+        else DB::table('watch_list')->where($key)->delete();
     }
 
     public function getFriendsStats(Request $request)

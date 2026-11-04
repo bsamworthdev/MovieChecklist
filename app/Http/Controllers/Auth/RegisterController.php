@@ -90,15 +90,15 @@ class RegisterController extends Controller
 
         //Update WatchList
         $select = WatchListNonAuth::where('session_id', '=', $session_id)
-            ->select(DB::raw("$user->id"), 'movie_id','created_at','updated_at');
-        WatchList::insertUsing(['user_id', 'movie_id','created_at','updated_at'], $select);
+            ->select(DB::raw("$user->id"), 'movie_id', 'movie_or_tv', 'created_at','updated_at');
+        WatchList::insertUsing(['user_id', 'movie_id', 'movie_or_tv', 'created_at','updated_at'], $select);
 
         //Update MovieUser
         $select = DB::table('movie_user_non_auth')
             ->where('session_id', '=', $session_id)
-            ->select(DB::raw("$user->id"), 'movie_id', 'favourite', 'created_at','updated_at');
+            ->select(DB::raw("$user->id"), 'movie_id', 'movie_or_tv', 'watched', 'favourite', 'created_at','updated_at');
         DB::table("movie_user")
-            ->insertUsing(['user_id', 'movie_id', 'favourite', 'created_at','updated_at'], $select);
+            ->insertUsing(['user_id', 'movie_id', 'movie_or_tv', 'watched', 'favourite', 'created_at','updated_at'], $select);
 
         return $user;
     }

@@ -28,6 +28,7 @@ class ImdbTop250Parser
                             'name' => $node['titleText']['text'] ?? '',
                             'year' => $node['releaseYear']['year'] ?? null,
                             'rating' => $node['ratingsSummary']['aggregateRating'] ?? null,
+                            'votes' => $node['ratingsSummary']['voteCount'] ?? null,
                             'image_url' => $node['primaryImage']['url'] ?? null,
                         ];
                     }
@@ -50,7 +51,7 @@ class ImdbTop250Parser
                         if (preg_match('/^#(\d+)$/', trim($text->nodeValue), $rank)) {
                             $position = (int) $rank[1];
                         }
-                        if (preg_match('/^((?:18|19|20|21)\d{2})$/', trim($text->nodeValue), $match)) {
+                        if (preg_match('/^((?:18|19|20|21)\d{2})(?:\s*[–—-]\s*(?:(?:18|19|20|21)\d{2})?)?$/u', trim($text->nodeValue), $match)) {
                             $year = (int) $match[1];
                         }
                     }
@@ -61,7 +62,9 @@ class ImdbTop250Parser
                         $url = $sizes[0][1];
                     }
                     $ratingNode = $xpath->query('.//*[contains(@class,"ipc-rating-star--rating")]', $item)->item(0);
+                    $votesNode = $xpath->query('.//*[contains(@class,"ipc-rating-star--voteCount")]', $item)->item(0);
                     $rows[] = [
+                        'votes' => $votesNode ? $this->parseVotes($votesNode->textContent) : null,
                         'position' => $position,
                         'imdb_id' => $code[1],
                         'name' => $title,
@@ -76,6 +79,13 @@ class ImdbTop250Parser
             libxml_clear_errors();
             libxml_use_internal_errors($previous);
         }
+    }
+
+    private function parseVotes(string $text): ?int
+    {
+        $text = preg_replace('/[\s(),\x{00a0}]/u', '', $text);
+        if (!preg_match('/^(\d+(?:\.\d+)?)([KMB]?)$/i', $text, $match)) return null;
+        return (int) round((float) $match[1] * (['' => 1, 'K' => 1000, 'M' => 1000000, 'B' => 1000000000][strtoupper($match[2])]));
     }
 
     private function findChart(array $data): array
@@ -105,6 +115,8 @@ class ImdbTop250Parser
             $row['position'] = (int) $row['position'];
             $row['year'] = (int) $row['year'];
             $row['name'] = trim($row['name']);
+            $votes = $row['votes'] ?? null;
+            $row['votes'] = is_numeric($votes) && $votes >= 0 ? (int) $votes : null;
             $rating = $row['rating'];
             if ($rating !== null && $rating !== '' && (!is_numeric($rating) || $rating < 0 || $rating > 10)) {
                 throw new RuntimeException('The IMDb chart contains an invalid rating. No movies were updated.');

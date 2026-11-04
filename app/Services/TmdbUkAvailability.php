@@ -16,17 +16,18 @@ class TmdbUkAvailability
         return filled(config('services.tmdb.token')) || filled(config('services.tmdb.api_key'));
     }
 
-    public function providerIds(array $service): array
+    public function providerIds(array $service, string $media = 'movie'): array
     {
+        $this->validateMedia($media);
         if (!$this->configured()) {
             throw new CatalogueUpdateException('Add your TMDB API Read Access Token as TMDB_API_TOKEN in the server configuration before updating catalogues.');
         }
         $cache = Cache::store(config('catalogues.cache_store', 'file'));
-        $providers = $cache->get('tmdb:uk:providers:v1');
+        $providers = $cache->get('tmdb:uk:providers:v1'.($media === 'tv' ? ':tv' : ''));
         if ($providers === null) {
             try {
                 $response = Http::withHeaders($this->headers())->connectTimeout(5)->timeout(15)
-                    ->get('https://api.themoviedb.org/3/watch/providers/movie', $this->query(['watch_region' => 'GB', 'language' => 'en-GB']));
+                    ->get('https://api.themoviedb.org/3/watch/providers/'.$media, $this->query(['watch_region' => 'GB', 'language' => 'en-GB']));
             } catch (Throwable $exception) {
                 throw new CatalogueUpdateException('Could not connect to TMDB. Try the catalogue update again.');
             }
@@ -35,9 +36,9 @@ class TmdbUkAvailability
                 throw new CatalogueUpdateException('TMDB returned an incomplete UK provider list. No availability was changed.');
             }
             $providers = $json['results'];
-            $cache->put('tmdb:uk:providers:v1', $providers, 3600);
+            $cache->put('tmdb:uk:providers:v1'.($media === 'tv' ? ':tv' : ''), $providers, 3600);
         }
-        $names = array_map(fn ($name) => $this->name($name), $service['provider_names']);
+        $names = array_map(fn ($name) => $this->name($name), ($media === 'tv' ? ($service['tv_provider_names'] ?? $service['provider_names']) : $service['provider_names']));
         $ids = [];
         foreach ($providers as $provider) {
             if (isset($provider['provider_name'], $provider['provider_id'])
@@ -47,13 +48,17 @@ class TmdbUkAvailability
             }
         }
         if (!$ids) {
-            throw new CatalogueUpdateException('TMDB did not list '.$service['label'].' as a UK movie provider. No availability was changed.');
+            throw new CatalogueUpdateException('TMDB did not list '.$service['label'].' as a UK '.$media.' provider. No availability was changed.');
         }
         return array_values(array_unique($ids));
     }
 
-    public function check(array $movies, array $providerIds, array $offerTypes = ['flatrate']): array
+    public function check(array $movies, array $providerIds, array $offerTypes = ['flatrate'], string $media = 'movie'): array
     {
+        $this->validateMedia($media);
+        $identityPrefix = $media === 'tv' ? 'tmdb:tv:imdb:' : 'tmdb:imdb:';
+        $offerPrefix = $media === 'tv' ? 'tmdb:tv:gb:offers:v2:' : 'tmdb:gb:offers:v2:';
+        $resultKey = $media === 'tv' ? 'tv_results' : 'movie_results';
         $cache = Cache::store(config('catalogues.cache_store', 'file'));
         $identities = [];
         $pending = [];
@@ -62,7 +67,7 @@ class TmdbUkAvailability
             if (!is_string($code) || !preg_match('/\Att\d{5,12}\z/', $code)) {
                 continue;
             }
-            $identity = $cache->get('tmdb:imdb:'.$code);
+            $identity = $cache->get($identityPrefix.$code);
             if ($identity === null) {
                 $pending[$code] = ['path' => '/find/'.$code, 'query' => ['external_source' => 'imdb_id']];
             } else {
@@ -70,14 +75,14 @@ class TmdbUkAvailability
             }
         }
         foreach ($this->pool($pending) as $code => $json) {
-            if (!isset($json['movie_results']) || !is_array($json['movie_results'])) {
+            if (!isset($json[$resultKey]) || !is_array($json[$resultKey])) {
                 throw new CatalogueUpdateException('TMDB returned an incomplete IMDb lookup. No availability was changed.');
             }
-            $results = $json['movie_results'];
+            $results = $json[$resultKey];
             $id = count($results) === 1 && $this->validId($results[0]['id'] ?? null) ? (int) $results[0]['id'] : null;
             $identity = ['id' => $id];
             $identities[$code] = $identity;
-            $cache->put('tmdb:imdb:'.$code, $identity, $id ? 2592000 : 3600);
+            $cache->put($identityPrefix.$code, $identity, $id ? 2592000 : 3600);
         }
         $offers = [];
         $pending = [];
@@ -86,9 +91,9 @@ class TmdbUkAvailability
                 continue;
             }
             $id = $identity['id'];
-            $offer = $cache->get('tmdb:gb:offers:v2:'.$id);
+            $offer = $cache->get($offerPrefix.$id);
             if ($offer === null) {
-                $pending[$id] = ['path' => '/movie/'.$id.'/watch/providers', 'query' => []];
+                $pending[$id] = ['path' => '/'.$media.'/'.$id.'/watch/providers', 'query' => []];
             } else {
                 $offers[$id] = $offer;
             }
@@ -119,14 +124,40 @@ class TmdbUkAvailability
             }
             // Cache all supported access types, but never rentals/purchases, for sharing across services.
             $offers[$id] = $groups;
-            $cache->put('tmdb:gb:offers:v2:'.$id, $groups, 900);
+            $cache->put($offerPrefix.$id, $groups, 900);
+        }
+        $metadata = [];
+        if ($media === 'tv') {
+            $pending = [];
+            $metadataIds = [];
+            foreach ($movies as $show) {
+                $code = $show['imdb_id'] ?? '';
+                $id = config('tv_metadata.sources.'.$code) ?? ($identities[$code]['id'] ?? null);
+                if (!$id) continue;
+                $metadataIds[$show['id']] = $id;
+                $details = $cache->get('tmdb:tv:metadata:v1:'.$id);
+                if ($details === null) $pending[$id] = ['path' => '/tv/'.$id, 'query' => []];
+                else $metadata[$id] = $details;
+            }
+            foreach ($this->pool($pending) as $id => $details) {
+                $values = [];
+                if (is_string($details['original_language'] ?? null) && preg_match('/^[a-z]{2,3}$/', $details['original_language'])) {
+                    $values['language'] = $details['original_language'];
+                }
+                if (isset($details['genres']) && is_array($details['genres'])) {
+                    $genres = array_filter(array_column($details['genres'], 'name'), fn ($name) => is_string($name) && $name !== '');
+                    if ($genres) $values['genre'] = mb_substr(implode(', ', $genres), 0, 512);
+                }
+                $metadata[$id] = $values;
+                $cache->put('tmdb:tv:metadata:v1:'.$id, $values, 86400);
+            }
         }
         $outcomes = [];
         foreach ($movies as $movie) {
             $code = $movie['imdb_id'] ?? '';
             $identity = $identities[$code] ?? null;
             if (!$identity || !$identity['id']) {
-                $outcomes[$movie['id']] = ['skipped' => $code ? 'IMDb code could not be resolved to one TMDB movie.' : 'No IMDb code.'];
+                $outcomes[$movie['id']] = ['skipped' => $code ? 'IMDb code could not be resolved to one TMDB '.$media.'.' : 'No IMDb code.'];
             } else {
                 $allowed = [];
                 foreach ($offerTypes as $type) {
@@ -136,9 +167,19 @@ class TmdbUkAvailability
                     $allowed = array_merge($allowed, $offers[$identity['id']][$type] ?? []);
                 }
                 $outcomes[$movie['id']] = ['available' => count(array_intersect($providerIds, $allowed)) > 0];
+
+            }
+            if ($media === 'tv') {
+                $outcomes[$movie['id']]['metadata'] = config('tv_metadata.corrections.'.$code)
+                    ?? ($metadata[$metadataIds[$movie['id']] ?? 0] ?? []);
             }
         }
         return $outcomes;
+    }
+
+    private function validateMedia(string $media): void
+    {
+        if (!in_array($media, ['movie', 'tv'], true)) throw new CatalogueUpdateException('Unknown catalogue type.');
     }
 
     private function pool(array $requests): array

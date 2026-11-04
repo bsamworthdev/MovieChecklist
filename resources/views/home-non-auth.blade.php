@@ -49,7 +49,8 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div id="showFiltersButton" class="row mt-1 mb-0"><div class="col-12"><button type="button" class="btn btn-light btn-block pt-0 pb-0 text-small" aria-controls="filtersContainer" aria-expanded="false" onclick="showFilters()"><i class="fa fa-chevron-down" aria-hidden="true"></i> <small>More Filters</small></button></div></div>
+                                        <div id="filtersContainer" class="row mt-3" style="display:none;">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
                                                     <div class="streaming-service-grid">
@@ -196,6 +197,7 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        <div id="hideFiltersButton" class="row mt-0 mb-0" style="display:none;"><div class="col-12"><button type="button" class="btn btn-light btn-block pt-0 pb-0 text-small" aria-controls="filtersContainer" aria-expanded="false" aria-label="Hide filters" onclick="hideFilters()"><i class="fa fa-chevron-up" aria-hidden="true"></i></button></div></div>
                                     </div>
                                     <input type="hidden" class="form-input"  id="filters" name="filters">
                                 </form>

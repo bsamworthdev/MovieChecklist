@@ -77,12 +77,12 @@ class User extends Authenticatable
     }
 
     public function hasWatchedMovie($movie_id){
-        $rows=DB::select("select * from movie_user where user_id=? and movie_id=?",[$this->id, $movie_id]);
+        $rows=DB::select("select * from movie_user where movie_or_tv='movie' and user_id=? and movie_id=?",[$this->id, $movie_id]);
         return (count($rows) > 0);
     }
 
     public function isFavouriteMovie($movie_id){
-        $rows=DB::select("select * from movie_user where user_id=? and movie_id=? and favourite=1",[$this->id, $movie_id]);
+        $rows=DB::select("select * from movie_user where movie_or_tv='movie' and user_id=? and movie_id=? and favourite=1",[$this->id, $movie_id]);
         return (count($rows) > 0);
     }
 
@@ -105,6 +105,7 @@ class User extends Authenticatable
                 'movies.imdb_id',
             )
             ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
+            ->where('movie_user.movie_or_tv', 'movie')
             ->where('movie_user.user_id', $user_id)
             ->where('movie_user.favourite', 1)
             ->orderBy('movies.id')
@@ -167,6 +168,7 @@ class User extends Authenticatable
                 'movie_user.favourite',
             )
             ->join('movie_user', 'movies.id', '=', 'movie_user.movie_id')
+            ->where('movie_user.movie_or_tv', 'movie')
             ->where('movie_user.user_id', $user_id)
             //->where('movie_user.movie_id', '<=', $max_movie_id)
             ->where('movies.top250_rank', '<=', 100)

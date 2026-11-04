@@ -49,15 +49,15 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div id="showFiltersButton" style="{{ ($user->filters_shown == 1) ? 'display:none;' : '' }}" class="row mt-1 mb-0">
+                                        <div id="showFiltersButton"  class="row mt-1 mb-0">
                                             <div class="col-12">
-                                                <div class="button btn btn-light btn-block pt-0 pb-0 text-small" onclick="showFilters()">
+                                                <button type="button" class="btn btn-light btn-block pt-0 pb-0 text-small" aria-controls="filtersContainer" aria-expanded="false" onclick="showFilters()">
                                                     <i class="fa fa-chevron-down"></i>
                                                     <small>More Filters</small>
-                                                </div>
+                                                </button>
                                             </div>
                                         </div>
-                                        <div id="filtersContainer" style="{{ ($user->filters_shown == 0) ? 'display:none;' : '' }}" class="row mt-3">
+                                        <div id="filtersContainer" style="display:none;" class="row mt-3">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
                                                     <div>
@@ -198,8 +198,8 @@
                                                         Unwatched By Me <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
                                                     </span>
                                                 </label>
+                                                @if(count($user->friends) > 0)
                                                 <label class="vertAlign" >
-                                                    @if(count($user->friends) > 0)
                      
                                                         <span id="selectedFriendsLabel">Unwatched By Friends 
                                                             (<b>{{ $selectedUnwatchedByFriends == '' ? 0 : (substr_count($selectedUnwatchedByFriends, '|') + 1) }}</b>)
@@ -208,18 +208,16 @@
                                                         <a id="editFriendsLink" href="#" onclick="toggleFriendsContainer()">
                                                             edit
                                                         </a>
-                                                    @else 
-                                                        <span id="inactiveSelectedFriendsLabel" title="Add friends to use this feature">Unwatched By Friends (0)</span> &nbsp;    
-                                                    @endif
                                                 </label>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="hideFiltersButton" class="row mt-0 mb-0" style="{{ ($user->filters_shown == 0) ? 'display:none;' : '' }}">
+                                    <div id="hideFiltersButton" class="row mt-0 mb-0" style="display:none;">
                                         <div class="col-12">
-                                            <div class="button btn btn-light btn-block pt-0 pb-0 text-small" onclick="hideFilters()">
+                                            <button type="button" class="btn btn-light btn-block pt-0 pb-0 text-small" aria-controls="filtersContainer" aria-expanded="false" aria-label="Hide filters" onclick="hideFilters()">
                                                 <i class="fa fa-chevron-up"></i>
-                                            </div>
+                                            </button>
                                         </div>
                                     </div>
                                     <input type="hidden" class="form-input"  id="filters" name="filters">
@@ -303,40 +301,6 @@
         } else {
             topButton.style.display = "none";
         }
-    }
-
-    function showFilters(){
-        var filtersContainer = document.getElementById("filtersContainer");
-        var showFiltersButton = document.getElementById("showFiltersButton");
-        var hideFiltersButton = document.getElementById("hideFiltersButton");
-
-        axios.post('/updateFiltersShown/1')
-        .then((response) => {
-            filtersContainer.style.display = "";
-            showFiltersButton.style.display = "none";
-            hideFiltersButton.style.display = "";
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-        
-    }
-
-    function hideFilters(){
-        var filtersContainer = document.getElementById("filtersContainer");
-        var showFiltersButton = document.getElementById("showFiltersButton");
-        var hideFiltersButton = document.getElementById("hideFiltersButton");
-
-
-        axios.post('/updateFiltersShown/0')
-        .then((response) => {
-            filtersContainer.style.display = "none";
-            showFiltersButton.style.display = "";
-            hideFiltersButton.style.display = "none";
-        })
-        .catch((error) => {
-            console.log(error);
-        });
     }
 
     function showFriendsContainer(){
@@ -604,7 +568,4 @@
         white-space:nowrap;
     }
 
-    #inactiveSelectedFriendsLabel{
-        opacity:0.4;
-    }
 </style>

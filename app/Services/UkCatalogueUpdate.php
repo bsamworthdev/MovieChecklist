@@ -14,19 +14,20 @@ class UkCatalogueUpdate
     {
     }
 
-    public function start(string $service, $userId): array
+    public function start(string $service, $userId, string $media = 'movie'): array
     {
+        if (!in_array($media, ['movie', 'tv'], true)) throw new CatalogueUpdateException('Unknown catalogue type.');
         $settings = config('catalogues.services.'.$service);
         if (!$settings) {
             throw new CatalogueUpdateException('Unknown streaming service.');
         }
-        $providerIds = $this->api->providerIds($settings);
-        $movies = DB::table('movies')->orderBy('id')->get(['id', 'name', 'imdb_id'])->map(fn ($movie) => (array) $movie)->all();
+        $providerIds = $this->api->providerIds($settings, $media);
+        $movies = DB::table($media === 'tv' ? 'tv_shows' : 'movies')->orderBy('id')->get(['id', 'name', 'imdb_id'])->map(fn ($movie) => (array) $movie)->all();
         if (!$movies) {
-            throw new CatalogueUpdateException('There are no movies in the database to check.');
+            throw new CatalogueUpdateException('There are no '.($media === 'tv' ? 'TV shows' : 'movies').' in the database to check.');
         }
         $state = [
-            'token' => (string) Str::uuid(), 'user_id' => $userId, 'service' => $service,
+            'media' => $media, 'token' => (string) Str::uuid(), 'user_id' => $userId, 'service' => $service,
             'provider_ids' => $providerIds, 'movies' => $movies, 'fingerprint' => $this->fingerprint($movies),
             'processed' => 0, 'statuses' => [], 'skipped' => [], 'expires_at' => time() + 7200,
         ];
@@ -51,9 +52,10 @@ class UkCatalogueUpdate
                 return $this->progress($state);
             }
             $batch = array_slice($state['movies'], $state['processed'], max(1, min(20, (int) config('catalogues.batch_size', 10))));
-            $outcomes = $this->api->check($batch, $state['provider_ids'], config('catalogues.services.'.$state['service'].'.offer_types', ['flatrate']));
+            $outcomes = $this->api->check($batch, $state['provider_ids'], config('catalogues.services.'.$state['service'].'.offer_types', ['flatrate']), $state['media'] ?? 'movie');
             foreach ($batch as $movie) {
                 $outcome = $outcomes[$movie['id']];
+                if (!empty($outcome['metadata'])) $state['metadata'][$movie['id']] = $outcome['metadata'];
                 if (isset($outcome['skipped'])) {
                     $state['skipped'][] = ['name' => $movie['name'], 'imdb_id' => $movie['imdb_id'], 'reason' => $outcome['skipped']];
                 } else {
@@ -74,14 +76,15 @@ class UkCatalogueUpdate
     private function persist(array $state): array
     {
         return DB::transaction(function () use ($state) {
-            $current = DB::table('movies')->orderBy('id')->lockForUpdate()->get(['id', 'imdb_id'])->map(fn ($movie) => (array) $movie)->all();
+            $media = $state['media'] ?? 'movie';
+            $current = DB::table($media === 'tv' ? 'tv_shows' : 'movies')->orderBy('id')->lockForUpdate()->get(['id', 'imdb_id'])->map(fn ($movie) => (array) $movie)->all();
             if ($this->fingerprint($current) !== $state['fingerprint']) {
-                throw ValidationException::withMessages(['token' => 'The movie list changed during this update. Start again to include the current movies. No availability was changed.']);
+                throw ValidationException::withMessages(['token' => 'The catalogue changed during this update. Start again to include the current titles. No availability was changed.']);
             }
             $settings = config('catalogues.services.'.$state['service']);
             $table = $settings['table'];
             $column = $settings['column'];
-            $rows = DB::table($table)->whereIn('movie_id', array_keys($state['statuses']))->orderBy('id')->lockForUpdate()->get()->groupBy('movie_id');
+            $rows = DB::table($table)->where('movie_or_tv', $media)->whereIn('movie_id', array_keys($state['statuses']))->orderBy('id')->lockForUpdate()->get()->groupBy('movie_id');
             $result = [
                 'verified' => count($state['statuses']), 'available' => array_sum($state['statuses']),
                 'added' => 0, 'removed' => 0, 'skipped' => count($state['skipped']), 'duplicates_removed' => 0,
@@ -93,7 +96,7 @@ class UkCatalogueUpdate
                 $result['added'] += !$before && $available ? 1 : 0;
                 $result['removed'] += $before && !$available ? 1 : 0;
                 if ($existing->isEmpty()) {
-                    DB::table($table)->insert(['movie_id' => $movieId, $column => $available, 'created_at' => $now, 'updated_at' => $now]);
+                    DB::table($table)->insert(['movie_or_tv' => $media, 'movie_id' => $movieId, $column => $available, 'created_at' => $now, 'updated_at' => $now]);
                 } else {
                     DB::table($table)->where('id', $existing->first()->id)->update([$column => $available, 'updated_at' => $now]);
                     $duplicates = $existing->skip(1)->pluck('id')->all();
@@ -101,6 +104,11 @@ class UkCatalogueUpdate
                         DB::table($table)->whereIn('id', $duplicates)->delete();
                         $result['duplicates_removed'] += count($duplicates);
                     }
+                }
+            }
+            if ($media === 'tv') {
+                foreach ($state['metadata'] ?? [] as $id => $metadata) {
+                    DB::table('tv_shows')->where('id', $id)->update($metadata + ['updated_at' => $now]);
                 }
             }
             return $result;
@@ -115,7 +123,7 @@ class UkCatalogueUpdate
     private function progress(array $state): array
     {
         return [
-            'token' => $state['token'], 'service' => $state['service'], 'processed' => $state['processed'],
+            'media' => $state['media'] ?? 'movie', 'token' => $state['token'], 'service' => $state['service'], 'processed' => $state['processed'],
             'total' => count($state['movies']), 'complete' => isset($state['result']),
             'result' => $state['result'] ?? null, 'skipped' => isset($state['result']) ? $state['skipped'] : [],
         ];

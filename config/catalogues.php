@@ -24,6 +24,7 @@ return [
         'now' => [
             'label' => 'NOW TV', 'table' => 'nowtv', 'column' => 'on_nowtv', 'icon' => 'nowtv.jpg',
             'provider_names' => ['Now TV Cinema', 'NOW Cinema', 'Now TV', 'NOW'],
+            'tv_provider_names' => ['Now TV', 'NOW', 'Now TV Entertainment', 'NOW Entertainment'],
         ],
         'apple_tv' => [
             'label' => 'Apple TV', 'table' => 'apple_tv', 'column' => 'on_apple_tv', 'icon' => 'apple_tv.png',

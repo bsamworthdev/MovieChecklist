@@ -17,6 +17,7 @@ class WatchedMovieTest extends TestCase
         DB::purge('sqlite');
         Schema::create('movies', function (Blueprint $table) { $table->id(); });
         Schema::create('movie_user', function (Blueprint $table) {
+            $table->string('movie_or_tv')->default('movie');
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('movie_id');
@@ -30,7 +31,7 @@ class WatchedMovieTest extends TestCase
     {
         // Production creates this constraint through the standalone cleanup SQL.
         Schema::table('movie_user', function (Blueprint $table) {
-            $table->unique(['user_id', 'movie_id'], 'movie_user_user_movie_unique');
+            $table->unique(['movie_or_tv', 'user_id', 'movie_id'], 'movie_user_user_movie_unique');
         });
     }
 
