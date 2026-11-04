@@ -346,7 +346,10 @@
         right:6px;
         top:60px;
         display:grid;
-        grid-template-columns:repeat(2, 30px);
+        grid-auto-flow:column;
+        grid-template-rows:repeat(5, 30px);
+        grid-auto-columns:30px;
+        direction:rtl;
         gap:2px;
     }
 
