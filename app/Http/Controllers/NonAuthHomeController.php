@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\StreamingAvailabilityFilter;
+
 use Illuminate\Http\Request;
 use App\Movie;
 use App\User;
@@ -184,35 +186,19 @@ class NonAuthHomeController extends Controller
             ->when($search_text != '', function ($q) use ($search_text) {
                 return $q->where('movies.name', 'LIKE', '%'.$search_text.'%');
             })
-            ->when(($netflix_only == 1), function ($q) {
-                return $q->where('netflix.on_netflix', '=', '1');
-            })
-            ->when(($amazon_only == 1), function ($q) {
-                return $q->where('amazon.on_amazon', '=', '1');
-            })
-            ->when(($nowtv_only == 1), function ($q) {
-                return $q->where('nowtv.on_nowtv', '=', '1');
-            })
-            ->when(($disney_plus_only == 1), function ($q) {
-                return $q->where('disney_plus.on_disney_plus', '=', '1');
-            })
-            ->when(($hbo_max_only == 1), function ($q) {
-                return $q->where('hbo_max.on_hbo_max', '=', '1');
-            })
-            ->when(($apple_tv_only == 1), function ($q) {
-                return $q->where('apple_tv.on_apple_tv', '=', '1');
-            })
-            ->when(($paramount_plus_only == 1), function ($q) {
-                return $q->where('paramount_plus.on_paramount_plus', '=', '1');
-            })
-            ->when(($bbc_iplayer_only == 1), function ($q) {
-                return $q->where('bbc_iplayer.on_bbc_iplayer', '=', '1');
-            })
-            ->when(($itvx_only == 1), function ($q) {
-                return $q->where('itvx.on_itvx', '=', '1');
-            })
-            ->when(($channel4_only == 1), function ($q) {
-                return $q->where('channel4.on_channel4', '=', '1');
+            ->when(true, function ($q) use ($netflix_only, $amazon_only, $nowtv_only, $disney_plus_only, $hbo_max_only, $apple_tv_only, $paramount_plus_only, $bbc_iplayer_only, $itvx_only, $channel4_only) {
+                return StreamingAvailabilityFilter::apply($q, [
+                    'netflix' => $netflix_only,
+                    'prime' => $amazon_only,
+                    'now' => $nowtv_only,
+                    'disney' => $disney_plus_only,
+                    'hbo_max' => $hbo_max_only,
+                    'apple_tv' => $apple_tv_only,
+                    'paramount_plus' => $paramount_plus_only,
+                    'bbc_iplayer' => $bbc_iplayer_only,
+                    'itvx' => $itvx_only,
+                    'channel4' => $channel4_only
+                ]);
             })
             ->when($unwatched_only == 1, function ($q) {
                 return $q->where('movie_user_non_auth.session_id', '=', NULL);
