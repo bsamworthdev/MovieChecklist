@@ -287,21 +287,12 @@
         </div>
     </div>
 
-    <button onclick="returnToTop()" id="topButton" title="Go to top">Back To Top</button>
+    <back-to-top></back-to-top>
 </div>
 @endsection
 
 <script>
 
-    // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function() {
-        var topButton = document.getElementById("topButton");
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-            topButton.style.display = "block";
-        } else {
-            topButton.style.display = "none";
-        }
-    }
 
     function showFriendsContainer(){
         // var editFriendsLink = document.getElementById('editFriendsLink');
@@ -428,11 +419,6 @@
         }
     }
 
-    // When the user clicks on the button, scroll to the top of the document
-    function returnToTop() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
 
     window.onload = function(){
         $(function () {
@@ -456,25 +442,7 @@
     .card-header{
         font-size:16px;
     }
-    #topButton {
-        display: none;
-        position: fixed;
-        bottom: 20px; 
-        right: 30px; 
-        z-index: 99; 
-        outline: none; 
-        background-color: black; 
-        color: white; 
-        cursor: pointer; 
-        padding: 10px;
-        border-radius: 10px; 
-        font-size: 18px;
-        opacity:0.7;
-    }
 
-    #topButton:hover {
-        background-color: #555; /* Add a dark-grey background on hover */
-    }
     .nowrap {
         white-space:nowrap;
     }

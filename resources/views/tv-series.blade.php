@@ -9,5 +9,6 @@
         <div class="card"><div class="card-body"><h1 class="h3">TV Shows</h1><p class="mb-0">The TV Shows catalogue is being set up. Please check back shortly.</p></div></div>
     @endif
     </div></div>
+    <back-to-top></back-to-top>
 </div>
 @endsection
