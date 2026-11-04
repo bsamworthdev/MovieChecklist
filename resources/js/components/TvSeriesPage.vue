@@ -38,8 +38,7 @@
                 <div class="btn-group col-12"><button type="button" class="btn btn-success" :disabled="randomLoading" @click="pickShow">Pick me a random TV show!</button></div>
             </div>
         <div v-if="error" class="alert alert-danger" role="alert">{{ error }} <button class="btn btn-link p-0" @click="load(page)">Retry</button></div>
-        <p v-if="loading" class="alert alert-info" role="status">Loading TV shows…</p>
-        <div v-else-if="!items.length && !error" class="alert alert-light">{{ search || status !== 'all' || genre || decade || favourites || unwatched || english || popular || selectedServices.length ? 'No TV shows match your filters.' : 'The TV catalogue is empty. An admin can import IMDb’s Top 250 TV shows from the Admin page.' }}</div>
+        <div v-if="!loading && !items.length && !error" class="alert alert-light">{{ search || status !== 'all' || genre || decade || favourites || unwatched || english || popular || selectedServices.length ? 'No TV shows match your filters.' : 'The TV catalogue is empty. An admin can import IMDb’s Top 250 TV shows from the Admin page.' }}</div>
         <div class="row justify-content-center">
             <div v-for="(series, index) in items" :key="series.id" class="scratchCardContainer col-lg-3 col-md-4 col-sm-6 col-xs-12">
                 <article class="card movieCard" :class="{watched: Number(series.watched)}" :aria-busy="!!saving[series.id]">
