@@ -1,0 +1,73 @@
+name: Test suite
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: PHP and JavaScript tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_ENV: testing
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ':memory:'
+      CACHE_DRIVER: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+      TMDB_API_TOKEN: ''
+      TMDB_API_KEY: ''
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, gd, dom, xml, curl, zip
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Prepare test environment
+        run: cp .env.example .env
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Generate test application key
+        run: php artisan key:generate --force
+      - name: Install JavaScript dependencies
+        run: npm ci
+      - name: Build production assets
+        run: npm run build
+      - name: Run complete PHP test suite
+        run: composer test
+      - name: Run complete JavaScript test suite
+        run: npm test
+
+  deploy:
+    name: Trigger live Forge deployment
+    needs: tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      FORGE_DEPLOY_HOOK_URL: ${{ secrets.FORGE_DEPLOY_HOOK_URL }}
+    steps:
+      - name: Trigger Forge only after all tests pass
+        run: |
+          if [ -z "$FORGE_DEPLOY_HOOK_URL" ]; then
+            echo "::error::Add the site's Forge deploy hook as the FORGE_DEPLOY_HOOK_URL Actions secret."
+            exit 1
+          fi
+          curl --fail --silent --show-error --max-time 45 \
+            --output /dev/null --get \
+            --data-urlencode "forge_deploy_branch=master" \
+            --data-urlencode "forge_deploy_commit=$GITHUB_SHA" \
+            --data-urlencode "tested_commit=$GITHUB_SHA" \
+            "$FORGE_DEPLOY_HOOK_URL"
