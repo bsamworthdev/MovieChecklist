@@ -76,7 +76,7 @@ class MovieController extends Controller
         $this->updateVotes();
 
         //Update weighted ratings/rankings
-        //$this->updateWeightedRatings();
+        $this->updateWeightedRatings();
     }
 
     function updateVotes(){
@@ -109,26 +109,7 @@ class MovieController extends Controller
     }
 
     function updateWeightedRatings(){
-        //The formula for calculating the Top Rated 250 Titles gives a true Bayesian estimate:
-        //weighted rating (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C
-        //Where:
-        // R = average for the movie (mean) = (Rating)
-        // v = number of votes for the movie = (votes)
-        // m = minimum votes required to be listed in the Top 250 (currently 25000)
-        // C = the mean vote across the whole report (currently 7.0)
-
-        $movies = Movie::all();
-        $m = 25000;
-        $C = ($movies->sum('rating'))/$movies->count();
-
-        Log::Debug($C);
-
-        foreach($movies as $movie){
-            $R = $movie->rating;
-            $v = $movie->votes;
-            $movie->weighted_rating = ($v/($v + $m)) * $R + ($m/($v + $m)) * $C;
-            $movie->save();
-        }
+        return app(\App\Services\WeightedRatingCalculator::class)->recalculate();
     }
 
     function updateMovieImages(){

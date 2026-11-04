@@ -29,6 +29,8 @@ class AdminMovieImportTest extends TestCase
             $table->integer('rank')->default(1001);
             $table->integer('top250_rank')->default(999);
             $table->decimal('rating')->default(0);
+            $table->integer('votes')->default(0);
+            $table->decimal('weighted_rating', 5, 4)->default(0);
             $table->string('language');
             $table->string('image_url')->nullable();
             $table->string('image_url_small')->nullable();
@@ -276,5 +278,35 @@ class AdminMovieImportTest extends TestCase
         } finally {
             unlink($source);
         }
+    }
+
+    public function test_successful_import_recalculates_all_weighted_ratings_using_updated_ratings(): void
+    {
+        $this->admin();
+        $matched = $this->movie(['votes' => 25000]);
+        $outside = $this->movie(['imdb_id' => 'tt8888888', 'name' => 'Outside the chart', 'rating' => 10, 'votes' => 0]);
+        $preview = $this->preview();
+        $this->assertEquals(0, DB::table('movies')->find($matched)->weighted_rating, 'Preview does not recalculate ratings');
+        $this->postJson(route('admin.movies.apply'), [
+            'token' => $preview['token'], 'decisions' => $this->decisions($preview),
+        ])->assertOk()->assertJsonPath('weighted_ratings_updated', 251);
+        $average = (250 * 8.1 + 10) / 251;
+        $this->assertEquals(round((8.1 + $average) / 2, 4), DB::table('movies')->find($matched)->weighted_rating);
+        $this->assertEquals(round($average, 4), DB::table('movies')->find($outside)->weighted_rating);
+        $this->assertEquals(round($average, 4), DB::table('movies')->where('imdb_id', 'tt1000002')->value('weighted_rating'));
+    }
+
+    public function test_failed_weighted_recalculation_rolls_back_the_entire_import(): void
+    {
+        $this->admin();
+        $id = $this->movie();
+        $preview = $this->preview();
+        DB::unprepared("CREATE TRIGGER fail_weighted_update BEFORE UPDATE OF weighted_rating ON movies BEGIN SELECT RAISE(ABORT, 'weighted failure'); END");
+        $this->postJson(route('admin.movies.apply'), [
+            'token' => $preview['token'], 'decisions' => $this->decisions($preview),
+        ])->assertServerError();
+        $this->assertSame(1, DB::table('movies')->count());
+        $this->assertSame(9, DB::table('movies')->find($id)->top250_rank);
+        $this->assertEquals(7.3, DB::table('movies')->find($id)->rating);
     }
 }

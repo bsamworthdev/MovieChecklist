@@ -115,6 +115,7 @@ class ImdbTop250Import
                     $summary['unrated_added'] += $row['rating'] === null ? 1 : 0;
                 }
             }
+            $summary['weighted_ratings_updated'] = app(WeightedRatingCalculator::class)->recalculate();
             return $summary;
         });
     }
