@@ -44,3 +44,5 @@ const app = new Vue({
 
 
 require('./streaming-filter-controls')();
+
+require('./filter-visibility').init();

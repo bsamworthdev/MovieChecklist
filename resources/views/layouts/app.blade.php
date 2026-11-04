@@ -34,7 +34,6 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Movie Checklist
                 </a>
-                @include('catalogue-switch')
                 @guest
                 @else
                 <trophies-header
@@ -65,6 +64,9 @@
                     </ul>
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <li class="nav-item d-flex align-items-center">
+                            @include('catalogue-switch')
+                        </li>
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">

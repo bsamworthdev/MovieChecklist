@@ -33,7 +33,9 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Movie Checklist
                 </a> 
-                @include('catalogue-switch')
+                <div class="ml-auto">
+                    @include('catalogue-switch')
+                </div>
             </div>
         </nav>
         

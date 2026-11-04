@@ -29,6 +29,7 @@ class TvSeriesController extends Controller
             'favourites' => 'nullable|boolean',
             'services' => 'nullable|array|max:10',
             'services.*' => ['string', Rule::in(array_keys(config('catalogues.services')))],
+            'random' => 'nullable|boolean',
         ]);
         $query = app(\App\Services\TvShowTracking::class)->query($request);
         $watchlistCount = (clone $query)->whereNotNull('watchlist.movie_id')->count();
@@ -59,6 +60,11 @@ class TvSeriesController extends Controller
             case 'watched': $query->where('progress.watched', true); break;
             case 'favourites': $query->where('progress.favourite', true); break;
             case 'watchlist': $query->whereNotNull('watchlist.movie_id'); break;
+        }
+        if ($request->boolean('random')) {
+            $show = $query->whereRaw('COALESCE(progress.watched, 0) = 0')->inRandomOrder()->first();
+            if ($show) $show->image_url_small_extended = app(\App\Services\CatalogueThumbnails::class)->url($show->image_url_small ?? null);
+            return response()->json(['show' => $show]);
         }
         $watchedCount = (clone $query)->where('progress.watched', 1)->count();
         $result = $query->orderByRaw('series.top250_rank IS NULL')->orderBy('series.top250_rank')->orderBy('series.name')->paginate(48)->toArray();

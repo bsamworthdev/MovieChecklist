@@ -1,6 +1,6 @@
 <template>
-    <div class="card tv-catalogue">
-        <div class="card-header pb-0 pl-0 pr-0">
+    <div class="card tv-catalogue" :class="{'tv-catalogue-guest': !authenticated}">
+        <div class="card-header" :class="{'pb-0 pl-0 pr-0': authenticated}">
             <div class="container"><div class="row"><div class="col-12">
                 <form class="tv-filter-form" @submit.prevent="load(1)">
                     <div class="container">
@@ -10,30 +10,32 @@
                             <div class="col-lg-3 col-12"><label class="sr-only" for="tv-decade">Time period</label><select id="tv-decade" v-model="decade" class="form-control" @change="load(1)"><option value="">All Years</option><option v-for="value in availableFilters.decades" :key="value" :value="value">{{ value }}s</option></select></div>
                             <div class="col-lg-3 col-12"><label class="sr-only" for="tv-genre">Genre</label><select id="tv-genre" v-model="genre" class="form-control" @change="load(1)"><option value="">All Genres</option><option v-for="value in availableFilters.genres" :key="value" :value="value">{{ value }}</option></select></div>
                         </div>
-                        <div v-if="!filtersShown" class="row mt-1 mb-0"><div class="col-12"><button type="button" class="btn btn-light btn-block pt-0 pb-0" aria-controls="tv-extra-filters" :aria-expanded="filtersShown" @click="filtersShown = true"><i class="fa fa-chevron-down" aria-hidden="true"></i> <small>More Filters</small></button></div></div>
+                        <div v-if="!filtersShown" class="row mt-1 mb-0"><div class="col-12"><button type="button" class="btn btn-light btn-block pt-0 pb-0" aria-controls="tv-extra-filters" :aria-expanded="filtersShown" @click="setFiltersShown(true)"><i class="fa fa-chevron-down" aria-hidden="true"></i> <small>More Filters</small></button></div></div>
                         <div v-show="filtersShown" id="tv-extra-filters" class="row mt-3">
                             <div class="col-lg-3 col-12">
                                 <div class="card tv-stream-card">
                                     <div class="tv-stream-grid">
                                         <label v-for="service in services" :key="service.key" class="tv-stream-option"><img :src="service.icon" :alt="service.label" :title="service.label"><input v-model="selectedServices" type="checkbox" :value="service.key" :aria-label="service.label" @change="load(1)"></label>
                                     </div>
-                                    <div class="tv-stream-links"><button type="button" class="btn btn-link p-0" @click="selectServices(true)">Select all</button> | <button type="button" class="btn btn-link p-0" @click="selectServices(false)">Unselect all</button></div>
+                                    <div class="tv-stream-links d-flex justify-content-center align-items-center mt-1"><button type="button" class="btn btn-link p-0" @click="selectServices(true)">Select all</button><span class="mx-1 text-muted" aria-hidden="true">|</span><button type="button" class="btn btn-link p-0" @click="selectServices(false)">Unselect all</button></div>
                                 </div>
                             </div>
-                            <div class="col-lg-2 col-12"><label class="tv-vert-align"><span class="tv-nowrap"><i class="fa fa-heart tv-filter-heart" aria-hidden="true"></i> Favourites <input v-model="favourites" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
-                            <div class="col-lg-2 col-12"><label class="tv-vert-align"><span class="tv-nowrap">English Only <input v-model="english" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
-                            <div class="col-lg-2 col-12"><label class="tv-vert-align"><span class="tv-nowrap">Popular Only <i class="fa fa-info-circle" title="Popular TV shows have over 250k votes on IMDb." aria-hidden="true"></i> <input v-model="popular" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
-                            <div class="col-lg-3 col-12"><label class="tv-vert-align"><span class="tv-nowrap">Unwatched By Me <input v-model="unwatched" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
+                            <div v-if="!authenticated" class="col-lg-1 col-12"></div>
+                            <div class="col-lg-2 col-12"><label class="tv-vert-align"><span class="tv-nowrap"><i class="fa fa-heart tv-filter-heart" aria-hidden="true"></i> Favourites <input id="favourites_only_checkbox" v-model="favourites" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
+                            <div class="col-lg-2 col-12"><label class="tv-vert-align"><span class="tv-nowrap">English Only <input id="english_only_checkbox" v-model="english" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
+                            <div class="col-lg-2 col-12"><label class="tv-vert-align"><span class="tv-nowrap">Popular Only <i class="fa fa-info-circle" title="Popular TV shows have over 250k votes on IMDb." aria-hidden="true"></i> <input id="popular_only_checkbox" v-model="popular" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
+                            <div class="col-12" :class="authenticated ? 'col-lg-3' : 'col-lg-2'"><label class="tv-vert-align"><span class="tv-nowrap">{{ authenticated ? 'Unwatched By Me' : 'Unwatched Only' }} <input id="unwatched_only_checkbox" v-model="unwatched" class="form-input" type="checkbox" @change="load(1)"></span></label></div>
                         </div>
-                        <div v-if="filtersShown" class="row mt-0 mb-0"><div class="col-12"><button type="button" class="btn btn-light btn-block pt-0 pb-0" aria-controls="tv-extra-filters" :aria-expanded="filtersShown" aria-label="Hide filters" @click="filtersShown = false"><i class="fa fa-chevron-up" aria-hidden="true"></i></button></div></div>
+                        <div v-if="filtersShown" class="row mt-0 mb-0"><div class="col-12"><button type="button" class="btn btn-light btn-block pt-0 pb-0" aria-controls="tv-extra-filters" :aria-expanded="filtersShown" aria-label="Hide filters" @click="setFiltersShown(false)"><i class="fa fa-chevron-up" aria-hidden="true"></i></button></div></div>
                     </div>
                 </form>
             </div></div></div>
         </div>
         <div class="card-body"><div class="container">
-            <div class="row justify-content-left">
-                <div class="col-sm-12"><h4 aria-live="polite">You have watched <span class="watchedMovies">{{ summary.watched }}</span> of <b>{{ summary.total }}</b> TV shows.</h4></div>
+            <div class="row justify-content-left tv-summary">
+                <div class="col-sm-12"><h4 :class="{'d-inline': !authenticated}" aria-live="polite">You have watched <span class="watchedMovies">{{ summary.watched }}</span> of <b>{{ summary.total }}</b> TV shows.</h4> <div v-if="!authenticated" class="btn-group"><a href="/register" class="btn btn-success btn-lg">Save my score!</a></div></div>
                 <div v-if="summary.watchlist > 0" class="col-sm-12"><h5 class="d-inline">You have <span class="watchListMovies">{{ summary.watchlist }}</span> {{ summary.watchlist === 1 ? 'TV show' : 'TV shows' }} in your Watch List.</h5> <div class="btn-group"><button type="button" class="btn btn-primary" @click="openWatchlist">Watch List</button></div></div>
+                <div class="btn-group col-12"><button type="button" class="btn btn-success" :disabled="randomLoading" @click="pickShow">Pick me a random TV show!</button></div>
             </div>
         <div v-if="error" class="alert alert-danger" role="alert">{{ error }} <button class="btn btn-link p-0" @click="load(page)">Retry</button></div>
         <p v-if="loading" class="alert alert-info" role="status">Loading TV shows…</p>
@@ -71,6 +73,25 @@
                 </article>
             </div>
         </div>
+        <div v-if="randomOpen" class="tv-modal-backdrop" @click.self="closeRandom" @keydown.esc="closeRandom">
+            <section ref="randomDialog" class="card tv-watchlist-dialog" role="dialog" aria-modal="true" aria-labelledby="tv-random-title" tabindex="-1" @keydown.tab="trapRandomFocus">
+                <div class="card-header d-flex align-items-center justify-content-between"><h2 id="tv-random-title" class="h5 mb-0">Pick me a random TV show!</h2><button type="button" class="close" aria-label="Close random TV show" @click="closeRandom">×</button></div>
+                <div class="card-body">
+                    <p v-if="randomLoading" role="status">Picking a TV show…</p>
+                    <p v-else-if="randomError" class="alert alert-danger" role="alert">{{ randomError }}</p>
+                    <div v-else-if="randomShow" class="row">
+                        <div class="col-sm-5"><img v-if="randomShow.image_url_small_extended || randomShow.image_url" class="tv-random-poster" :src="randomShow.image_url_small_extended || randomShow.image_url" :alt="randomShow.name"></div>
+                        <div class="col-sm-7"><h3 class="h4">{{ randomShow.name }} ({{ randomShow.year }})</h3><p v-if="randomShow.rating">★ {{ Number(randomShow.rating).toFixed(1) }}</p><p v-if="randomShow.genre">{{ randomShow.genre }}</p>
+                            <button type="button" class="btn btn-primary mb-2" :disabled="!!saving[randomShow.id]" @click="save(randomShow, 'watchlist')">{{ Number(randomShow.watchlist) ? 'Remove from Watch List' : 'Add to Watch List' }}</button>
+                            <button type="button" class="btn btn-success mb-2" :disabled="!!saving[randomShow.id]" @click="save(randomShow, 'watched')">{{ Number(randomShow.watched) ? 'Mark unwatched' : 'Mark watched' }}</button>
+                            <a class="btn btn-warning mb-2" :href="'https://www.imdb.com/title/' + randomShow.imdb_id + '/'" target="_blank" rel="noopener noreferrer">View on IMDb <i class="fas fa-external-link-alt" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <p v-else>No unwatched TV shows match your current filters.</p>
+                </div>
+                <div class="card-footer"><button type="button" class="btn btn-success" :disabled="randomLoading" @click="pickShow">{{ randomError ? 'Try again' : 'Pick again' }}</button></div>
+            </section>
+        </div>
         <div v-if="watchlistOpen" class="tv-modal-backdrop" @click.self="closeWatchlist" @keydown.esc="closeWatchlist">
             <section ref="watchlistDialog" class="card tv-watchlist-dialog" role="dialog" aria-modal="true" aria-labelledby="tv-watchlist-title" tabindex="-1" @keydown.tab="trapWatchlistFocus">
                 <div class="card-header d-flex align-items-center justify-content-between"><h2 id="tv-watchlist-title" class="h5 mb-0">TV Shows Watch List</h2><button type="button" class="close" aria-label="Close watchlist" @click="closeWatchlist">×</button></div>
@@ -88,17 +109,50 @@
             </section>
         </div>
         <nav v-if="lastPage > 1" class="card p-3 d-flex flex-row justify-content-between" aria-label="TV shows pages"><button class="btn btn-primary" :disabled="loading || page === 1" @click="load(page - 1)">Previous</button><span>Page {{ page }} of {{ lastPage }}</span><button class="btn btn-primary" :disabled="loading || page === lastPage" @click="load(page + 1)">Next</button></nav>
-        <small class="text-muted d-block mt-3">UK streaming availability from <a href="https://www.justwatch.com/uk">JustWatch</a> via <a href="https://www.themoviedb.org">TMDB</a>.</small>
-        </div></div>
+                </div>
+        <p class="small text-muted text-center mt-3 mb-0">Streaming availability from <a href="https://www.justwatch.com/uk">JustWatch</a> via <a href="https://www.themoviedb.org">TMDB</a>. <a href="/about">Data credits</a></p>
+        </div>
     </div>
 </template>
 <script>
+const filterVisibility = require('../filter-visibility');
 export default {
-    props: {canEditStreams: {type: Boolean, default: false}},
-    data() { return {items: [], search: '', status: 'all', page: 1, lastPage: 1, total: 0, loading: false, error: '', saving: {}, requestId: 0, genre: '', decade: '', english: false, popular: false, unwatched: false, favourites: false, summary: {watched: 0, total: 0, watchlist: 0}, availableFilters: {genres: [], decades: [], has_languages: false}, watchlistOpen: false, watchlistItems: [], watchlistLoading: false, watchlistError: '', previousFocus: null, filtersShown: true, services: [], selectedServices: []}; },
+    props: {authenticated: {type: Boolean, default: false}, canEditStreams: {type: Boolean, default: false}},
+    data() { return {items: [], search: '', status: 'all', page: 1, lastPage: 1, total: 0, loading: false, error: '', saving: {}, requestId: 0, genre: '', decade: '', english: false, popular: false, unwatched: false, favourites: false, summary: {watched: 0, total: 0, watchlist: 0}, availableFilters: {genres: [], decades: [], has_languages: false}, watchlistOpen: false, watchlistItems: [], watchlistLoading: false, watchlistError: '', previousFocus: null, filtersShown: filterVisibility.get(), services: [], selectedServices: [], randomOpen: false, randomShow: null, randomLoading: false, randomError: '', randomPreviousFocus: null}; },
     mounted() { this.load(1); },
-    beforeDestroy() { if (this.watchlistOpen) document.body.style.overflow = this.previousOverflow; },
+    beforeDestroy() { if (this.watchlistOpen || this.randomOpen) document.body.style.overflow = this.previousOverflow; },
     methods: {
+        filterParams() {
+            return {search: this.search, status: this.status, genre: this.genre, decade: this.decade, english: Number(this.english), popular: Number(this.popular), unwatched: Number(this.unwatched), favourites: Number(this.favourites), services: this.selectedServices};
+        },
+        async pickShow() {
+            if (this.randomLoading) return;
+            if (!this.randomOpen) {
+                this.randomPreviousFocus = document.activeElement;
+                this.previousOverflow = document.body.style.overflow;
+                this.randomOpen = true;
+                document.body.style.overflow = 'hidden';
+                this.$nextTick(() => this.$refs.randomDialog.focus());
+            }
+            this.randomLoading = true; this.randomError = ''; this.randomShow = null;
+            try {
+                const {data} = await axios.get('/tv-series/catalogue', {params: {...this.filterParams(), random: 1}});
+                if (this.randomOpen) this.randomShow = data.show;
+            } catch (error) {this.randomError = 'Could not pick a TV show. Please try again.';}
+            finally {this.randomLoading = false;}
+        },
+        closeRandom() {
+            this.randomOpen = false;
+            document.body.style.overflow = this.previousOverflow;
+            if (this.randomPreviousFocus) this.randomPreviousFocus.focus();
+        },
+        trapRandomFocus(event) {
+            const nodes = this.$refs.randomDialog.querySelectorAll('button:not(:disabled), a[href]');
+            const first = nodes[0], last = nodes[nodes.length - 1];
+            if (event.shiftKey && (document.activeElement === first || document.activeElement === this.$refs.randomDialog)) {event.preventDefault(); last.focus();}
+            else if (!event.shiftKey && document.activeElement === last) {event.preventDefault(); first.focus();}
+        },
+        setFiltersShown(shown) {this.filtersShown = shown; filterVisibility.set(shown);},
         selectServices(all) {
             this.selectedServices = all ? this.services.map(service => service.key) : [];
             return this.load(1);
@@ -145,7 +199,7 @@ export default {
             const id = ++this.requestId;
             this.loading = true; this.error = '';
             try {
-                const {data} = await axios.get('/tv-series/catalogue', {params: {search: this.search, status: this.status, genre: this.genre, decade: this.decade, english: Number(this.english), popular: Number(this.popular), unwatched: Number(this.unwatched), favourites: Number(this.favourites), services: this.selectedServices, page}});
+                const {data} = await axios.get('/tv-series/catalogue', {params: {...this.filterParams(), page}});
                 if (id !== this.requestId) return;
                 this.items = data.data; this.page = data.current_page; this.lastPage = data.last_page; this.total = data.total;
                 this.summary = data.summary || {watched: 0, total: data.total, watchlist: 0};
@@ -171,13 +225,16 @@ export default {
 </script>
 <style scoped src="./catalogue-card.css"></style>
 <style scoped>
-.watchedMovies {color:green; font-weight:bold;}
+.tv-summary .btn-group {padding-bottom:10px;}
+.watchedMovies {color:red; font-weight:bold;}
 .watchListMovies {color:blue; font-weight:bold;}
+.tv-random-poster {width:100%; max-width:229px; height:auto; margin-bottom:1rem;}
 .tv-title {font-size:22px; font-weight:bold; margin-bottom:0;}
 .tv-filter-form {margin-bottom:0; text-align:left;}
 .tv-filter-form select {width:100%;}
 .tv-catalogue > .card-header {font-size:16px;}
 .tv-vert-align {height:30px; display:flex; align-items:center; margin-bottom:0;}
+.tv-catalogue-guest .tv-vert-align {height:40px;}
 .tv-nowrap {white-space:nowrap;}
 .tv-filter-heart {color:red; font-size:17px;}
 .tv-stream-card {text-align:center; padding:5px; background:#d8d8d8; margin-top:4px;}
@@ -186,7 +243,7 @@ export default {
 .tv-stream-option img {width:20px; height:20px; object-fit:contain;}
 .tv-stream-option:nth-child(9) {grid-column:2;}
 .tv-stream-option:nth-child(10) {grid-column:3;}
-.tv-stream-links {margin-top:8px; white-space:nowrap;}
+.tv-stream-links {white-space:nowrap;}
 .tv-stream-links .btn {font-size:.75rem;}
 .movieCard .tv-platforms {display:grid; grid-template-columns:repeat(2,30px); gap:2px;}
 .movieCard .tv-platforms-viewer {grid-template-columns:none; grid-template-rows:repeat(5,30px); grid-auto-flow:column; grid-auto-columns:30px; direction:rtl;}

@@ -247,4 +247,18 @@ class TvSeriesTest extends TestCase
             $this->getJson('/tv-series/catalogue')->assertOk()->assertJsonPath('data.0.image_url_small', '/storage/tv-shows/tt1234567.jpg');
         } finally {unlink($source);}
     }
+
+    public function test_random_picker_respects_filters_excludes_watched_and_searches_beyond_first_page(): void
+    {
+        $this->actingAs(new GenericUser(['id' => 1, 'role' => 'user']));
+        foreach (range(1, 60) as $rank) {
+            $id = $this->series(['imdb_id' => 'tt'.(1000000 + $rank), 'top250_rank' => $rank, 'language' => 'en', 'votes' => 500000]);
+            DB::table('netflix')->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', 'on_netflix' => 1]);
+            if ($rank < 60) DB::table('movie_user')->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', 'user_id' => 1, 'watched' => true]);
+        }
+        $this->series(['imdb_id' => 'tt9999999', 'language' => 'ja', 'votes' => 500000]);
+        $this->getJson('/tv-series/catalogue?random=1&english=1&popular=1&services[]=netflix')->assertOk()->assertJsonPath('show.top250_rank', 60)->assertJsonPath('show.watched', 0);
+        DB::table('movie_user')->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', 'user_id' => 1, 'watched' => true]);
+        $this->getJson('/tv-series/catalogue?random=1&english=1&popular=1&services[]=netflix')->assertOk()->assertExactJson(['show' => null]);
+    }
 }
