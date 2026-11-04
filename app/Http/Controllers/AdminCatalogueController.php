@@ -12,9 +12,9 @@ class AdminCatalogueController extends Controller
 {
     public function start(Request $request, UkCatalogueUpdate $updater)
     {
-        $data = $request->validate(['service' => ['required', Rule::in(array_keys(config('catalogues.services')))]]);
+        $data = $request->validate(['service' => ['required', Rule::in(array_keys(config('catalogues.services')))], 'media' => 'nullable|in:movie,tv']);
         try {
-            $progress = $updater->start($data['service'], $request->user()->getAuthIdentifier());
+            $progress = $updater->start($data['service'], $request->user()->getAuthIdentifier(), $data['media'] ?? 'movie');
         } catch (CatalogueUpdateException $exception) {
             throw ValidationException::withMessages(['catalogue' => $exception->getMessage()]);
         }

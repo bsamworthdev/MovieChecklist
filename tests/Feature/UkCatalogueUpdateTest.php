@@ -27,11 +27,13 @@ class UkCatalogueUpdateTest extends TestCase
             $table->string('imdb_id')->nullable();
             $table->string('name');
         });
+        Schema::create('tv_shows', function (Blueprint $table) {$table->id(); $table->string('name'); $table->string('imdb_id'); $table->string('language')->nullable(); $table->string('genre')->nullable(); $table->timestamps();});
         foreach (config('catalogues.services') as $service) {
             Schema::create($service['table'], function (Blueprint $table) use ($service) {
                 $table->id();
                 $table->integer('movie_id');
-                if (!in_array($service['table'], ['amazon', 'netflix', 'disney_plus', 'nowtv'], true)) $table->unique('movie_id');
+                $table->string('movie_or_tv')->default('movie');
+                if (!in_array($service['table'], ['amazon', 'netflix', 'disney_plus', 'nowtv'], true)) $table->unique(['movie_or_tv', 'movie_id']);
                 $table->tinyInteger($service['column']);
                 $table->timestamps();
             });
@@ -63,7 +65,7 @@ class UkCatalogueUpdateTest extends TestCase
             if (isset($overrides[$path])) {
                 return $overrides[$path];
             }
-            if ($path === '/3/watch/providers/movie') {
+            if (in_array($path, ['/3/watch/providers/movie', '/3/watch/providers/tv'], true)) {
                 return Http::response(['results' => [
                     ['provider_id' => 9, 'provider_name' => 'Amazon Prime Video'],
                     ['provider_id' => 2100, 'provider_name' => 'Amazon Prime Video with Ads'],
@@ -87,11 +89,12 @@ class UkCatalogueUpdateTest extends TestCase
                 ]]);
             }
             if (preg_match('~/find/tt(\d+)$~', $path, $matches)) {
-                return Http::response(['movie_results' => [['id' => (int) $matches[1] - 1000000]]]);
+                return Http::response(['movie_results' => [['id' => (int) $matches[1] - 1000000]], 'tv_results' => [['id' => (int) $matches[1] - 1000000]]]);
             }
-            if (preg_match('~/movie/(\d+)/watch/providers$~', $path, $matches)) {
+            if (preg_match('~/(?:movie|tv)/(\d+)/watch/providers$~', $path, $matches)) {
                 return Http::response(['results' => $offers[(int) $matches[1]] ?? []]);
             }
+            if (preg_match('~/tv/\d+$~', $path)) return Http::response(['original_language' => 'en', 'genres' => [['name' => 'Drama']]]);
             $this->fail('Unexpected API path: '.$path);
         });
     }
@@ -345,7 +348,7 @@ class UkCatalogueUpdateTest extends TestCase
         });
         $query = $queries[0]['query'];
         $this->assertStringContainsString('left join "hbo_max"', $query);
-        $this->assertStringContainsString('"hbo_max"."on_hbo_max" = \'1\'', $query);
+        $this->assertStringContainsString('"hbo_max"."on_hbo_max" = 1', $query);
         $this->assertStringContainsString('offset 100', $query);
         $route = app('router')->getRoutes()->match(\Illuminate\Http\Request::create('/getMoreMovies/100/all/all/0/0/0/0/null/0/0/0/0/null/1', 'POST'));
         $this->assertSame('1', $route->parameter('hbo_max_only'));
@@ -415,7 +418,55 @@ class UkCatalogueUpdateTest extends TestCase
             $queries = DB::connection()->pretend(function () use ($filters) {
                 app(\App\Http\Controllers\MovieController::class)->getMovies('all', 'all', 0, 0, 0, 0, '', 0, 0, 0, 0, '', 100, 0, ...$filters);
             });
-            $this->assertStringContainsString('"'.$service.'"."on_'.$service.'" = \'1\'', $queries[0]['query']);
+            $this->assertStringContainsString('"'.$service.'"."on_'.$service.'" = 1', $queries[0]['query']);
         }
+    }
+
+    public function test_tv_update_preserves_movie_with_same_id_and_uses_separate_api_cache(): void
+    {
+        $movie = $this->movie();
+        DB::table('tv_shows')->insert(['id' => $movie, 'name' => 'TV Show', 'imdb_id' => 'tt1000001']);
+        $this->flag('netflix', $movie, 1);
+        $this->fakeApi([1 => ['GB' => ['flatrate' => [['provider_id' => 8]]]]], [
+            '/3/tv/1/watch/providers' => Http::response(['results' => []]),
+        ]);
+        $api = app(\App\Services\TmdbUkAvailability::class);
+        $api->check([['id' => $movie, 'imdb_id' => 'tt1000001']], [8]);
+        $updater = app(\App\Services\UkCatalogueUpdate::class);
+        $state = $updater->start('netflix', 99, 'tv');
+        $state = $updater->step($state['token'], 99, 0);
+        $this->assertTrue($state['complete']);
+        $this->assertSame(0, $state['result']['available']);
+        $this->assertDatabaseHas('tv_shows', ['id' => $movie, 'language' => 'en', 'genre' => 'Drama']);
+        $this->assertDatabaseHas('netflix', ['movie_id' => $movie, 'movie_or_tv' => 'movie', 'on_netflix' => 1]);
+        $this->assertDatabaseHas('netflix', ['movie_id' => $movie, 'movie_or_tv' => 'tv', 'on_netflix' => 0]);
+        Http::assertSent(fn ($request) => str_contains($request->url(), '/3/watch/providers/tv'));
+        Http::assertSent(fn ($request) => str_contains($request->url(), '/3/tv/1/watch/providers'));
+    }
+
+    public function test_manual_movie_updates_never_change_tv_rows_for_any_service(): void
+    {
+        $id = $this->movie();
+        $this->admin();
+        foreach (config('catalogues.services') as $service) {
+            DB::table($service['table'])->insert(['movie_id' => $id, 'movie_or_tv' => 'tv', $service['column'] => 1]);
+            $this->postJson('/setMovieStreamStatus', ['movie_id' => $id, 'platform' => $service['table'], 'status' => false])->assertOk();
+            $this->assertDatabaseHas($service['table'], ['movie_id' => $id, 'movie_or_tv' => 'movie', $service['column'] => 0]);
+            $this->assertDatabaseHas($service['table'], ['movie_id' => $id, 'movie_or_tv' => 'tv', $service['column'] => 1]);
+        }
+    }
+
+    public function test_related_series_metadata_does_not_invent_streaming_availability(): void
+    {
+        config(['tv_metadata.sources.tt1000001' => 7246]);
+        DB::table('tv_shows')->insert(['id' => 1, 'name' => 'Separate IMDb season', 'imdb_id' => 'tt1000001']);
+        DB::table('netflix')->insert(['movie_id' => 1, 'movie_or_tv' => 'tv', 'on_netflix' => 1]);
+        $this->fakeApi([], ['/3/find/tt1000001' => Http::response(['tv_results' => [], 'movie_results' => []])]);
+        $updater = app(\App\Services\UkCatalogueUpdate::class);
+        $state = $updater->start('netflix', 99, 'tv');
+        $result = $updater->step($state['token'], 99, 0);
+        $this->assertSame(1, $result['result']['skipped']);
+        $this->assertDatabaseHas('tv_shows', ['id' => 1, 'language' => 'en', 'genre' => 'Drama']);
+        $this->assertDatabaseHas('netflix', ['movie_id' => 1, 'movie_or_tv' => 'tv', 'on_netflix' => 1]);
     }
 }

@@ -1,8 +1,8 @@
 @php($catalogueConfigured = filled(config('services.tmdb.token')) || filled(config('services.tmdb.api_key')))
 <section id="uk-catalogues" class="mb-4 pb-3 border-bottom"
-    data-start-url="{{ route('admin.catalogues.start') }}" data-step-url="{{ route('admin.catalogues.step') }}">
+    data-media="{{ $catalogue }}" data-start-url="{{ route('admin.catalogues.start') }}" data-step-url="{{ route('admin.catalogues.step') }}">
     <h2 class="h5">Update UK streaming catalogues</h2>
-    <p>Check which movies in your database are available on each service, including free and ad-supported viewing. Rentals, purchases and extra Prime channels are excluded.</p>
+    <p>Check which {{ $catalogue === 'tv' ? 'TV shows' : 'movies' }} in your database are available on each service, including free and ad-supported viewing. Rentals, purchases and extra Prime channels are excluded.</p>
     @unless($catalogueConfigured)
         <div class="alert alert-warning">
             Add your <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer">TMDB API Read Access Token</a>
@@ -33,5 +33,5 @@
     <small class="text-muted d-block mt-2">UK streaming availability from <a href="https://www.justwatch.com/uk">JustWatch</a> via <a href="https://www.themoviedb.org">TMDB</a>.</small>
 </section>
 @push('scripts')
-<script src="{{ asset('js/admin-catalogues.js') }}" defer></script>
+<script src="{{ asset('js/admin-catalogues.js') }}?v={{ filemtime(public_path('js/admin-catalogues.js')) }}" defer></script>
 @endpush

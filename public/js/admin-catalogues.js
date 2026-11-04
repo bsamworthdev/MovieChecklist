@@ -1,9 +1,11 @@
 (() => {
     const section = document.getElementById('uk-catalogues');
     if (!section) return;
+    const media = section.dataset.media || 'movie';
+    const titles = media === 'tv' ? 'TV shows' : 'movies';
     const buttons = [...section.querySelectorAll('[data-catalogue-update]')];
     const movieButton = document.getElementById('update-movies-button');
-    const thumbnailButton = document.getElementById('generate-movie-thumbnails-button');
+    const thumbnailButton = document.getElementById('generate-movie-thumbnails-button') || document.getElementById('generate-tv-thumbnails-button');
     let running = false;
     let active = null;
     const notify = (kind, text) => {
@@ -39,7 +41,7 @@
     };
     const progress = (result, label) => {
         document.getElementById('catalogue-progress').hidden = false;
-        document.getElementById('catalogue-progress-text').textContent = `Checking ${label} UK: ${result.processed} of ${result.total} movies.`;
+        document.getElementById('catalogue-progress-text').textContent = `Checking ${label} UK: ${result.processed} of ${result.total} ${titles}.`;
         const percent = Math.round(100 * result.processed / result.total);
         const bar = document.getElementById('catalogue-progress-bar');
         bar.style.width = `${percent}%`;
@@ -57,7 +59,7 @@
                 active = null;
                 buttons.forEach(other => { other.querySelector('[data-catalogue-label]').textContent = `Update ${other.dataset.label} UK`; });
                 document.getElementById('catalogue-progress').hidden = true;
-                active = await post(section.dataset.startUrl, { service });
+                active = await post(section.dataset.startUrl, { service, media });
             }
             progress(active, label);
             while (!active.complete) {
@@ -66,8 +68,8 @@
                 if (!active.complete) await new Promise(resolve => setTimeout(resolve, 500));
             }
             const result = active.result;
-            let text = `${label} UK successfully updated. ${result.verified} movies checked; ${result.available} available. ${result.added} newly available, ${result.removed} removed.`;
-            if (result.skipped) text += ` ${result.skipped} movies could not be identified; their existing availability was preserved.`;
+            let text = `${label} UK successfully updated. ${result.verified} ${titles} checked; ${result.available} available. ${result.added} newly available, ${result.removed} removed.`;
+            if (result.skipped) text += ` ${result.skipped} ${titles} could not be identified; their existing availability was preserved.`;
             if (result.duplicates_removed) text += ` ${result.duplicates_removed} duplicate availability rows removed.`;
             notify('success', text);
             const list = document.getElementById('catalogue-skipped-list');
@@ -77,7 +79,7 @@
                 item.textContent = `${movie.name}${movie.imdb_id ? ` (${movie.imdb_id})` : ''}: ${movie.reason}`;
                 list.append(item);
             });
-            document.getElementById('catalogue-skipped-title').textContent = `${result.skipped} movies were skipped`;
+            document.getElementById('catalogue-skipped-title').textContent = `${result.skipped} ${titles} were skipped`;
             document.getElementById('catalogue-skipped').hidden = !result.skipped;
             active = null;
             button.querySelector('[data-catalogue-label]').textContent = `Update ${label} UK`;

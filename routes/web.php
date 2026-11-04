@@ -19,6 +19,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/tv-series', 'TvSeriesController@index')->name('tv.index');
+Route::get('/tv-series/catalogue', 'TvSeriesController@catalogue')->name('tv.catalogue');
+Route::get('/tv-series/watchlist', 'TvSeriesController@watchlist')->name('tv.watchlist');
+Route::post('/tv-series/progress', 'TvSeriesController@progress')->name('tv.progress');
+Route::post('/tv-series/streaming', 'TvSeriesController@streaming')->middleware('auth')->name('tv.streaming');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/friends/{tag?}', 'FriendshipController@index')->name('friend');
@@ -42,6 +48,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('/admin', 'AdminController@index')->name('admin');
+    Route::post('/admin/tv-series/thumbnails', 'AdminTvImportController@thumbnails')->name('admin.tv.thumbnails');
+    Route::post('/admin/tv-series/preview', 'AdminTvImportController@preview')->name('admin.tv.preview');
+    Route::post('/admin/tv-series/apply', 'AdminTvImportController@apply')->name('admin.tv.apply');
     Route::post('/admin/movies/preview', 'AdminMovieImportController@preview')->name('admin.movies.preview');
     Route::post('/admin/movies/apply', 'AdminMovieImportController@apply')->name('admin.movies.apply');
     Route::post('/admin/catalogues/start', 'AdminCatalogueController@start')->name('admin.catalogues.start');

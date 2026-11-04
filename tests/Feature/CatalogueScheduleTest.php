@@ -24,13 +24,13 @@ class CatalogueScheduleTest extends TestCase
         $this->mock(TmdbUkAvailability::class)->shouldReceive('configured')->once()->andReturn(true);
     }
 
-    private function successful($mock, string $key): void
+    private function successful($mock, string $key, string $media = 'movie'): void
     {
-        $mock->shouldReceive('start')->once()->with($key, 'catalogue-command')->andReturn([
-            'token' => $key, 'complete' => false, 'processed' => 0, 'total' => 1,
+        $mock->shouldReceive('start')->once()->with($key, 'catalogue-command', $media)->andReturn([
+            'token' => $key.'-'.$media, 'complete' => false, 'processed' => 0, 'total' => 1,
         ]);
-        $mock->shouldReceive('step')->once()->with($key, 'catalogue-command', 0)->andReturn([
-            'token' => $key, 'complete' => true, 'processed' => 1, 'total' => 1,
+        $mock->shouldReceive('step')->once()->with($key.'-'.$media, 'catalogue-command', 0)->andReturn([
+            'token' => $key.'-'.$media, 'complete' => true, 'processed' => 1, 'total' => 1,
             'result' => ['verified' => 1, 'available' => 1, 'added' => 1, 'removed' => 0, 'skipped' => 0],
         ]);
     }
@@ -39,7 +39,9 @@ class CatalogueScheduleTest extends TestCase
     {
         $this->configured();
         $mock = $this->mock(UkCatalogueUpdate::class);
-        foreach (array_keys(config('catalogues.services')) as $key) $this->successful($mock, $key);
+        foreach (['movie', 'tv'] as $media) {
+            foreach (array_keys(config('catalogues.services')) as $key) $this->successful($mock, $key, $media);
+        }
         $this->artisan('catalogues:update')->assertExitCode(0);
     }
 
@@ -47,8 +49,9 @@ class CatalogueScheduleTest extends TestCase
     {
         $this->configured();
         $mock = $this->mock(UkCatalogueUpdate::class);
-        $mock->shouldReceive('start')->once()->with('prime', 'catalogue-command')->andThrow(new CatalogueUpdateException('TMDB is unavailable'));
+        $mock->shouldReceive('start')->once()->with('prime', 'catalogue-command', 'movie')->andThrow(new CatalogueUpdateException('TMDB is unavailable'));
         foreach (array_diff(array_keys(config('catalogues.services')), ['prime']) as $key) $this->successful($mock, $key);
+        foreach (array_keys(config('catalogues.services')) as $key) $this->successful($mock, $key, 'tv');
         $this->artisan('catalogues:update')->expectsOutput('Prime Video failed: TMDB is unavailable')->assertExitCode(1);
     }
 
@@ -57,6 +60,7 @@ class CatalogueScheduleTest extends TestCase
         $this->configured();
         $mock = $this->mock(UkCatalogueUpdate::class);
         $this->successful($mock, 'hbo_max');
+        $this->successful($mock, 'hbo_max', 'tv');
         $this->artisan('catalogues:update', ['--service' => ['hbo_max']])->assertExitCode(0);
     }
 

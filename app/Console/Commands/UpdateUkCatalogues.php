@@ -13,12 +13,18 @@ use Throwable;
 
 class UpdateUkCatalogues extends Command
 {
-    protected $signature = 'catalogues:update {--service=* : Update only these service keys; defaults to all services}';
+    protected $signature = 'catalogues:update {--service=* : Update only these service keys; defaults to all services} {--media=all : movie, tv or all}';
 
     protected $description = 'Update UK streaming availability for all configured streaming services';
 
     public function handle(UkCatalogueUpdate $updater, TmdbUkAvailability $api): int
     {
+        $media = $this->option('media');
+        if (!in_array($media, ['movie', 'tv', 'all'], true)) {
+            $this->error('Choose --media=movie, --media=tv or --media=all.');
+            return self::INVALID;
+        }
+        $types = $media === 'all' ? ['movie', 'tv'] : [$media];
         $services = config('catalogues.services');
         $selected = array_unique($this->option('service') ?: array_keys($services));
         foreach ($selected as $key) {
@@ -39,31 +45,33 @@ class UpdateUkCatalogues extends Command
         $failed = false;
         try {
             $this->info('UK catalogue update started: '.now('Europe/London')->toDateTimeString().' Europe/London');
-            foreach ($selected as $key) {
-                $label = $services[$key]['label'];
-                try {
-                    $state = $updater->start($key, 'catalogue-command');
-                    while (!$state['complete']) {
-                        $state = $updater->step($state['token'], 'catalogue-command', $state['processed']);
-                        $this->line($label.': '.$state['processed'].'/'.$state['total'].' checked');
-                        if (!$state['complete']) {
-                            usleep(max(0, (int) config('catalogues.batch_delay_ms', 500)) * 1000);
+            foreach ($types as $type) {
+                foreach ($selected as $key) {
+                    $label = ($type === 'tv' ? 'TV Shows / ' : '').$services[$key]['label'];
+                    try {
+                        $state = $updater->start($key, 'catalogue-command', $type);
+                        while (!$state['complete']) {
+                            $state = $updater->step($state['token'], 'catalogue-command', $state['processed']);
+                            $this->line($label.': '.$state['processed'].'/'.$state['total'].' checked');
+                            if (!$state['complete']) {
+                                usleep(max(0, (int) config('catalogues.batch_delay_ms', 500)) * 1000);
+                            }
                         }
+                        $result = $state['result'];
+                        $this->info($label.': '.$result['verified'].' checked, '.$result['available'].' available, '
+                            .$result['added'].' newly available, '.$result['removed'].' removed, '.$result['skipped'].' skipped.');
+                        Log::info('Scheduled UK catalogue updated', ['media' => $type, 'service' => $key, 'result' => $result]);
+                    } catch (Throwable $exception) {
+                        $failed = true;
+                        $message = $exception instanceof ValidationException
+                            ? implode(' ', array_merge(...array_values($exception->errors()))) : $exception->getMessage();
+                        $this->error($label.' failed: '.$message);
+                        Log::error('Scheduled UK catalogue update failed', ['media' => $type, 'service' => $key, 'error' => $message]);
+                        if (!$exception instanceof CatalogueUpdateException && !$exception instanceof ValidationException) {
+                            report($exception);
+                        }
+                        // Each provider uses its own transaction; keep processing the other services.
                     }
-                    $result = $state['result'];
-                    $this->info($label.': '.$result['verified'].' checked, '.$result['available'].' available, '
-                        .$result['added'].' newly available, '.$result['removed'].' removed, '.$result['skipped'].' skipped.');
-                    Log::info('Scheduled UK catalogue updated', ['service' => $key, 'result' => $result]);
-                } catch (Throwable $exception) {
-                    $failed = true;
-                    $message = $exception instanceof ValidationException
-                        ? implode(' ', array_merge(...array_values($exception->errors()))) : $exception->getMessage();
-                    $this->error($label.' failed: '.$message);
-                    Log::error('Scheduled UK catalogue update failed', ['service' => $key, 'error' => $message]);
-                    if (!$exception instanceof CatalogueUpdateException && !$exception instanceof ValidationException) {
-                        report($exception);
-                    }
-                    // Each provider uses its own transaction; keep processing the other services.
                 }
             }
         } finally {

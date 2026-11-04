@@ -34,6 +34,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Movie Checklist
                 </a>
+                @include('catalogue-switch')
                 @guest
                 @else
                 <trophies-header
@@ -50,7 +51,7 @@
                         @guest
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="/home">Home</a>
+                            <a class="nav-link" href="{{ session('catalogue') === 'tv' ? route('tv.index') : route('home') }}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/friends">Friends</a>

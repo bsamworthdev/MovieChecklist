@@ -58,3 +58,9 @@ php artisan catalogues:update --service=netflix
 ```
 
 Valid keys are `prime`, `netflix`, `disney`, `now`, `hbo_max`, `apple_tv`, `paramount_plus`, `bbc_iplayer`, `itvx`, and `channel4`. Multiple `--service` options may be supplied. All services are selected when the option is omitted.
+
+## TV shows
+
+The same buttons operate on TV shows when the header toggle is set to TV Shows. Run migrations to add `movie_or_tv` to all ten provider tables. Movie and TV IDs are scoped in every availability read and write. TV providers come from TMDB's TV provider list and `/tv/{series_id}/watch/providers`; movie and TV API caches are separate.
+
+The nightly command now processes both catalogues by default. To update just one, run `php artisan catalogues:update --media=tv` or `--media=movie`. The existing Forge schedule needs no change. NOW uses TV entertainment subscription providers in TV mode.

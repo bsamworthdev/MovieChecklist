@@ -12,7 +12,15 @@ class AdminController extends Controller
     }
 
     public function index(){
-        $watched = DB::table('movie_user')
+        $catalogue = session('catalogue', 'movie');
+        if ($catalogue === 'tv') {
+            return view('admin-settings', [
+                'catalogue' => 'tv', 'users' => collect(),
+                'tvCount' => DB::table('tv_shows')->count(),
+                'tvRankedCount' => DB::table('tv_shows')->whereNotNull('top250_rank')->count(),
+            ]);
+        }
+        $watched = DB::table('movie_user')->where('movie_user.movie_or_tv', 'movie')
             ->join('movies', 'movies.id', '=', 'movie_user.movie_id')
             ->where('movies.top250_rank', '<=', 100)
             ->select('movie_user.user_id')
@@ -36,6 +44,7 @@ class AdminController extends Controller
         return view(
             'admin-settings', [
                 "users" => $users,
+                'catalogue' => 'movie',
             ]
         );
     }

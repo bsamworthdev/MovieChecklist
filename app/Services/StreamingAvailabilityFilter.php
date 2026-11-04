@@ -18,7 +18,7 @@ class StreamingAvailabilityFilter
         if ($columns) {
             $query->where(function (Builder $streaming) use ($columns) {
                 foreach ($columns as $column) {
-                    $streaming->orWhere($column, '=', '1');
+                    $streaming->orWhere($column, '=', 1);
                 }
             });
         }
