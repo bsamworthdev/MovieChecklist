@@ -198,8 +198,8 @@
                                                         Unwatched By Me <input type="checkbox" class="form-input" id="unwatched_only_checkbox" {{( $selectedUnwatchedOnly ? "checked" : '')}} onchange="return changeSelection();">
                                                     </span>
                                                 </label>
+                                                @if(count($user->friends) > 0)
                                                 <label class="vertAlign" >
-                                                    @if(count($user->friends) > 0)
                      
                                                         <span id="selectedFriendsLabel">Unwatched By Friends 
                                                             (<b>{{ $selectedUnwatchedByFriends == '' ? 0 : (substr_count($selectedUnwatchedByFriends, '|') + 1) }}</b>)
@@ -208,10 +208,8 @@
                                                         <a id="editFriendsLink" href="#" onclick="toggleFriendsContainer()">
                                                             edit
                                                         </a>
-                                                    @else 
-                                                        <span id="inactiveSelectedFriendsLabel" title="Add friends to use this feature">Unwatched By Friends (0)</span> &nbsp;    
-                                                    @endif
                                                 </label>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -604,7 +602,4 @@
         white-space:nowrap;
     }
 
-    #inactiveSelectedFriendsLabel{
-        opacity:0.4;
-    }
 </style>
