@@ -10,7 +10,7 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
     const output = new VirtualConsole();
     output.on('jsdomError', error => errors.push(error));
     output.on('error', error => errors.push(error));
-    const dom = new JSDOM('<meta name="csrf-token" content="test"><div id="app"></div>', {url: 'http://localhost/tv-series', runScripts: 'outside-only', virtualConsole: output});
+    const dom = new JSDOM('<meta name="csrf-token" content="test"><div id="app"></div>', {url: 'http://localhost/tv-shows', runScripts: 'outside-only', virtualConsole: output});
     try {
         dom.window.eval(fs.readFileSync('public/js/app.js', 'utf8'));
         const pending = [];

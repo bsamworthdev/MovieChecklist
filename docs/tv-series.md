@@ -1,6 +1,6 @@
 # TV Shows
 
-The header switch opens `/tv-series` for guests and account holders. TV shows use the `tv_shows` catalogue and the existing watched/favourite/watchlist tables, scoped by `movie_or_tv`. Watched status applies to the whole series. Guests save progress to their browser session, while logged-in users save it to their account. Guest TV history is transferred with movie history when registering an account.
+The header switch opens `/tv-shows` for guests and account holders. TV shows use the `tv_shows` catalogue and the existing watched/favourite/watchlist tables, scoped by `movie_or_tv`. Watched status applies to the whole series. Guests save progress to their browser session, while logged-in users save it to their account. Guest TV history is transferred with movie history when registering an account.
 
 ## Deploy and populate
 

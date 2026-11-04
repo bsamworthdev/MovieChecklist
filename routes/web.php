@@ -19,11 +19,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/tv-series', 'TvSeriesController@index')->name('tv.index');
-Route::get('/tv-series/catalogue', 'TvSeriesController@catalogue')->name('tv.catalogue');
-Route::get('/tv-series/watchlist', 'TvSeriesController@watchlist')->name('tv.watchlist');
-Route::post('/tv-series/progress', 'TvSeriesController@progress')->name('tv.progress');
-Route::post('/tv-series/streaming', 'TvSeriesController@streaming')->middleware('auth')->name('tv.streaming');
+Route::match(['GET', 'POST'], '/tv-series/{path?}', function (\Illuminate\Http\Request $request, $path = null) {
+    $query = $request->getQueryString();
+    return redirect('/tv-shows'.($path ? '/'.$path : '').($query ? '?'.$query : ''), 308);
+})->where('path', '.*');
+
+Route::get('/tv-shows', 'TvSeriesController@index')->name('tv.index');
+Route::get('/tv-shows/catalogue', 'TvSeriesController@catalogue')->name('tv.catalogue');
+Route::get('/tv-shows/watchlist', 'TvSeriesController@watchlist')->name('tv.watchlist');
+Route::post('/tv-shows/progress', 'TvSeriesController@progress')->name('tv.progress');
+Route::post('/tv-shows/streaming', 'TvSeriesController@streaming')->middleware('auth')->name('tv.streaming');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
@@ -48,9 +53,13 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('/admin', 'AdminController@index')->name('admin');
-    Route::post('/admin/tv-series/thumbnails', 'AdminTvImportController@thumbnails')->name('admin.tv.thumbnails');
-    Route::post('/admin/tv-series/preview', 'AdminTvImportController@preview')->name('admin.tv.preview');
-    Route::post('/admin/tv-series/apply', 'AdminTvImportController@apply')->name('admin.tv.apply');
+    Route::match(['GET', 'POST'], '/admin/tv-series/{path}', function (\Illuminate\Http\Request $request, $path) {
+        $query = $request->getQueryString();
+        return redirect('/admin/tv-shows/'.$path.($query ? '?'.$query : ''), 308);
+    })->where('path', '.*');
+    Route::post('/admin/tv-shows/thumbnails', 'AdminTvImportController@thumbnails')->name('admin.tv.thumbnails');
+    Route::post('/admin/tv-shows/preview', 'AdminTvImportController@preview')->name('admin.tv.preview');
+    Route::post('/admin/tv-shows/apply', 'AdminTvImportController@apply')->name('admin.tv.apply');
     Route::post('/admin/movies/preview', 'AdminMovieImportController@preview')->name('admin.movies.preview');
     Route::post('/admin/movies/apply', 'AdminMovieImportController@apply')->name('admin.movies.apply');
     Route::post('/admin/catalogues/start', 'AdminCatalogueController@start')->name('admin.catalogues.start');

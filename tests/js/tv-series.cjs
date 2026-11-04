@@ -7,7 +7,7 @@ const {JSDOM, VirtualConsole} = require('jsdom');
     const console = new VirtualConsole();
     console.on('jsdomError', error => errors.push(error));
     console.on('error', error => errors.push(error));
-    const dom = new JSDOM('<meta name="csrf-token" content="test"><div id="app"></div>', {url: 'http://localhost/tv-series', runScripts: 'outside-only', virtualConsole: console});
+    const dom = new JSDOM('<meta name="csrf-token" content="test"><div id="app"></div>', {url: 'http://localhost/tv-shows', runScripts: 'outside-only', virtualConsole: console});
     try {
         dom.window.eval(fs.readFileSync('public/js/app.js', 'utf8'));
         const requests = [];
@@ -17,7 +17,7 @@ const {JSDOM, VirtualConsole} = require('jsdom');
         const show = {id: 1, imdb_id: 'tt0903747', name: 'Breaking Bad', year: 2008, rating: 9.5, top250_rank: 1, watched: 0, favourite: 0, watchlist: 1, on_netflix: 1, image_url: 'https://example.test/original.jpg', image_url_small_extended: '/storage/tv-shows/test.jpg'};
         dom.window.axios.get = async (url, options) => {
             if (options && options.params.random) return {data: {show: {...show, watched: 0}}};
-            if (url === '/tv-series/watchlist') return {data: show.watchlist ? [{...show}] : []};
+            if (url === '/tv-shows/watchlist') return {data: show.watchlist ? [{...show}] : []};
             requests.push({url, params: options.params});
             return {data: {data: [{...show}], current_page: 1, last_page: 1, total: 1, services, summary: {watched: show.watched, total: 1, watchlist: show.watchlist}, filters: {genres: ['Drama'], decades: [2000], has_languages: true}}};
         };
@@ -31,7 +31,7 @@ const {JSDOM, VirtualConsole} = require('jsdom');
         assert.match(vm.$el.textContent, /Save my score!/);
         assert.equal(vm.$el.querySelector('a.btn-success').getAttribute('href'), '/register');
         assert.match(vm.$el.textContent, /Pick me a random TV show!/);
-        assert.equal(requests[0].url, '/tv-series/catalogue');
+        assert.equal(requests[0].url, '/tv-shows/catalogue');
         assert.equal(vm.filtersShown, false, 'extra filters are hidden on first entry');
         vm.setFiltersShown(true);
         assert.equal(dom.window.sessionStorage.getItem('catalogue-filters-shown'), 'true');

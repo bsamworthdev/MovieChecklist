@@ -145,7 +145,7 @@ export default {
             }
             this.randomLoading = true; this.randomError = ''; this.randomShow = null;
             try {
-                const {data} = await axios.get('/tv-series/catalogue', {params: {...this.filterParams(), random: 1}});
+                const {data} = await axios.get('/tv-shows/catalogue', {params: {...this.filterParams(), random: 1}});
                 if (this.randomOpen) this.randomShow = data.show;
             } catch (error) {this.randomError = 'Could not pick a TV show. Please try again.';}
             finally {this.randomLoading = false;}
@@ -170,7 +170,7 @@ export default {
             if (!this.canEditStreams || this.saving[series.id]) return;
             this.$set(this.saving, series.id, true); this.error = '';
             try {
-                await axios.post('/tv-series/streaming', {id: series.id, service: service.key, available: !Number(series[service.column])});
+                await axios.post('/tv-shows/streaming', {id: series.id, service: service.key, available: !Number(series[service.column])});
                 await this.refresh();
             } catch (error) {this.error = 'Could not save streaming availability. Please try again.';}
             finally {this.$delete(this.saving, series.id);}
@@ -200,7 +200,7 @@ export default {
         },
         async fetchWatchlist() {
             this.watchlistLoading = true; this.watchlistError = '';
-            try { const {data} = await axios.get('/tv-series/watchlist'); this.watchlistItems = data; }
+            try { const {data} = await axios.get('/tv-shows/watchlist'); this.watchlistItems = data; }
             catch (error) { this.watchlistError = 'Could not load your watchlist. Please try again.'; }
             finally {this.watchlistLoading = false;}
         },
@@ -214,7 +214,7 @@ export default {
             this.loading = true; this.error = '';
             try {
                 const params = this.filterParams();
-                const responses = await Promise.all(Array.from({length: pages}, (_, index) => axios.get('/tv-series/catalogue', {params: {...params, page: page + index}})));
+                const responses = await Promise.all(Array.from({length: pages}, (_, index) => axios.get('/tv-shows/catalogue', {params: {...params, page: page + index}})));
                 if (id !== this.requestId) return;
                 const data = responses[0].data;
                 const incoming = responses.flatMap(response => response.data.data);
@@ -231,7 +231,7 @@ export default {
             this.$set(this.saving, series.id, true); this.error = '';
             const value = !Number(series[field]);
             try {
-                await axios.post('/tv-series/progress', {id: series.id, field, value});
+                await axios.post('/tv-shows/progress', {id: series.id, field, value});
                 this.$set(series, field, Number(value));
                 await this.refresh();
                 if (this.watchlistOpen) await this.fetchWatchlist();

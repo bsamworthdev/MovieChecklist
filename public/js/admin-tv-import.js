@@ -41,7 +41,7 @@
         preview.disabled = true; if (thumbnails) thumbnails.disabled = true; apply.hidden = true; token = null;
         result.textContent = 'Reading TV list…';
         try {
-            const data = await request('/admin/tv-series/preview', {html: html.value});
+            const data = await request('/admin/tv-shows/preview', {html: html.value});
             token = data.token;
             result.textContent = `${data.total} TV shows: ${data.existing} existing, ${data.new} new. First 10: ` + data.titles.map(row => `${row.position}. ${row.name}`).join('; ');
             apply.hidden = false;
@@ -53,7 +53,7 @@
         apply.disabled = true; preview.disabled = true; if (thumbnails) thumbnails.disabled = true;
         result.textContent = 'Updating TV shows…';
         try {
-            const data = await request('/admin/tv-series/apply', {token});
+            const data = await request('/admin/tv-shows/apply', {token});
             result.textContent = `Successfully updated ${data.updated} TV shows; ${data.added} added.`;
             apply.hidden = true; token = null;
         } catch (error) {result.textContent = error.message;}

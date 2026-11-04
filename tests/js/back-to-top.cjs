@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const {JSDOM, VirtualConsole} = require('jsdom');
 
 (async () => {
-    const dom = new JSDOM('<meta name="csrf-token" content="test"><div id="app"></div>', {url: 'http://localhost/tv-series', runScripts: 'outside-only', virtualConsole: new VirtualConsole()});
+    const dom = new JSDOM('<meta name="csrf-token" content="test"><div id="app"></div>', {url: 'http://localhost/tv-shows', runScripts: 'outside-only', virtualConsole: new VirtualConsole()});
     try {
         dom.window.eval(fs.readFileSync('public/js/app.js', 'utf8'));
         let otherScrollCalls = 0;
