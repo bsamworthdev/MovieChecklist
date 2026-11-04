@@ -52,7 +52,7 @@
                                         <div class="row">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
-                                                    <label>
+                                                    <div>
                                                         <span class="nowrap">
                                                             <label for="netflix_only_checkbox"> 
                                                                 <img class="netflix_logo" title="Netflix" src="/images/netflix.jpg">
@@ -156,7 +156,8 @@
                                                                 {{( $selectedChannel4Only ? "checked" : '')}}
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                    </label>
+                                                    </div>
+                                                    @include('streaming-select-all')
                                                 </div>
                                             </div>
                                             <div class="col-lg-1 col-12"></div>

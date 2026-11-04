@@ -51,9 +51,36 @@ async function check(role) {
     }
 }
 
+function checkStreamingSelection(initialCount) {
+    let submissions = 0;
+    const options = services.map((service, index) => `<input type="checkbox" id="${service}_only_checkbox" ${index < initialCount ? 'checked' : ''}>`).join('');
+    const dom = new JSDOM(`<!doctype html><html><head><meta name="csrf-token" content="test"></head><body><div id="app"><input type="checkbox" id="english_only_checkbox" checked><div id="streamCard"><div>${options}</div><div><button type="button" id="streaming-select-all">Select all</button> | <button type="button" id="streaming-unselect-all">Unselect all</button></div></div></div></body></html>`, {
+        url: 'http://localhost/home', runScripts: 'outside-only', virtualConsole: new VirtualConsole(),
+    });
+    try {
+        dom.window.changeSelection = () => { submissions++; };
+        dom.window.eval(bundle);
+        const select = dom.window.document.getElementById('streaming-select-all');
+        const unselect = dom.window.document.getElementById('streaming-unselect-all');
+        const checkboxes = services.map(service => dom.window.document.getElementById(service+'_only_checkbox'));
+        assert.equal(dom.window.document.querySelectorAll('#streamCard input[type="checkbox"]').length, services.length, 'There is no bulk-selection checkbox');
+        assert.equal(submissions, 0, 'Initial state does not submit the filter form');
+        select.click();
+        assert.ok(checkboxes.every(checkbox => checkbox.checked));
+        assert.equal(submissions, 1, 'Select all submits exactly once');
+        unselect.click();
+        assert.ok(checkboxes.every(checkbox => !checkbox.checked));
+        assert.equal(submissions, 2, 'Unselect all submits exactly once');
+        assert.equal(dom.window.document.getElementById('english_only_checkbox').checked, true, 'Other filters are preserved');
+    } finally {
+        dom.window.close();
+    }
+}
+
 (async () => {
     for (const role of ['admin', 'user', 'guest']) await check(role);
+    for (const count of [0, 2, services.length]) checkStreamingSelection(count);
     const manifest = JSON.parse(fs.readFileSync('public/mix-manifest.json', 'utf8'));
     assert.match(manifest['/js/app.js'], /\?id=[a-f0-9]+$/, 'The tested bundle has a cache-busting URL');
-    process.stdout.write('Compiled Vue bundle mounts and renders all ten streaming badges for admin, member and guest views.\n');
+    process.stdout.write('Compiled Vue bundle mounts and renders all ten badges and supports Select all and Unselect all links from every selection state.\n');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -40,3 +40,6 @@ Vue.component('trophies-header', require('./components/TrophiesHeader.vue').defa
 const app = new Vue({
     el: '#app',
 });
+
+
+require('./streaming-filter-controls')();

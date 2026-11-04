@@ -60,7 +60,7 @@
                                         <div id="filtersContainer" style="{{ ($user->filters_shown == 0) ? 'display:none;' : '' }}" class="row mt-3">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
-                                                    <label>
+                                                    <div>
                                                         <span class="nowrap mr-2">
                                                             <label for="netflix_only_checkbox"> 
                                                                 <img class="netflix_logo" title="Netflix" src="/images/netflix.jpg">
@@ -161,7 +161,8 @@
                                                                 {{( $selectedChannel4Only ? "checked" : '')}}
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                    </label>
+                                                    </div>
+                                                    @include('streaming-select-all')
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-12">
