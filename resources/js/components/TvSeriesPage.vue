@@ -43,9 +43,10 @@
         <div class="row justify-content-center">
             <div v-for="(series, index) in items" :key="series.id" class="scratchCardContainer col-lg-3 col-md-4 col-sm-6 col-xs-12">
                 <article class="card movieCard" :class="{watched: Number(series.watched)}" :aria-busy="!!saving[series.id]">
-                    <div class="card-body movieImage" :style="{backgroundImage: (series.image_url_small_extended || series.image_url) ? `url(${series.image_url_small_extended || series.image_url})` : 'none', backgroundColor: '#252525'}"
+                    <div class="card-body movieImage" :style="{backgroundImage: posterUrl(series) ? `url(${posterUrl(series)})` : 'none', backgroundColor: '#252525'}"
                          role="button" tabindex="0" :aria-label="(Number(series.watched) ? 'Mark unwatched: ' : 'Mark watched: ') + series.name" :aria-pressed="!!Number(series.watched)"
                          @click="save(series, 'watched')" @keydown.enter.self.prevent="save(series, 'watched')" @keydown.space.self.prevent="save(series, 'watched')">
+                        <img v-if="posterUrl(series)" :src="posterUrl(series)" class="sr-only" alt="" aria-hidden="true" @error="posterFailed(series)">
                         <h4>{{ series.name }} ({{ series.year }})</h4>
                         <div class="rank" :class="{rounded: (page - 1) * 48 + index + 1 === Number(series.top250_rank)}">
                             <span class="filtered_rank">{{ (page - 1) * 48 + index + 1 }}</span>
@@ -80,7 +81,7 @@
                     <p v-if="randomLoading" role="status">Picking a TV show…</p>
                     <p v-else-if="randomError" class="alert alert-danger" role="alert">{{ randomError }}</p>
                     <div v-else-if="randomShow" class="row">
-                        <div class="col-sm-5"><img v-if="randomShow.image_url_small_extended || randomShow.image_url" class="tv-random-poster" :src="randomShow.image_url_small_extended || randomShow.image_url" :alt="randomShow.name"></div>
+                        <div class="col-sm-5"><img v-if="posterUrl(randomShow)" class="tv-random-poster" :src="posterUrl(randomShow)" :alt="randomShow.name" @error="posterFailed(randomShow)"></div>
                         <div class="col-sm-7"><h3 class="h4">{{ randomShow.name }} ({{ randomShow.year }})</h3><p v-if="randomShow.rating">★ {{ Number(randomShow.rating).toFixed(1) }}</p><p v-if="randomShow.genre">{{ randomShow.genre }}</p>
                             <button type="button" class="btn btn-primary mb-2" :disabled="!!saving[randomShow.id]" @click="save(randomShow, 'watchlist')">{{ Number(randomShow.watchlist) ? 'Remove from Watch List' : 'Add to Watch List' }}</button>
                             <button type="button" class="btn btn-success mb-2" :disabled="!!saving[randomShow.id]" @click="save(randomShow, 'watched')">{{ Number(randomShow.watched) ? 'Mark unwatched' : 'Mark watched' }}</button>
@@ -118,10 +119,16 @@
 const filterVisibility = require('../filter-visibility');
 export default {
     props: {authenticated: {type: Boolean, default: false}, canEditStreams: {type: Boolean, default: false}},
-    data() { return {items: [], search: '', status: 'all', page: 1, lastPage: 1, total: 0, loading: false, error: '', saving: {}, requestId: 0, genre: '', decade: '', english: false, popular: false, unwatched: false, favourites: false, summary: {watched: 0, total: 0, watchlist: 0}, availableFilters: {genres: [], decades: [], has_languages: false}, watchlistOpen: false, watchlistItems: [], watchlistLoading: false, watchlistError: '', previousFocus: null, filtersShown: filterVisibility.get(), services: [], selectedServices: [], randomOpen: false, randomShow: null, randomLoading: false, randomError: '', randomPreviousFocus: null}; },
+    data() { return {items: [], search: '', status: 'all', page: 1, lastPage: 1, total: 0, loading: false, error: '', saving: {}, requestId: 0, genre: '', decade: '', english: false, popular: false, unwatched: false, favourites: false, summary: {watched: 0, total: 0, watchlist: 0}, availableFilters: {genres: [], decades: [], has_languages: false}, watchlistOpen: false, watchlistItems: [], watchlistLoading: false, watchlistError: '', previousFocus: null, filtersShown: filterVisibility.get(), services: [], selectedServices: [], randomOpen: false, randomShow: null, randomLoading: false, randomError: '', randomPreviousFocus: null, failedThumbnails: {}}; },
     mounted() { this.load(1); },
     beforeDestroy() { if (this.watchlistOpen || this.randomOpen) document.body.style.overflow = this.previousOverflow; },
     methods: {
+        posterUrl(show) {
+            return show.image_url_small_extended && !this.failedThumbnails[show.image_url_small_extended] ? show.image_url_small_extended : show.image_url;
+        },
+        posterFailed(show) {
+            if (show.image_url_small_extended && !this.failedThumbnails[show.image_url_small_extended]) this.$set(this.failedThumbnails, show.image_url_small_extended, true);
+        },
         filterParams() {
             return {search: this.search, status: this.status, genre: this.genre, decade: this.decade, english: Number(this.english), popular: Number(this.popular), unwatched: Number(this.unwatched), favourites: Number(this.favourites), services: this.selectedServices};
         },

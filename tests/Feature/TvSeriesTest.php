@@ -235,6 +235,7 @@ class TvSeriesTest extends TestCase
             file_put_contents($source, (string) \Intervention\Image\Facades\Image::canvas(300, 500, '#ffffff')->encode('jpg'));
             $id = $this->series(['image_url' => $source]);
             $existing = $this->series(['imdb_id' => 'tt2345678', 'image_url' => $source, 'image_url_small' => '/storage/existing.jpg']);
+            \Illuminate\Support\Facades\Storage::disk('public')->put('existing.jpg', file_get_contents($source));
             $this->postJson(route('admin.tv.thumbnails'))->assertUnauthorized();
             $this->actingAs(new GenericUser(['id' => 1, 'role' => 'user']))->postJson(route('admin.tv.thumbnails'))->assertForbidden();
             $this->actingAs(new GenericUser(['id' => 1, 'role' => 'admin']))->postJson(route('admin.tv.thumbnails'))->assertOk()->assertExactJson(['generated' => 1, 'remaining' => 0]);
@@ -244,7 +245,11 @@ class TvSeriesTest extends TestCase
             $this->assertSame(229, $image->width());
             $this->assertSame(287, $image->height());
             $this->postJson(route('admin.tv.thumbnails'))->assertOk()->assertExactJson(['generated' => 0, 'remaining' => 0]);
-            $this->getJson('/tv-series/catalogue')->assertOk()->assertJsonPath('data.0.image_url_small', '/storage/tv-shows/tt1234567.jpg');
+            $this->getJson('/tv-series/catalogue')->assertOk()->assertJsonPath('data.0.image_url_small', '/storage/tv-shows/tt1234567.jpg')->assertJsonPath('data.0.image_url_small_extended', '/storage/tv-shows/tt1234567.jpg');
+            \Illuminate\Support\Facades\Storage::disk('public')->delete('existing.jpg');
+            $this->getJson('/tv-series/catalogue?search=Test')->assertOk()->assertJsonPath('data.1.image_url_small_extended', null);
+            $this->postJson(route('admin.tv.thumbnails'))->assertOk()->assertExactJson(['generated' => 1, 'remaining' => 0]);
+            $this->assertSame('/storage/tv-shows/tt2345678.jpg', DB::table('tv_shows')->where('id', $existing)->value('image_url_small'));
         } finally {unlink($source);}
     }
 

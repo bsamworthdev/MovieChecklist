@@ -13,13 +13,18 @@ class CatalogueThumbnails
     {
         if (!in_array($media, ['movie', 'tv'], true)) throw new RuntimeException('Unknown catalogue type.');
         $table = $media === 'tv' ? 'tv_shows' : 'movies';
-        $query = fn () => DB::table($table)->where(function ($query) {
-            $query->whereNull('image_url_small')->orWhere('image_url_small', '');
-        })->whereNotNull('image_url')->where('image_url', '<>', '');
-        $rows = $query()->orderBy('id');
-        if ($limit !== null) $rows->limit($limit);
+        $pending = function () use ($table, $media) {
+            $query = DB::table($table)->whereNotNull('image_url')->where('image_url', '<>', '')->orderBy('id');
+            if ($media === 'movie') {
+                return $query->where(function ($query) {$query->whereNull('image_url_small')->orWhere('image_url_small', '');})->get();
+            }
+            return $query->get()->filter(fn ($row) => !$row->image_url_small
+                || !Storage::disk('public')->exists(preg_replace('~^/storage/~', '', $row->image_url_small)));
+        };
+        $rows = $pending();
+        if ($limit !== null) $rows = $rows->take($limit);
         $generated = 0;
-        foreach ($rows->get() as $row) {
+        foreach ($rows as $row) {
             $contents = @file_get_contents($row->image_url, false, stream_context_create(['http' => ['timeout' => 15]]));
             if ($contents === false) throw new RuntimeException('Could not download artwork for '.$row->name.'. Retry thumbnail generation.');
             $name = $media === 'tv' ? 'tv-shows/'.$row->imdb_id.'.jpg' : basename(parse_url($row->image_url, PHP_URL_PATH) ?: $row->image_url);
@@ -29,12 +34,15 @@ class CatalogueThumbnails
             DB::table($table)->where('id', $row->id)->update(['image_url_small' => '/storage/'.$name, 'updated_at' => now()]);
             $generated++;
         }
-        return ['generated' => $generated, 'remaining' => $query()->count()];
+        return ['generated' => $generated, 'remaining' => $pending()->count()];
     }
 
     public function url(?string $path): ?string
     {
         if (!$path) return null;
-        return Storage::disk('public')->url(preg_replace('~^/storage/~', '', $path));
+        $name = preg_replace('~^/storage/~', '', $path);
+        if (!Storage::disk('public')->exists($name)) return null;
+        if (config('filesystems.disks.public.driver') === 'local') return '/storage/'.$name;
+        return Storage::disk('public')->url($name);
     }
 }
