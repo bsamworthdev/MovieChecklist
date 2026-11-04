@@ -86,17 +86,23 @@
         },
         methods: {
             toggleWatched(){
+                if (this.savingWatched) return;
+                this.savingWatched = true;
+                const watched = !this.hasWatched;
                 axios.post('/saveMovieUser',{
                     movie_id:this.movie.id,
-                    watched:!this.hasWatched                    
+                    watched:watched
                 })
                 .then((response) => {
-                    this.hasWatched = !this.hasWatched;
+                    this.hasWatched = watched;
                     this.movieStatusChanged();
                     console.log(response);
                 })
                 .catch((error) => {
                     console.log(error);
+                })
+                .finally(() => {
+                    this.savingWatched = false;
                 });
             },
             movieStatusChanged() {
@@ -205,6 +211,7 @@
         data() {
             return {
                 hasWatched: (this.movie.watched == 1),
+                savingWatched: false,
                 isFavourite: (this.movie.favourite == 1),
                 isOnWatchList: (this.movie.on_watch_list == 1),
                 isOnNetflix: (this.movie.on_netflix == 1),

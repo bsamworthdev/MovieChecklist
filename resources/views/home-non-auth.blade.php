@@ -52,7 +52,7 @@
                                         <div class="row">
                                             <div class="col-lg-3 col-12">
                                                 <div class="card" id="streamCard">
-                                                    <div>
+                                                    <div class="streaming-service-grid">
                                                         <span class="nowrap">
                                                             <label for="netflix_only_checkbox"> 
                                                                 <img class="netflix_logo" title="Netflix" src="/images/netflix.jpg">
@@ -63,7 +63,7 @@
                                                                 {{( $selectedNetflixOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                        &nbsp;&nbsp;
+
                                                         <span class="nowrap">
                                                             <label for="amazon_only_checkbox"> 
                                                                 <img class="amazon_logo" title="Amazon Prime" src="/images/amazon.jpeg">
@@ -74,7 +74,7 @@
                                                                 {{( $selectedAmazonOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                        &nbsp;&nbsp;
+
                                                         <span class="nowrap">
                                                             <label for="nowtv_only_checkbox"> 
                                                                 <img class="nowtv_logo" title="Now TV" src="/images/nowtv.jpg">
@@ -85,7 +85,7 @@
                                                                 {{( $selectedNowtvOnly ? "checked" : '')}} 
                                                                 onchange="return changeSelection();">
                                                         </span>
-                                                        &nbsp;&nbsp;
+
                                                         <span class="nowrap">
                                                             <label for="disney_plus_only_checkbox"> 
                                                                 <img class="disney_plus_logo" title="Now TV" src="/images/disney_plus.jpg">
@@ -157,7 +157,7 @@
                                                                 onchange="return changeSelection();">
                                                         </span>
                                                     </div>
-                                                    @include('streaming-select-all')
+@include('streaming-select-all')
                                                 </div>
                                             </div>
                                             <div class="col-lg-1 col-12"></div>
@@ -348,6 +348,24 @@
     .netflix_logo, .amazon_logo, .nowtv_logo, .disney_plus_logo, .hbo_max_logo, .apple_tv_logo, .paramount_plus_logo, .bbc_iplayer_logo, .itvx_logo, .channel4_logo{
         width:20px;
         height:20px;
+    }
+    #streamCard .streaming-service-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        align-items: center;
+    }
+    #streamCard .streaming-service-grid > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+    #streamCard .streaming-service-grid > span:nth-child(9) {
+        grid-column: 2;
+    }
+    #streamCard .streaming-service-grid > span:nth-child(10) {
+        grid-column: 3;
     }
     #streamCard{
         text-align:center;

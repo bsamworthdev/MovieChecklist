@@ -24,14 +24,22 @@ class UserController extends Controller
     public function saveMovieUser(Request $request)
     {
         $user_id = Auth::user()->id;
-        $movie_id = $request->movie_id;
-        
-        if ($request->watched){
-            DB::statement("insert into movie_user (user_id,movie_id, created_at, updated_at) values ($user_id, $movie_id, NOW(), NOW())");
-            // DB::insert('insert into users (email, votes) values (?, ?)', ['john@example.com', '0']);
+        $data = $request->validate([
+            'movie_id' => 'required|integer|exists:movies,id',
+            'watched' => 'required|boolean',
+        ]);
+
+        if ($data['watched']) {
+            // The unique user/movie index makes repeated or concurrent requests safe.
+            DB::table('movie_user')->insertOrIgnore([
+                'user_id' => $user_id, 'movie_id' => $data['movie_id'], 'favourite' => 0,
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
         } else {
-            DB::statement("delete from movie_user where user_id=$user_id and movie_id=$movie_id");
+            DB::table('movie_user')->where('user_id', $user_id)->where('movie_id', $data['movie_id'])->delete();
         }
+
+        return response()->json(['watched' => (bool) $data['watched']]);
     }
 
     public function setMovieAsFavourite(Request $request)

@@ -77,10 +77,50 @@ function checkStreamingSelection(initialCount) {
     }
 }
 
+async function checkRepeatedWatchedClicks() {
+    const dom = new JSDOM(`<!doctype html><html><head><meta name="csrf-token" content="test"></head><body><div id="app"><scratch-card :movie="${attribute(movie(true))}" :user="${attribute({ id: 1, role: 'user', friendsCount: 0 })}"></scratch-card></div></body></html>`, {
+        url: 'http://localhost/home', runScripts: 'outside-only', virtualConsole: new VirtualConsole(),
+    });
+    try {
+        dom.window.eval(bundle);
+        const calls = [];
+        const pending = [];
+        dom.window.axios.post = (url, payload) => {
+            calls.push({ url, payload });
+            return new Promise((resolve, reject) => pending.push({ resolve, reject }));
+        };
+        const card = dom.window.document.querySelector('.movieCard');
+        const component = card.__vue__;
+        card.click();
+        card.click();
+        card.click();
+        assert.equal(calls.length, 1, 'Repeated clicks while saving send only one watched request');
+        assert.equal(calls[0].payload.watched, true);
+        pending[0].resolve({ data: { watched: true } });
+        await new Promise(resolve => setTimeout(resolve, 0));
+        assert.equal(component.hasWatched, true);
+        assert.equal(component.savingWatched, false);
+        card.click();
+        assert.equal(calls.length, 2, 'A later intentional click can unwatch the film');
+        assert.equal(calls[1].payload.watched, false);
+        pending[1].resolve({ data: { watched: false } });
+        await new Promise(resolve => setTimeout(resolve, 0));
+        assert.equal(component.hasWatched, false);
+        card.click();
+        pending[2].reject(new Error('Network failure'));
+        await new Promise(resolve => setTimeout(resolve, 0));
+        assert.equal(component.hasWatched, false, 'A failed save leaves the watched state unchanged');
+        assert.equal(component.savingWatched, false, 'A failed save permits retrying');
+    } finally {
+        dom.window.close();
+    }
+}
+
 (async () => {
     for (const role of ['admin', 'user', 'guest']) await check(role);
     for (const count of [0, 2, services.length]) checkStreamingSelection(count);
+    await checkRepeatedWatchedClicks();
     const manifest = JSON.parse(fs.readFileSync('public/mix-manifest.json', 'utf8'));
     assert.match(manifest['/js/app.js'], /\?id=[a-f0-9]+$/, 'The tested bundle has a cache-busting URL');
-    process.stdout.write('Compiled Vue bundle mounts and renders all ten badges and supports Select all and Unselect all links from every selection state.\n');
+    process.stdout.write('Compiled Vue bundle mounts and renders all ten badges and supports bulk filter selection and prevents duplicate watched clicks.\n');
 })().catch(error => { console.error(error); process.exitCode = 1; });
